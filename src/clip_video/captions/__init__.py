@@ -16,6 +16,14 @@ from clip_video.captions.renderer import (
     Caption,
     CaptionTrack,
 )
+from clip_video.captions.enhancements import (
+    EmojiTrigger,
+    LogoOverlay,
+    BrandEnhancements,
+    EnhancedCaptionRenderer,
+    create_cncf_enhancements,
+    create_tech_enhancements,
+)
 
 __all__ = [
     "CaptionStyle",
@@ -26,4 +34,10 @@ __all__ = [
     "CaptionRenderer",
     "Caption",
     "CaptionTrack",
+    "EmojiTrigger",
+    "LogoOverlay",
+    "BrandEnhancements",
+    "EnhancedCaptionRenderer",
+    "create_cncf_enhancements",
+    "create_tech_enhancements",
 ]
