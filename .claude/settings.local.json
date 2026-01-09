@@ -13,7 +13,14 @@
       "Bash(clip-video:*)",
       "Bash(echo:*)",
       "Bash(rm:*)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "Bash(python -m py_compile:*)",
+      "Bash(python:*)",
+      "Bash(set PYTHONIOENCODING=utf-8:*)",
+      "Bash(tasklist:*)",
+      "Bash(uv run mypy:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(pip show:*)"
     ]
   }
 }
