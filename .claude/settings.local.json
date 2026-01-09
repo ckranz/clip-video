@@ -20,7 +20,8 @@
       "Bash(tasklist:*)",
       "Bash(uv run mypy:*)",
       "Bash(uv run ruff:*)",
-      "Bash(pip show:*)"
+      "Bash(pip show:*)",
+      "Bash(uv pip show:*)"
     ]
   }
 }
