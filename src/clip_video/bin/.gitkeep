@@ -1,0 +1,3 @@
+# This directory is used to store custom FFmpeg binaries.
+# Users can place ffmpeg.exe and ffprobe.exe here to use custom versions.
+# The directory is initially empty - binaries are auto-downloaded via imageio-ffmpeg.

@@ -22,6 +22,14 @@ from clip_video.config import (
     load_brand_config,
     save_brand_config,
 )
+from clip_video.ffmpeg_binary import (
+    FFmpegConfig,
+    get_bin_directory,
+    get_dependency_report,
+    get_ffmpeg_info,
+    install_custom_ffmpeg,
+    verify_ffmpeg,
+)
 
 # Create the main Typer app
 app = typer.Typer(
@@ -358,14 +366,125 @@ def highlights_batch(
 
 
 @app.command()
-def check_deps() -> None:
+def check_deps(
+    verbose: Annotated[
+        bool,
+        typer.Option("--verbose", "-v", help="Show detailed dependency information"),
+    ] = False,
+    custom_ffmpeg: Annotated[
+        Optional[Path],
+        typer.Option("--set-ffmpeg", help="Install custom FFmpeg binary from path"),
+    ] = None,
+    custom_ffprobe: Annotated[
+        Optional[Path],
+        typer.Option("--set-ffprobe", help="Install custom FFprobe binary from path"),
+    ] = None,
+) -> None:
     """Check and report on required dependencies.
 
     Verifies FFmpeg is available and reports version information.
+    Use --set-ffmpeg to install a custom FFmpeg binary.
     """
-    # TODO: Implement dependency check in task 2
-    console.print(f"[yellow]Dependency check not yet implemented.[/yellow]")
-    console.print("Will verify: FFmpeg binaries")
+    # Handle custom binary installation
+    if custom_ffmpeg:
+        console.print(f"[cyan]Installing custom FFmpeg from:[/cyan] {custom_ffmpeg}")
+        success, message = install_custom_ffmpeg(
+            str(custom_ffmpeg),
+            str(custom_ffprobe) if custom_ffprobe else None
+        )
+        if success:
+            console.print(f"[green]{message}[/green]")
+        else:
+            console.print(f"[red]Error:[/red] {message}")
+            raise typer.Exit(1)
+        console.print()
+
+    # Get FFmpeg information
+    ffmpeg_info = get_ffmpeg_info()
+    success, message = verify_ffmpeg()
+
+    # Build status display
+    if verbose:
+        # Detailed report
+        report = get_dependency_report()
+
+        table = Table(title="Dependency Status")
+        table.add_column("Component", style="cyan")
+        table.add_column("Status", style="white")
+        table.add_column("Details", style="dim")
+
+        # FFmpeg
+        if ffmpeg_info.available:
+            table.add_row(
+                "FFmpeg",
+                f"[green]Available[/green] (v{ffmpeg_info.version})",
+                f"Source: {ffmpeg_info.source}\n{ffmpeg_info.path}"
+            )
+        else:
+            table.add_row(
+                "FFmpeg",
+                "[red]Not Found[/red]",
+                "Install with: pip install imageio-ffmpeg"
+            )
+
+        # FFprobe
+        ffprobe_info = report.get("ffprobe", {})
+        if ffprobe_info.get("available"):
+            table.add_row(
+                "FFprobe",
+                "[green]Available[/green]",
+                str(ffprobe_info.get("path", ""))
+            )
+        else:
+            table.add_row(
+                "FFprobe",
+                "[yellow]Not Found[/yellow]",
+                "Optional - used for media inspection"
+            )
+
+        # imageio-ffmpeg
+        imageio_info = report.get("imageio_ffmpeg", {})
+        if imageio_info.get("available"):
+            table.add_row(
+                "imageio-ffmpeg",
+                f"[green]Installed[/green]",
+                f"Version: {imageio_info.get('version', 'unknown')}"
+            )
+        else:
+            table.add_row(
+                "imageio-ffmpeg",
+                "[yellow]Not Installed[/yellow]",
+                "Recommended: pip install imageio-ffmpeg"
+            )
+
+        # Platform info
+        platform_info = report.get("platform", {})
+        table.add_row(
+            "Platform",
+            str(platform_info.get("system", "")),
+            str(platform_info.get("machine", ""))
+        )
+
+        console.print(table)
+        console.print()
+        console.print(f"[dim]Custom binary location: {get_bin_directory()}[/dim]")
+
+    else:
+        # Simple status
+        console.print(Panel(
+            f"[bold]Dependency Check[/bold]\n\n" +
+            (f"[green]FFmpeg:[/green] v{ffmpeg_info.version} ({ffmpeg_info.source})\n"
+             f"  [dim]{ffmpeg_info.path}[/dim]"
+             if ffmpeg_info.available
+             else "[red]FFmpeg:[/red] Not found\n"
+                  "  Install with: pip install imageio-ffmpeg"),
+            title="clip-video dependencies",
+        ))
+
+    # Exit with error if FFmpeg not available
+    if not ffmpeg_info.available:
+        console.print("\n[yellow]Tip:[/yellow] Run 'pip install imageio-ffmpeg' to auto-download FFmpeg")
+        raise typer.Exit(1)
 
 
 @app.command()
