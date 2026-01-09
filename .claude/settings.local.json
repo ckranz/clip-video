@@ -5,7 +5,15 @@
       "Skill(ck-autopilot:discovery-workflow)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(pip install:*)",
+      "Bash(clip-video --help:*)",
+      "Bash(clip-video init-brand:*)",
+      "Bash(clip-video:*)",
+      "Bash(echo:*)",
+      "Bash(rm:*)",
+      "Bash(rmdir:*)"
     ]
   }
 }
