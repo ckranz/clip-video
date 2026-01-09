@@ -9,8 +9,22 @@ from clip_video.modes.lyric_match import (
     LyricMatchProject,
     LyricMatchProcessor,
 )
+from clip_video.modes.highlights import (
+    HighlightsProject,
+    HighlightsProcessor,
+    HighlightsConfig,
+    HighlightClip,
+    HighlightMetadata,
+    Platform,
+)
 
 __all__ = [
     "LyricMatchProject",
     "LyricMatchProcessor",
+    "HighlightsProject",
+    "HighlightsProcessor",
+    "HighlightsConfig",
+    "HighlightClip",
+    "HighlightMetadata",
+    "Platform",
 ]
