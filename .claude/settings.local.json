@@ -21,7 +21,8 @@
       "Bash(uv run mypy:*)",
       "Bash(uv run ruff:*)",
       "Bash(pip show:*)",
-      "Bash(uv pip show:*)"
+      "Bash(uv pip show:*)",
+      "Bash(dir:*)"
     ]
   }
 }
