@@ -5,12 +5,14 @@ Uses Typer for a modern, type-hinted CLI experience.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from rich.table import Table
 
 from clip_video import __version__
@@ -27,6 +29,7 @@ from clip_video.ffmpeg_binary import (
     get_bin_directory,
     get_dependency_report,
     get_ffmpeg_info,
+    get_ffprobe_path,
     install_custom_ffmpeg,
     verify_ffmpeg,
 )
@@ -204,6 +207,10 @@ def transcribe(
         bool,
         typer.Option("--force", help="Re-transcribe even if transcript exists"),
     ] = False,
+    yes: Annotated[
+        bool,
+        typer.Option("--yes", "-y", help="Skip cost confirmation prompt"),
+    ] = False,
 ) -> None:
     """Transcribe videos for a brand.
 
@@ -214,13 +221,249 @@ def transcribe(
         console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
         raise typer.Exit(1)
 
-    # TODO: Implement transcription logic in task 7
-    console.print(f"[yellow]Transcription not yet implemented.[/yellow]")
-    console.print(f"Brand: {brand_name}")
+    # Import transcription modules
+    from clip_video.transcription import (
+        TranscriptionProgress,
+        WhisperAPIProvider,
+        WhisperLocalProvider,
+    )
+    from clip_video.vocabulary import VocabularyTerms, TranscriptCorrector
+
+    # Load brand config
+    config = load_brand_config(brand_name)
+    brand_path = get_brand_path(brand_name)
+
+    # Determine provider
+    provider_name = provider or config.transcription_provider
+
+    # Initialize provider
+    if provider_name == "whisper_local":
+        transcription_provider = WhisperLocalProvider()
+        if not transcription_provider.is_available():
+            console.print("[red]Error:[/red] Local Whisper not available.")
+            console.print("Install faster-whisper: pip install faster-whisper")
+            raise typer.Exit(1)
+    else:
+        # Default to API
+        transcription_provider = WhisperAPIProvider()
+        if not transcription_provider.is_available():
+            console.print("[red]Error:[/red] OpenAI API not configured.")
+            console.print("Set OPENAI_API_KEY environment variable.")
+            raise typer.Exit(1)
+
+    # Load vocabulary for corrections
+    vocabulary = VocabularyTerms(config.vocabulary) if config.vocabulary else VocabularyTerms()
+    corrector = TranscriptCorrector(vocabulary)
+    whisper_prompt = vocabulary.generate_whisper_prompt()
+
+    # Load progress tracker
+    progress_path = brand_path / "transcripts" / ".transcription_progress.json"
+    progress_tracker = TranscriptionProgress.load_or_create(progress_path, brand_name)
+    progress_tracker.provider = provider_name
+
+    # Get videos to process
+    videos_dir = brand_path / "videos"
+    transcripts_dir = brand_path / "transcripts"
+    transcripts_dir.mkdir(exist_ok=True)
+
+    # Video file extensions
+    video_extensions = {".mp4", ".mkv", ".avi", ".mov", ".webm", ".m4v", ".wmv", ".flv"}
+
     if video:
-        console.print(f"Video: {video}")
-    if provider:
-        console.print(f"Provider: {provider}")
+        # Single video mode
+        if not video.exists():
+            console.print(f"[red]Error:[/red] Video file not found: {video}")
+            raise typer.Exit(1)
+        videos_to_process = [video]
+    else:
+        # Batch mode - find all videos
+        videos_to_process = [
+            f for f in videos_dir.iterdir()
+            if f.is_file() and f.suffix.lower() in video_extensions
+        ]
+
+    if not videos_to_process:
+        console.print("[yellow]No videos found to transcribe.[/yellow]")
+        return
+
+    # Filter based on existing transcripts and progress
+    videos_needing_transcription = []
+    for video_path in videos_to_process:
+        transcript_path = transcripts_dir / f"{video_path.stem}.json"
+
+        # Check if already completed (unless force)
+        if not force:
+            if transcript_path.exists():
+                progress_tracker.skip_video(video_path, "Transcript exists")
+                continue
+            if progress_tracker.is_completed(str(video_path)):
+                progress_tracker.skip_video(video_path, "Already transcribed")
+                continue
+
+        progress_tracker.add_video(video_path)
+        videos_needing_transcription.append(video_path)
+
+    if not videos_needing_transcription:
+        console.print("[green]All videos already transcribed.[/green]")
+        summary = progress_tracker.get_summary()
+        console.print(f"Completed: {summary['completed']}, Skipped: {summary['skipped']}")
+        return
+
+    # Estimate total duration and cost
+    total_duration = 0.0
+    video_durations: dict[Path, float] = {}
+
+    console.print(f"\n[cyan]Analyzing {len(videos_needing_transcription)} videos...[/cyan]")
+
+    for video_path in videos_needing_transcription:
+        duration = _get_video_duration(video_path)
+        video_durations[video_path] = duration
+        total_duration += duration
+
+    # Show cost estimate for API provider
+    estimated_cost = transcription_provider.estimate_cost(total_duration)
+
+    console.print(Panel(
+        f"[bold]Transcription Summary[/bold]\n\n"
+        f"Videos to process: {len(videos_needing_transcription)}\n"
+        f"Total duration: {total_duration / 60:.1f} minutes\n"
+        f"Provider: {provider_name}\n"
+        + (f"Estimated cost: ${estimated_cost:.2f} USD\n" if estimated_cost else "Cost: Free (local)\n")
+        + f"Vocabulary terms: {len(vocabulary)}",
+        title="Transcription Plan",
+    ))
+
+    # Confirm if using API and cost is significant
+    if estimated_cost and estimated_cost > 0.01 and not yes:
+        if not typer.confirm("Proceed with transcription?"):
+            console.print("[yellow]Transcription cancelled.[/yellow]")
+            raise typer.Exit(0)
+
+    # Process videos
+    console.print()
+    successful = 0
+    failed = 0
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        console=console,
+    ) as progress_bar:
+        task = progress_bar.add_task(
+            "Transcribing...",
+            total=len(videos_needing_transcription),
+        )
+
+        for video_path in videos_needing_transcription:
+            progress_bar.update(task, description=f"Transcribing {video_path.name}...")
+
+            try:
+                # Mark as in progress
+                progress_tracker.start_video(video_path)
+                progress_tracker.save(progress_path)
+
+                # Transcribe
+                result = transcription_provider.transcribe(
+                    video_path,
+                    language="en",
+                    prompt=whisper_prompt,
+                )
+
+                # Apply vocabulary corrections
+                all_words = []
+                for segment in result.segments:
+                    for word in segment.words:
+                        all_words.append(word.__dict__)
+
+                corrected_words, correction_log = corrector.correct_words(
+                    all_words,
+                    source_file=str(video_path),
+                )
+
+                # Update words in segments
+                word_idx = 0
+                for segment in result.segments:
+                    segment_word_count = len(segment.words)
+                    for i in range(segment_word_count):
+                        if word_idx < len(corrected_words):
+                            segment.words[i].word = corrected_words[word_idx]["word"]
+                            if "original_word" in corrected_words[word_idx]:
+                                segment.words[i].original_word = corrected_words[word_idx]["original_word"]
+                            word_idx += 1
+
+                    # Update segment text from corrected words
+                    segment.text = " ".join(w.word for w in segment.words)
+
+                # Update full text
+                result.text = " ".join(seg.text for seg in result.segments)
+                result.vocabulary_corrections = len(correction_log)
+
+                # Save transcript
+                transcript_path = transcripts_dir / f"{video_path.stem}.json"
+                result.save(transcript_path)
+
+                # Update progress
+                progress_tracker.complete_video(
+                    video_path,
+                    transcript_path,
+                    duration_seconds=result.duration,
+                    cost_usd=result.cost_usd,
+                )
+                progress_tracker.save(progress_path)
+
+                successful += 1
+
+            except Exception as e:
+                progress_tracker.fail_video(video_path, str(e))
+                progress_tracker.save(progress_path)
+                failed += 1
+                console.print(f"\n[red]Error transcribing {video_path.name}:[/red] {e}")
+
+            progress_bar.advance(task)
+
+    # Final summary
+    console.print()
+    summary = progress_tracker.get_summary()
+
+    console.print(Panel(
+        f"[bold]Transcription Complete[/bold]\n\n"
+        f"Successful: [green]{successful}[/green]\n"
+        f"Failed: [red]{failed}[/red]\n"
+        f"Total processed: {summary['completed']}\n"
+        + (f"Total cost: ${summary['total_cost_usd']:.2f} USD" if summary['total_cost_usd'] else ""),
+        title="Results",
+    ))
+
+
+def _get_video_duration(video_path: Path) -> float:
+    """Get duration of a video file in seconds."""
+    import subprocess
+
+    ffprobe_path = get_ffprobe_path()
+    if not ffprobe_path:
+        return 0.0
+
+    try:
+        result = subprocess.run(
+            [
+                ffprobe_path,
+                "-v", "error",
+                "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1",
+                str(video_path),
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        if result.returncode == 0 and result.stdout.strip():
+            return float(result.stdout.strip())
+    except Exception:
+        pass
+
+    return 0.0
 
 
 # =============================================================================
