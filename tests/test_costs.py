@@ -356,8 +356,8 @@ class TestCostEstimator:
             model="haiku",
         )
 
-        # Much cheaper than Sonnet
-        assert cost < 0.01
+        # Cheaper than Sonnet (Haiku 4.5: $1/$5 per 1M vs Sonnet 4.5: $3/$15 per 1M)
+        assert cost < 0.02
 
     def test_estimate_llm_cost_openai(self):
         """Test OpenAI cost estimation."""
@@ -408,12 +408,12 @@ class TestPricing:
         """Test Claude pricing constants."""
         assert Pricing.CLAUDE_INPUT_PER_1M == 3.00
         assert Pricing.CLAUDE_OUTPUT_PER_1M == 15.00
-        assert Pricing.CLAUDE_HAIKU_INPUT_PER_1M == 0.25
+        assert Pricing.CLAUDE_HAIKU_INPUT_PER_1M == 1.00
 
     def test_openai_pricing(self):
         """Test OpenAI pricing constants."""
-        assert Pricing.GPT4O_INPUT_PER_1M == 2.50
-        assert Pricing.GPT4O_OUTPUT_PER_1M == 10.00
+        assert Pricing.GPT4O_INPUT_PER_1M == 2.00
+        assert Pricing.GPT4O_OUTPUT_PER_1M == 8.00
 
 
 class TestFormatFunctions:

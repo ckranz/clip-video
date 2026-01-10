@@ -1,0 +1,513 @@
+{
+  "discoveries": [
+    {
+      "id": "disc_001",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Input workflow: folder of video files + transcript to match. Source videos often from YouTube (user-owned).",
+      "confidence": "stated",
+      "source_exchange": 1,
+      "related_domains": ["data", "integration"],
+      "timestamp": "2026-01-09T12:05:00.000Z",
+      "tags": ["input", "workflow", "youtube"]
+    },
+    {
+      "id": "disc_002",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "May need initial processing phase to generate transcripts for all source videos before matching can begin.",
+      "confidence": "stated",
+      "source_exchange": 1,
+      "related_domains": ["data", "integration"],
+      "timestamp": "2026-01-09T12:05:00.000Z",
+      "tags": ["transcription", "preprocessing"]
+    },
+    {
+      "id": "disc_003",
+      "domain": "functionality",
+      "type": "insight",
+      "content": "Word/phrase clip dictionary approach - pre-cut clips organized by word/phrase for reuse across projects.",
+      "confidence": "stated",
+      "source_exchange": 1,
+      "related_domains": ["data", "reusability"],
+      "timestamp": "2026-01-09T12:05:00.000Z",
+      "tags": ["dictionary", "clips", "organization"]
+    },
+    {
+      "id": "disc_004",
+      "domain": "functionality",
+      "type": "constraint",
+      "content": "Prefer not reusing clips from the same source video multiple times in a single output project.",
+      "confidence": "stated",
+      "source_exchange": 1,
+      "related_domains": ["use_cases"],
+      "timestamp": "2026-01-09T12:05:00.000Z",
+      "tags": ["variety", "constraint"]
+    },
+    {
+      "id": "disc_005",
+      "domain": "functionality",
+      "type": "decision",
+      "content": "Output clip naming: source video filename + clip identifier suffix for traceability.",
+      "confidence": "stated",
+      "source_exchange": 1,
+      "related_domains": ["data"],
+      "timestamp": "2026-01-09T12:05:00.000Z",
+      "tags": ["naming", "output", "traceability"]
+    },
+    {
+      "id": "disc_006",
+      "domain": "functionality",
+      "type": "insight",
+      "content": "Phrases sometimes work better than individual words - selection is context-dependent on the target music video.",
+      "confidence": "stated",
+      "source_exchange": 1,
+      "related_domains": ["use_cases"],
+      "timestamp": "2026-01-09T12:05:00.000Z",
+      "tags": ["phrases", "matching", "flexibility"]
+    },
+    {
+      "id": "disc_007",
+      "domain": "data",
+      "type": "requirement",
+      "content": "Clip dictionary organized by 'brand' (e.g., a conference). Dictionary persists across multiple song projects within same brand.",
+      "confidence": "stated",
+      "source_exchange": 2,
+      "related_domains": ["functionality", "reusability"],
+      "timestamp": "2026-01-09T12:10:00.000Z",
+      "tags": ["brand", "organization", "persistence"]
+    },
+    {
+      "id": "disc_008",
+      "domain": "data",
+      "type": "requirement",
+      "content": "Multiple brands supported - each brand has its own separate clip library that can be used for multiple songs.",
+      "confidence": "stated",
+      "source_exchange": 2,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:10:00.000Z",
+      "tags": ["brand", "multi-tenant"]
+    },
+    {
+      "id": "disc_009",
+      "domain": "functionality",
+      "type": "decision",
+      "content": "Phrase boundaries are manually curated, not auto-detected. Phrases requested on-demand when a song project needs them.",
+      "confidence": "stated",
+      "source_exchange": 2,
+      "related_domains": ["use_cases"],
+      "timestamp": "2026-01-09T12:10:00.000Z",
+      "tags": ["phrases", "manual", "curation"]
+    },
+    {
+      "id": "disc_010",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Dictionary building is lyrics-driven: feed in target lyrics, use that as basis for what words/phrases to extract from source videos.",
+      "confidence": "stated",
+      "source_exchange": 2,
+      "related_domains": ["use_cases"],
+      "timestamp": "2026-01-09T12:10:00.000Z",
+      "tags": ["lyrics", "dictionary", "workflow"]
+    },
+    {
+      "id": "disc_011",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Search interface needed: 'source the phrase X from the video library in brand Y' - search across sources for specific phrases.",
+      "confidence": "stated",
+      "source_exchange": 2,
+      "related_domains": ["integration"],
+      "timestamp": "2026-01-09T12:10:00.000Z",
+      "tags": ["search", "phrases", "interface"]
+    },
+    {
+      "id": "disc_012",
+      "domain": "functionality",
+      "type": "insight",
+      "content": "Match selection is human-in-the-loop: phonetic quality matching is nice-to-have, but final selection is manual. Visual quality not a factor.",
+      "confidence": "stated",
+      "source_exchange": 2,
+      "related_domains": ["use_cases"],
+      "timestamp": "2026-01-09T12:10:00.000Z",
+      "tags": ["selection", "human-in-loop", "manual"]
+    },
+    {
+      "id": "disc_013",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Highlights Mode: batch processing of 30+ videos after a conference event to generate scheduled social content.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["performance", "use_cases"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["batch", "highlights", "conference"]
+    },
+    {
+      "id": "disc_014",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Target platforms: YouTube and LinkedIn. Output needs portrait format conversion for shorts/reels.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["integration"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["platforms", "youtube", "linkedin", "portrait"]
+    },
+    {
+      "id": "disc_015",
+      "domain": "functionality",
+      "type": "insight",
+      "content": "Portrait conversion can use fixed crop area since speakers typically in fixed location - simpler than full visual tracking.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["performance"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["portrait", "crop", "simplification"]
+    },
+    {
+      "id": "disc_016",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Highlights input includes session description alongside video - used to identify hooks and insightful moments.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["data"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["input", "description", "context"]
+    },
+    {
+      "id": "disc_017",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Highlight selection goals: (1) hook viewers into watching full video, OR (2) deliver standalone insightful knowledge snippet.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["use_cases"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["highlights", "hooks", "insights"]
+    },
+    {
+      "id": "disc_018",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Highlights output: clip file + title/hook text. Title for YouTube, post content for LinkedIn.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["data"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["output", "title", "description"]
+    },
+    {
+      "id": "disc_019",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "On-screen captions essential, especially for LinkedIn. Must be burned into video.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["integration"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["captions", "accessibility", "linkedin"]
+    },
+    {
+      "id": "disc_020",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Caption enhancement: inject brand-specific emojis/logos when certain terms mentioned (e.g., Kubernetes logo when 'Kubernetes' spoken).",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["data", "reusability"],
+      "timestamp": "2026-01-09T12:15:00.000Z",
+      "tags": ["captions", "emoji", "logos", "brand"]
+    },
+    {
+      "id": "disc_021",
+      "domain": "data",
+      "type": "requirement",
+      "content": "Brand-specific emoji/icon/logo mapping: user-curated list per brand. Different conferences have different visual assets.",
+      "confidence": "stated",
+      "source_exchange": 3,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["brand", "emoji", "logos", "configuration"]
+    },
+    {
+      "id": "disc_022",
+      "domain": "functionality",
+      "type": "decision",
+      "content": "CLI tool interface - no web UI or desktop app needed.",
+      "confidence": "stated",
+      "source_exchange": 4,
+      "related_domains": ["deployment"],
+      "timestamp": "2026-01-09T12:20:00.000Z",
+      "tags": ["cli", "interface"]
+    },
+    {
+      "id": "disc_023",
+      "domain": "functionality",
+      "type": "decision",
+      "content": "Clip output: dump candidates to folder for manual review in video editor. Search interface outputs to folder too.",
+      "confidence": "stated",
+      "source_exchange": 4,
+      "related_domains": ["data"],
+      "timestamp": "2026-01-09T12:20:00.000Z",
+      "tags": ["output", "folder", "review"]
+    },
+    {
+      "id": "disc_024",
+      "domain": "functionality",
+      "type": "requirement",
+      "content": "Save/resume project state needed, though most work is batch processed.",
+      "confidence": "stated",
+      "source_exchange": 4,
+      "related_domains": ["data"],
+      "timestamp": "2026-01-09T12:20:00.000Z",
+      "tags": ["state", "resume", "persistence"]
+    },
+    {
+      "id": "disc_025",
+      "domain": "error_handling",
+      "type": "requirement",
+      "content": "Idempotent processing: if cataloguing/transcribing is interrupted (even mid-video), it can be resumed without re-doing completed work.",
+      "confidence": "stated",
+      "source_exchange": 4,
+      "related_domains": ["functionality", "performance"],
+      "timestamp": "2026-01-09T12:20:00.000Z",
+      "tags": ["idempotent", "resume", "reliability"]
+    },
+    {
+      "id": "disc_026",
+      "domain": "error_handling",
+      "type": "requirement",
+      "content": "Failure tolerant for unreliable internet - network issues shouldn't corrupt state or lose progress.",
+      "confidence": "stated",
+      "source_exchange": 4,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:20:00.000Z",
+      "tags": ["network", "reliability", "offline"]
+    },
+    {
+      "id": "disc_027",
+      "domain": "data",
+      "type": "decision",
+      "content": "Storage format: no preference - use whatever is best for the use case. Human-readability not required. Portability not needed independently (entire project shared together).",
+      "confidence": "stated",
+      "source_exchange": 5,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:25:00.000Z",
+      "tags": ["storage", "format", "flexibility"]
+    },
+    {
+      "id": "disc_028",
+      "domain": "data",
+      "type": "requirement",
+      "content": "Keep full transcripts and source videos for future reuse. Extracted clips stored separately. Both retained to support creating new outputs from same source material.",
+      "confidence": "stated",
+      "source_exchange": 5,
+      "related_domains": ["functionality", "reusability"],
+      "timestamp": "2026-01-09T12:25:00.000Z",
+      "tags": ["transcripts", "retention", "reuse"]
+    },
+    {
+      "id": "disc_029",
+      "domain": "data",
+      "type": "decision",
+      "content": "Videos referenced where they live. User copies videos into project. Suggested structure: brand/source/ for source video storage.",
+      "confidence": "stated",
+      "source_exchange": 5,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:25:00.000Z",
+      "tags": ["video", "storage", "structure"]
+    },
+    {
+      "id": "disc_030",
+      "domain": "integration",
+      "type": "constraint",
+      "content": "Preference for free/cheap transcription. Speed not priority if pause/resume works - can run overnight/weekend. Typical workload: 30-35 videos x 30min = 15-20 hours content.",
+      "confidence": "stated",
+      "source_exchange": 6,
+      "related_domains": ["performance", "functionality"],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["transcription", "cost", "batch"]
+    },
+    {
+      "id": "disc_031",
+      "domain": "integration",
+      "type": "requirement",
+      "content": "Need cost/time estimation before processing. Acceptable threshold ~$20 for full conference. If under a few dollars for API, quality/speed wins. Make provider configurable.",
+      "confidence": "stated",
+      "source_exchange": 6,
+      "related_domains": ["functionality", "observability"],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["cost", "estimation", "configuration"]
+    },
+    {
+      "id": "disc_032",
+      "domain": "integration",
+      "type": "decision",
+      "content": "LLM for highlight detection: Claude/OpenAI APIs acceptable. Considered low cost for the requirement.",
+      "confidence": "stated",
+      "source_exchange": 6,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["llm", "api", "highlights"]
+    },
+    {
+      "id": "disc_033",
+      "domain": "integration",
+      "type": "decision",
+      "content": "Video codecs: no specific requirements. Use common, compatible, efficient formats. No need for 4K output.",
+      "confidence": "stated",
+      "source_exchange": 6,
+      "related_domains": ["performance"],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["video", "codec", "output"]
+    },
+    {
+      "id": "disc_034",
+      "domain": "integration",
+      "type": "decision",
+      "content": "Audio handling: no special requirements. Content is 99% speech, not hi-fidelity music.",
+      "confidence": "stated",
+      "source_exchange": 6,
+      "related_domains": [],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["audio", "speech"]
+    },
+    {
+      "id": "disc_035",
+      "domain": "integration",
+      "type": "requirement",
+      "content": "Caption burning: direct text overlay, lower-thirds positioning. Auto-sized and auto-wrapped to fit video window.",
+      "confidence": "stated",
+      "source_exchange": 6,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["captions", "overlay", "positioning"]
+    },
+    {
+      "id": "disc_036",
+      "domain": "integration",
+      "type": "insight",
+      "content": "Nice-to-have: highlighted word animation as speaker talks (karaoke-style). Not essential, but would enhance captions.",
+      "confidence": "stated",
+      "source_exchange": 6,
+      "related_domains": ["functionality"],
+      "timestamp": "2026-01-09T12:30:00.000Z",
+      "tags": ["captions", "animation", "enhancement"]
+    },
+    {
+      "id": "disc_037",
+      "domain": "dependencies",
+      "type": "decision",
+      "content": "Runtime: Python preferred. No strong user preference, but Python ecosystem stronger for video/ML tooling.",
+      "confidence": "stated",
+      "source_exchange": 7,
+      "related_domains": ["integration"],
+      "timestamp": "2026-01-09T12:35:00.000Z",
+      "tags": ["python", "runtime", "ecosystem"]
+    },
+    {
+      "id": "disc_038",
+      "domain": "dependencies",
+      "type": "constraint",
+      "content": "Development machine: Microsoft Surface Book Pro, 32GB RAM, dedicated GPU (laptop-grade, not high-powered). Windows 11.",
+      "confidence": "stated",
+      "source_exchange": 7,
+      "related_domains": ["performance", "deployment"],
+      "timestamp": "2026-01-09T12:35:00.000Z",
+      "tags": ["hardware", "windows", "gpu", "laptop"]
+    },
+    {
+      "id": "disc_039",
+      "domain": "dependencies",
+      "type": "insight",
+      "content": "GPU is laptop-grade, limiting local Whisper performance. May favor API transcription or slower local processing.",
+      "confidence": "inferred",
+      "source_exchange": 7,
+      "related_domains": ["performance", "integration"],
+      "timestamp": "2026-01-09T12:35:00.000Z",
+      "tags": ["gpu", "whisper", "transcription", "performance"]
+    },
+    {
+      "id": "disc_040",
+      "domain": "dependencies",
+      "type": "decision",
+      "content": "Target video editor: DaVinci Resolve. User recently switched and still learning. Exported clips should be easily importable.",
+      "confidence": "stated",
+      "source_exchange": 7,
+      "related_domains": ["integration", "functionality"],
+      "timestamp": "2026-01-09T12:35:00.000Z",
+      "tags": ["davinci", "editor", "export", "workflow"]
+    },
+    {
+      "id": "disc_041",
+      "domain": "dependencies",
+      "type": "insight",
+      "content": "DaVinci Resolve compatibility: standard MP4/MOV containers with H.264/H.265 video and AAC audio import seamlessly. Avoid exotic codecs.",
+      "confidence": "inferred",
+      "source_exchange": 7,
+      "related_domains": ["integration"],
+      "timestamp": "2026-01-09T12:35:00.000Z",
+      "tags": ["davinci", "codec", "compatibility"]
+    }
+  ],
+  "exchanges": [
+    {
+      "id": 1,
+      "domain": "functionality",
+      "question": "For Lyric Match Mode, walk me through your ideal workflow step-by-step: inputs, matching interface, handling multiple source videos.",
+      "answer": "Input: folder of video files + transcript. Videos often from YouTube (owned). May need preprocessing for transcripts. Want word/phrase clip dictionary approach. Prefer not reusing same source video. Output naming: source filename + clip identifier.",
+      "extracted_discoveries": ["disc_001", "disc_002", "disc_003", "disc_004", "disc_005", "disc_006"],
+      "timestamp": "2026-01-09T12:05:00.000Z"
+    },
+    {
+      "id": 2,
+      "domain": "functionality",
+      "question": "Dictionary persistence (project vs library), phrase boundary detection method, and match selection criteria.",
+      "answer": "Brand-based persistence spanning multiple projects. Phrase boundaries manually curated and lyrics-driven. Search interface for sourcing phrases. Match selection is human-in-the-loop, phonetic matching nice-to-have.",
+      "extracted_discoveries": ["disc_007", "disc_008", "disc_009", "disc_010", "disc_011", "disc_012"],
+      "timestamp": "2026-01-09T12:10:00.000Z"
+    },
+    {
+      "id": 3,
+      "domain": "functionality",
+      "question": "Highlights Mode: input setup, topic configuration, and output expectations.",
+      "answer": "Batch process 30+ videos post-conference. Target YouTube/LinkedIn with portrait format. Input includes session description. Output: clip + title/hook. On-screen captions essential with brand-specific emoji/logo injection for mentioned terms.",
+      "extracted_discoveries": ["disc_013", "disc_014", "disc_015", "disc_016", "disc_017", "disc_018", "disc_019", "disc_020", "disc_021"],
+      "timestamp": "2026-01-09T12:15:00.000Z"
+    },
+    {
+      "id": 4,
+      "domain": "functionality",
+      "question": "User interface model, human-in-the-loop interaction, and project state management.",
+      "answer": "CLI tool. Output dumped to folders for review. Save/resume needed. Must be idempotent and failure-tolerant for unreliable internet.",
+      "extracted_discoveries": ["disc_022", "disc_023", "disc_024", "disc_025", "disc_026"],
+      "timestamp": "2026-01-09T12:20:00.000Z"
+    },
+    {
+      "id": 5,
+      "domain": "data",
+      "question": "Storage format preferences, transcript retention strategy, and video file handling approach.",
+      "answer": "No format preference - use best for use case. Keep full transcripts and videos for future reuse. Videos referenced in place, user copies to brand/source/ structure.",
+      "extracted_discoveries": ["disc_027", "disc_028", "disc_029"],
+      "timestamp": "2026-01-09T12:25:00.000Z"
+    },
+    {
+      "id": 6,
+      "domain": "integration",
+      "question": "Transcription provider preferences, LLM for highlight detection, and video processing requirements.",
+      "answer": "Prefer free/cheap, quality matters, speed OK if resumable. Cost estimation needed, ~$20 threshold. Claude/OpenAI for LLM. Standard codecs, speech audio. Direct text overlay captions, lower-thirds, auto-sized. Word highlighting nice-to-have.",
+      "extracted_discoveries": ["disc_030", "disc_031", "disc_032", "disc_033", "disc_034", "disc_035", "disc_036"],
+      "timestamp": "2026-01-09T12:30:00.000Z"
+    },
+    {
+      "id": 7,
+      "domain": "dependencies",
+      "question": "Runtime preference (Node.js vs Python), local machine setup (GPU, RAM, OS), and existing video editing tools.",
+      "answer": "No strong preference, Python seems stronger. Microsoft Surface Book Pro with 32GB RAM and laptop-grade dedicated GPU. Windows 11. Recently moved to DaVinci Resolve, still learning it.",
+      "extracted_discoveries": ["disc_037", "disc_038", "disc_039", "disc_040", "disc_041"],
+      "timestamp": "2026-01-09T12:35:00.000Z"
+    }
+  ]
+}

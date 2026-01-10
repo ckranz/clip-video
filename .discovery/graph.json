@@ -1,26 +1,47 @@
 {
   "domains": {
-    "users": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [], "priority": 0.9 },
-    "functionality": { "status": "exploring", "score": 0.55, "discoveries": ["disc_001", "disc_002", "disc_003", "disc_004", "disc_005", "disc_006", "disc_009", "disc_010", "disc_011", "disc_012", "disc_013", "disc_014", "disc_015", "disc_016", "disc_017", "disc_018", "disc_019", "disc_020", "disc_022", "disc_023", "disc_024"], "blockers": [], "priority": 0.95 },
-    "use_cases": { "status": "pending", "score": 0.2, "discoveries": [], "blockers": [], "priority": 0.85 },
-    "data": { "status": "exploring", "score": 0.35, "discoveries": ["disc_007", "disc_008", "disc_021", "disc_027", "disc_028", "disc_029"], "blockers": [], "priority": 0.9 },
-    "integration": { "status": "exploring", "score": 0.4, "discoveries": ["disc_030", "disc_031", "disc_032", "disc_033", "disc_034", "disc_035", "disc_036"], "blockers": [], "priority": 0.8 },
-    "security": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [], "priority": 0.5 },
-    "error_handling": { "status": "exploring", "score": 0.3, "discoveries": ["disc_025", "disc_026"], "blockers": [], "priority": 0.6 },
-    "testing": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [], "priority": 0.5 },
-    "observability": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [], "priority": 0.4 },
-    "performance": { "status": "pending", "score": 0.15, "discoveries": [], "blockers": [], "priority": 0.7 },
-    "reusability": { "status": "pending", "score": 0.1, "discoveries": [], "blockers": [], "priority": 0.6 },
-    "dependencies": { "status": "exploring", "score": 0.4, "discoveries": ["disc_037", "disc_038", "disc_039", "disc_040", "disc_041"], "blockers": [], "priority": 0.75 },
-    "deployment": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [], "priority": 0.4 },
-    "documentation": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [], "priority": 0.3 }
+    "users": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "functionality": {
+      "status": "complete",
+      "score": 0.9,
+      "discoveries": ["D001", "D002", "D003", "D004", "D005", "D006", "D007", "D008", "D009", "D010", "D011", "D012", "D013"],
+      "blockers": []
+    },
+    "use_cases": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "data": {
+      "status": "complete",
+      "score": 0.8,
+      "discoveries": ["D022", "D023"],
+      "blockers": []
+    },
+    "integration": {
+      "status": "complete",
+      "score": 0.8,
+      "discoveries": ["D014", "D015", "D016", "D017"],
+      "blockers": []
+    },
+    "security": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "error_handling": {
+      "status": "complete",
+      "score": 0.9,
+      "discoveries": ["D018", "D019", "D020", "D021"],
+      "blockers": []
+    },
+    "testing": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "observability": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "performance": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "reusability": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "dependencies": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "deployment": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "documentation": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] }
   },
   "edges": [
-    {"from": "functionality", "to": "data", "type": "depends_on", "reason": "Brand-based clip organization", "discovered_in_exchange": 2},
-    {"from": "functionality", "to": "integration", "type": "surfaces", "reason": "YouTube transcript extraction, platform output formats", "discovered_in_exchange": 3},
-    {"from": "functionality", "to": "performance", "type": "surfaces", "reason": "Batch processing 30+ videos", "discovered_in_exchange": 3},
-    {"from": "dependencies", "to": "performance", "type": "constrains", "reason": "Laptop-grade GPU limits local Whisper performance", "discovered_in_exchange": 7},
-    {"from": "dependencies", "to": "integration", "type": "informs", "reason": "DaVinci Resolve compatibility requirements", "discovered_in_exchange": 7}
+    {"from": "functionality", "to": "data", "relationship": "requires", "note": "Validation rules need transcript data structure"},
+    {"from": "functionality", "to": "integration", "relationship": "requires", "note": "Multi-pass workflow needs LLM integration"},
+    {"from": "functionality", "to": "error_handling", "relationship": "requires", "note": "Validation failures need proper error handling"},
+    {"from": "integration", "to": "data", "relationship": "requires", "note": "Human review queue needs data storage"},
+    {"from": "integration", "to": "error_handling", "relationship": "requires", "note": "Rejection workflow needs error handling"},
+    {"from": "error_handling", "to": "observability", "relationship": "requires", "note": "Cost tracking and reporting"}
   ],
   "cross_domain_issues": []
 }

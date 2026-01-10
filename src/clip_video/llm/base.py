@@ -43,9 +43,9 @@ class LLMConfig:
         """Set default models based on provider."""
         if self.model is None:
             if self.provider == LLMProviderType.CLAUDE:
-                self.model = "claude-sonnet-4-20250514"
+                self.model = "claude-sonnet-4-5-20241219"
             elif self.provider == LLMProviderType.OPENAI:
-                self.model = "gpt-4o"
+                self.model = "gpt-4.1"
 
 
 @dataclass

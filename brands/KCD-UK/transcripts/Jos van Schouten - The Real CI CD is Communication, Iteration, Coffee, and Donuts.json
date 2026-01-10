@@ -1,0 +1,4147 @@
+{
+  "video_path": "C:\\Users\\chris\\Dropbox\\Scripts\\clip-video\\brands\\KCD-UK\\videos\\Jos van Schouten - The Real CI CD is Communication, Iteration, Coffee, and Donuts.mp4",
+  "text": "All right So I'm Jost and I want to talk about real CICD communication coffee and donuts or basically what I tell junior engineers but in a five minute version So this is how we're often sold on CICD It's a magical conveyor belt You have your pipeline you commit your code everything's magic except not really right We've got problems like this You want to do a deploy but you can't because you're waiting for someone or someone sneaks in a last minute PR Or maybe you do deploy and it breaks production And I'd argue none of these are technical problems It's a problem coming from inside of the organization Tools are not going to fix broken communication right It's about silence It's tools can automate flow but it's culture that determines if flow actually works Communication has to be continuous too Otherwise in the end you'll stall your And you see this with the best performing teams They're highly visible They have high communication And you see this from the Dora report Dora Institute report for instance Those teams with high collaboration they recover faster but also they fail less often And they do this by baking in conversation Chat ops highly visible reviews They catch problems early They do all the things that you learn about in Agile or in DevOps but it matters for a reason Because if you don't you get drift And drift isn't about laziness It's about Slack going quiet during deploys It's about people saying stuff like this Oh no that's fails in staging but it's fine in prod That doesn't happen But yeah if you say this you normalize bad behavior If you see this happening you should inspect your pipeline If you run into problems like this I'd argue that's a bad pattern if you hear this in a Drift is people saying bad code instead of why didn't the pipeline catch this It's when language shifts It's basically when things or people get blamed And we don't fix this by blame but we fix this by feedback Like Mr Miyagi teaches in the Karate Kid you need continuous feedback Feedback repetition matters Feedback repeated often practice into confidence and turns confidence into resilience Observability that's kind of part of that You do a successful deploy and there's silence Does that mean it's stable or does that mean it's invisible You need more than just a thumbs up You need active feedback Another bad anti pattern I want to mention quickly is this guy Maybe nobody owns the pipeline This guy shows up in the end at some point and he always will Because management thinks someone needs to sign off And you get ceremony and you don't have accountability So watch out for him And don't get me wrong on blamelessness It doesn't mean it's soft We still do postmortems We still do all the things to inspect the pipeline to inspect production to make sure there's resilience We all know tech depth slows you down Culture depth does the exact same thing Every time you allow for drift for ceremony or silence you're building culture depth Because in the end what matters is whether your team can recover learn adapt And culture shows up in those metrics It shows up in recovery time lead time and visibility There's a reason for the four measure flow in the end So yeah this is where we started out with the perfect conveyor belt Except you know frosting gets spilled the belt breaks we send in engineers they talk about the problem they fix the problem And that whole thing is what ships in the end not just code Because like Homer Simpson knows donuts are not just fuel they're feedback Thank you",
+  "segments": [
+    {
+      "text": "All right So I'm Jost and I want to talk about real CICD communication",
+      "start": 2.9200000762939453,
+      "end": 8.579999923706055,
+      "words": [
+        {
+          "word": "All",
+          "start": 2.9200000762939453,
+          "end": 3.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "right",
+          "start": 3.5,
+          "end": 3.7200000286102295,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 3.9800000190734863,
+          "end": 4.179999828338623,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'm",
+          "start": 4.179999828338623,
+          "end": 4.460000038146973,
+          "confidence": 1.0
+        },
+        {
+          "word": "Jost",
+          "start": 4.460000038146973,
+          "end": 4.739999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 4.840000152587891,
+          "end": 4.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 4.920000076293945,
+          "end": 4.960000038146973,
+          "confidence": 1.0
+        },
+        {
+          "word": "want",
+          "start": 4.960000038146973,
+          "end": 5.079999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 5.079999923706055,
+          "end": 5.199999809265137,
+          "confidence": 1.0
+        },
+        {
+          "word": "talk",
+          "start": 5.199999809265137,
+          "end": 5.300000190734863,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 5.300000190734863,
+          "end": 5.619999885559082,
+          "confidence": 1.0
+        },
+        {
+          "word": "real",
+          "start": 5.619999885559082,
+          "end": 6.260000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "CICD",
+          "start": 6.260000228881836,
+          "end": 6.679999828338623,
+          "confidence": 1.0
+        },
+        {
+          "word": "communication",
+          "start": 7.539999961853027,
+          "end": 8.020000457763672,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "coffee and donuts or basically what I tell junior engineers but in a five minute version",
+      "start": 9.039999961853027,
+      "end": 13.920000076293945,
+      "words": [
+        {
+          "word": "coffee",
+          "start": 9.039999961853027,
+          "end": 9.039999961853027,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 9.039999961853027,
+          "end": 9.199999809265137,
+          "confidence": 1.0
+        },
+        {
+          "word": "donuts",
+          "start": 9.199999809265137,
+          "end": 9.479999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "or",
+          "start": 9.619999885559082,
+          "end": 9.760000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "basically",
+          "start": 9.760000228881836,
+          "end": 10.119999885559082,
+          "confidence": 1.0
+        },
+        {
+          "word": "what",
+          "start": 10.119999885559082,
+          "end": 10.319999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 10.319999694824219,
+          "end": 10.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "tell",
+          "start": 10.5,
+          "end": 11.260000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "junior",
+          "start": 11.260000228881836,
+          "end": 12.199999809265137,
+          "confidence": 1.0
+        },
+        {
+          "word": "engineers",
+          "start": 12.199999809265137,
+          "end": 12.640000343322754,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 12.779999732971191,
+          "end": 12.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 12.920000076293945,
+          "end": 13.0600004196167,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 13.0600004196167,
+          "end": 13.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "five",
+          "start": 13.15999984741211,
+          "end": 13.420000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "minute",
+          "start": 13.420000076293945,
+          "end": 13.5600004196167,
+          "confidence": 1.0
+        },
+        {
+          "word": "version",
+          "start": 13.5600004196167,
+          "end": 13.920000076293945,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So this is how we're often sold on CICD It's a magical conveyor belt You have your pipeline",
+      "start": 14.479999542236328,
+      "end": 20.219999313354492,
+      "words": [
+        {
+          "word": "So",
+          "start": 14.479999542236328,
+          "end": 14.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 14.979999542236328,
+          "end": 15.319999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 15.319999694824219,
+          "end": 15.479999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "how",
+          "start": 15.479999542236328,
+          "end": 15.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "we're",
+          "start": 15.5,
+          "end": 15.600000381469727,
+          "confidence": 1.0
+        },
+        {
+          "word": "often",
+          "start": 15.600000381469727,
+          "end": 16.059999465942383,
+          "confidence": 1.0
+        },
+        {
+          "word": "sold",
+          "start": 16.059999465942383,
+          "end": 16.399999618530273,
+          "confidence": 1.0
+        },
+        {
+          "word": "on",
+          "start": 16.399999618530273,
+          "end": 16.940000534057617,
+          "confidence": 1.0
+        },
+        {
+          "word": "CICD",
+          "start": 16.940000534057617,
+          "end": 17.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 17.440000534057617,
+          "end": 17.700000762939453,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 17.700000762939453,
+          "end": 18.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "magical",
+          "start": 18.0,
+          "end": 18.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "conveyor",
+          "start": 18.31999969482422,
+          "end": 18.719999313354492,
+          "confidence": 1.0
+        },
+        {
+          "word": "belt",
+          "start": 18.719999313354492,
+          "end": 19.059999465942383,
+          "confidence": 1.0
+        },
+        {
+          "word": "You",
+          "start": 19.3799991607666,
+          "end": 19.739999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 19.739999771118164,
+          "end": 19.739999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 19.739999771118164,
+          "end": 19.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "pipeline",
+          "start": 19.979999542236328,
+          "end": 20.219999313354492,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "you commit your code everything's magic except not really right We've got problems",
+      "start": 20.440000534057617,
+      "end": 26.719999313354492,
+      "words": [
+        {
+          "word": "you",
+          "start": 20.440000534057617,
+          "end": 20.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "commit",
+          "start": 20.68000030517578,
+          "end": 20.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 20.68000030517578,
+          "end": 20.860000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "code",
+          "start": 20.860000610351562,
+          "end": 21.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "everything's",
+          "start": 21.299999237060547,
+          "end": 21.700000762939453,
+          "confidence": 1.0
+        },
+        {
+          "word": "magic",
+          "start": 21.700000762939453,
+          "end": 22.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "except",
+          "start": 22.34000015258789,
+          "end": 22.84000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 22.84000015258789,
+          "end": 23.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "really",
+          "start": 23.979999542236328,
+          "end": 24.280000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "right",
+          "start": 24.31999969482422,
+          "end": 24.739999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "We've",
+          "start": 24.81999969482422,
+          "end": 25.399999618530273,
+          "confidence": 1.0
+        },
+        {
+          "word": "got",
+          "start": 25.399999618530273,
+          "end": 25.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "problems",
+          "start": 25.920000076293945,
+          "end": 26.719999313354492,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "like this You want to do a deploy but you can't because you're waiting for someone",
+      "start": 26.719999313354492,
+      "end": 30.299999237060547,
+      "words": [
+        {
+          "word": "like",
+          "start": 26.719999313354492,
+          "end": 26.84000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 26.84000015258789,
+          "end": 27.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "You",
+          "start": 27.280000686645508,
+          "end": 27.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "want",
+          "start": 27.31999969482422,
+          "end": 27.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 27.5,
+          "end": 27.600000381469727,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 27.600000381469727,
+          "end": 27.760000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 27.760000228881836,
+          "end": 27.860000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "deploy",
+          "start": 27.860000610351562,
+          "end": 28.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 28.739999771118164,
+          "end": 28.84000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 28.84000015258789,
+          "end": 29.040000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "can't",
+          "start": 29.040000915527344,
+          "end": 29.280000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 29.280000686645508,
+          "end": 29.440000534057617,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 29.440000534057617,
+          "end": 29.559999465942383,
+          "confidence": 1.0
+        },
+        {
+          "word": "waiting",
+          "start": 29.559999465942383,
+          "end": 29.719999313354492,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 29.719999313354492,
+          "end": 30.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "someone",
+          "start": 30.0,
+          "end": 30.299999237060547,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "or someone sneaks in a last minute PR Or maybe you do deploy and it breaks production",
+      "start": 30.8799991607666,
+      "end": 36.459999084472656,
+      "words": [
+        {
+          "word": "or",
+          "start": 30.8799991607666,
+          "end": 31.260000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "someone",
+          "start": 31.260000228881836,
+          "end": 31.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "sneaks",
+          "start": 31.65999984741211,
+          "end": 31.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 31.920000076293945,
+          "end": 32.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 32.08000183105469,
+          "end": 32.20000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "last",
+          "start": 32.20000076293945,
+          "end": 32.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "minute",
+          "start": 32.5,
+          "end": 32.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "PR",
+          "start": 32.599998474121094,
+          "end": 32.959999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "Or",
+          "start": 33.81999969482422,
+          "end": 34.060001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "maybe",
+          "start": 34.060001373291016,
+          "end": 34.400001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 34.400001525878906,
+          "end": 34.900001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 34.900001525878906,
+          "end": 35.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "deploy",
+          "start": 35.02000045776367,
+          "end": 35.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 35.36000061035156,
+          "end": 35.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 35.65999984741211,
+          "end": 36.040000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "breaks",
+          "start": 36.040000915527344,
+          "end": 36.040000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "production",
+          "start": 36.040000915527344,
+          "end": 36.459999084472656,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And I'd argue none of these are technical problems It's a problem coming from inside",
+      "start": 37.220001220703125,
+      "end": 42.84000015258789,
+      "words": [
+        {
+          "word": "And",
+          "start": 37.220001220703125,
+          "end": 37.560001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'd",
+          "start": 37.560001373291016,
+          "end": 38.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "argue",
+          "start": 38.08000183105469,
+          "end": 38.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "none",
+          "start": 38.08000183105469,
+          "end": 38.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 38.36000061035156,
+          "end": 38.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "these",
+          "start": 38.5,
+          "end": 38.720001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 38.720001220703125,
+          "end": 39.400001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "technical",
+          "start": 39.400001525878906,
+          "end": 39.900001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "problems",
+          "start": 39.900001525878906,
+          "end": 40.279998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 40.47999954223633,
+          "end": 40.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 40.70000076293945,
+          "end": 41.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "problem",
+          "start": 41.18000030517578,
+          "end": 41.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "coming",
+          "start": 41.18000030517578,
+          "end": 41.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "from",
+          "start": 41.5,
+          "end": 42.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "inside",
+          "start": 42.36000061035156,
+          "end": 42.84000015258789,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "of the organization Tools are not going to fix broken communication right It's about",
+      "start": 42.84000015258789,
+      "end": 50.099998474121094,
+      "words": [
+        {
+          "word": "of",
+          "start": 42.84000015258789,
+          "end": 43.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 43.0,
+          "end": 43.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "organization",
+          "start": 43.08000183105469,
+          "end": 43.540000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "Tools",
+          "start": 44.70000076293945,
+          "end": 44.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 44.70000076293945,
+          "end": 45.29999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 45.29999923706055,
+          "end": 45.52000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "going",
+          "start": 45.52000045776367,
+          "end": 45.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 45.65999984741211,
+          "end": 45.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "fix",
+          "start": 45.91999816894531,
+          "end": 46.060001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "broken",
+          "start": 46.060001373291016,
+          "end": 46.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "communication",
+          "start": 46.619998931884766,
+          "end": 47.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "right",
+          "start": 47.2599983215332,
+          "end": 47.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 48.7400016784668,
+          "end": 49.34000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 49.34000015258789,
+          "end": 50.099998474121094,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "silence It's tools can automate flow but it's culture that determines if flow actually works",
+      "start": 50.099998474121094,
+      "end": 57.540000915527344,
+      "words": [
+        {
+          "word": "silence",
+          "start": 50.099998474121094,
+          "end": 50.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 52.36000061035156,
+          "end": 52.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "tools",
+          "start": 52.599998474121094,
+          "end": 53.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 53.65999984741211,
+          "end": 53.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "automate",
+          "start": 53.86000061035156,
+          "end": 54.119998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "flow",
+          "start": 54.119998931884766,
+          "end": 54.560001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 54.720001220703125,
+          "end": 54.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 54.81999969482422,
+          "end": 55.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "culture",
+          "start": 55.02000045776367,
+          "end": 55.29999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 55.29999923706055,
+          "end": 55.959999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "determines",
+          "start": 55.959999084472656,
+          "end": 55.959999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 55.959999084472656,
+          "end": 56.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "flow",
+          "start": 56.70000076293945,
+          "end": 56.79999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 56.79999923706055,
+          "end": 57.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "works",
+          "start": 57.13999938964844,
+          "end": 57.540000915527344,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Communication has to be continuous too Otherwise in the end you'll stall your",
+      "start": 58.58000183105469,
+      "end": 62.47999954223633,
+      "words": [
+        {
+          "word": "Communication",
+          "start": 58.58000183105469,
+          "end": 58.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "has",
+          "start": 58.599998474121094,
+          "end": 58.880001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 58.880001068115234,
+          "end": 59.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 59.02000045776367,
+          "end": 59.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "continuous",
+          "start": 59.15999984741211,
+          "end": 59.560001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "too",
+          "start": 59.900001525878906,
+          "end": 60.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "Otherwise",
+          "start": 60.599998474121094,
+          "end": 60.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 61.060001373291016,
+          "end": 61.20000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 61.20000076293945,
+          "end": 61.2599983215332,
+          "confidence": 1.0
+        },
+        {
+          "word": "end",
+          "start": 61.2599983215332,
+          "end": 61.380001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "you'll",
+          "start": 61.47999954223633,
+          "end": 61.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "stall",
+          "start": 61.65999984741211,
+          "end": 61.880001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 61.880001068115234,
+          "end": 62.47999954223633,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And you see this with the best performing teams They're highly visible They have high",
+      "start": 62.91999816894531,
+      "end": 71.68000030517578,
+      "words": [
+        {
+          "word": "And",
+          "start": 62.91999816894531,
+          "end": 63.540000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 63.540000915527344,
+          "end": 63.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "see",
+          "start": 63.619998931884766,
+          "end": 63.779998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 63.779998779296875,
+          "end": 64.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 64.22000122070312,
+          "end": 64.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 64.81999969482422,
+          "end": 65.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "best",
+          "start": 65.26000213623047,
+          "end": 65.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "performing",
+          "start": 65.55999755859375,
+          "end": 65.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "teams",
+          "start": 65.91999816894531,
+          "end": 66.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "They're",
+          "start": 68.68000030517578,
+          "end": 69.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "highly",
+          "start": 69.33999633789062,
+          "end": 69.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "visible",
+          "start": 69.62000274658203,
+          "end": 70.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "They",
+          "start": 70.77999877929688,
+          "end": 70.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 70.95999908447266,
+          "end": 71.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "high",
+          "start": 71.27999877929688,
+          "end": 71.68000030517578,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "communication And you see this from the Dora report Dora Institute report for instance",
+      "start": 71.68000030517578,
+      "end": 78.83999633789062,
+      "words": [
+        {
+          "word": "communication",
+          "start": 71.68000030517578,
+          "end": 72.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 72.41999816894531,
+          "end": 72.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 72.55999755859375,
+          "end": 73.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "see",
+          "start": 73.13999938964844,
+          "end": 73.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 73.27999877929688,
+          "end": 73.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "from",
+          "start": 73.5999984741211,
+          "end": 74.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 74.5999984741211,
+          "end": 76.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "Dora",
+          "start": 76.0,
+          "end": 76.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "report",
+          "start": 76.0,
+          "end": 76.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "Dora",
+          "start": 77.23999786376953,
+          "end": 77.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "Institute",
+          "start": 77.44000244140625,
+          "end": 77.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "report",
+          "start": 77.77999877929688,
+          "end": 78.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 78.27999877929688,
+          "end": 78.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "instance",
+          "start": 78.62000274658203,
+          "end": 78.83999633789062,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Those teams with high collaboration they recover faster but also they fail less often",
+      "start": 78.83999633789062,
+      "end": 83.91999816894531,
+      "words": [
+        {
+          "word": "Those",
+          "start": 78.83999633789062,
+          "end": 79.0199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "teams",
+          "start": 79.0199966430664,
+          "end": 79.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 79.69999694824219,
+          "end": 79.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "high",
+          "start": 79.86000061035156,
+          "end": 80.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "collaboration",
+          "start": 80.05999755859375,
+          "end": 80.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 80.81999969482422,
+          "end": 81.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "recover",
+          "start": 81.0,
+          "end": 81.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "faster",
+          "start": 81.31999969482422,
+          "end": 81.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 81.9000015258789,
+          "end": 81.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "also",
+          "start": 81.95999908447266,
+          "end": 82.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 82.26000213623047,
+          "end": 82.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "fail",
+          "start": 82.63999938964844,
+          "end": 82.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "less",
+          "start": 82.87999725341797,
+          "end": 83.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "often",
+          "start": 83.69999694824219,
+          "end": 83.91999816894531,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And they do this by baking in conversation Chat ops highly visible reviews They catch",
+      "start": 84.19999694824219,
+      "end": 92.5999984741211,
+      "words": [
+        {
+          "word": "And",
+          "start": 84.19999694824219,
+          "end": 84.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 84.36000061035156,
+          "end": 84.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 84.5,
+          "end": 84.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 84.72000122070312,
+          "end": 85.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "by",
+          "start": 85.08000183105469,
+          "end": 86.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "baking",
+          "start": 86.18000030517578,
+          "end": 86.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 86.5999984741211,
+          "end": 86.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "conversation",
+          "start": 86.83999633789062,
+          "end": 87.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "Chat",
+          "start": 88.86000061035156,
+          "end": 88.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "ops",
+          "start": 88.95999908447266,
+          "end": 89.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "highly",
+          "start": 89.86000061035156,
+          "end": 90.12000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "visible",
+          "start": 90.12000274658203,
+          "end": 90.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "reviews",
+          "start": 90.5,
+          "end": 91.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "They",
+          "start": 91.81999969482422,
+          "end": 92.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "catch",
+          "start": 92.37999725341797,
+          "end": 92.5999984741211,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "problems early They do all the things that you learn about in Agile or in DevOps but it",
+      "start": 92.5999984741211,
+      "end": 97.27999877929688,
+      "words": [
+        {
+          "word": "problems",
+          "start": 92.5999984741211,
+          "end": 92.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "early",
+          "start": 92.91999816894531,
+          "end": 93.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "They",
+          "start": 93.22000122070312,
+          "end": 93.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 93.30000305175781,
+          "end": 93.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 93.45999908447266,
+          "end": 93.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 93.72000122070312,
+          "end": 93.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "things",
+          "start": 93.95999908447266,
+          "end": 94.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 94.08000183105469,
+          "end": 94.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 94.55999755859375,
+          "end": 94.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "learn",
+          "start": 94.68000030517578,
+          "end": 94.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 94.87999725341797,
+          "end": 95.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 95.13999938964844,
+          "end": 95.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "Agile",
+          "start": 95.4800033569336,
+          "end": 95.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "or",
+          "start": 95.68000030517578,
+          "end": 96.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 96.19999694824219,
+          "end": 96.4000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "DevOps",
+          "start": 96.4000015258789,
+          "end": 96.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 96.76000213623047,
+          "end": 96.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 96.86000061035156,
+          "end": 97.27999877929688,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "matters for a reason Because if you don't you get drift And drift isn't about laziness It's about Slack",
+      "start": 97.27999877929688,
+      "end": 105.94000244140625,
+      "words": [
+        {
+          "word": "matters",
+          "start": 97.27999877929688,
+          "end": 97.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 97.27999877929688,
+          "end": 97.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 97.4800033569336,
+          "end": 97.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "reason",
+          "start": 97.86000061035156,
+          "end": 97.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "Because",
+          "start": 98.13999938964844,
+          "end": 98.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 98.5999984741211,
+          "end": 98.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 98.72000122070312,
+          "end": 98.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 98.87999725341797,
+          "end": 99.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 99.68000030517578,
+          "end": 99.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "get",
+          "start": 99.68000030517578,
+          "end": 99.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "drift",
+          "start": 99.87999725341797,
+          "end": 100.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 101.69999694824219,
+          "end": 102.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "drift",
+          "start": 102.26000213623047,
+          "end": 102.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "isn't",
+          "start": 102.26000213623047,
+          "end": 102.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 102.54000091552734,
+          "end": 103.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "laziness",
+          "start": 103.0,
+          "end": 103.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 104.0,
+          "end": 104.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 104.55999755859375,
+          "end": 105.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "Slack",
+          "start": 105.45999908447266,
+          "end": 105.94000244140625,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "going quiet during deploys It's about people saying stuff like this Oh no that's",
+      "start": 105.94000244140625,
+      "end": 112.18000030517578,
+      "words": [
+        {
+          "word": "going",
+          "start": 105.94000244140625,
+          "end": 106.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "quiet",
+          "start": 106.37999725341797,
+          "end": 106.73999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "during",
+          "start": 106.73999786376953,
+          "end": 107.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "deploys",
+          "start": 107.0,
+          "end": 107.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 108.23999786376953,
+          "end": 108.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 108.69999694824219,
+          "end": 109.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "people",
+          "start": 109.13999938964844,
+          "end": 109.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "saying",
+          "start": 109.45999908447266,
+          "end": 109.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "stuff",
+          "start": 109.94000244140625,
+          "end": 110.23999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 110.23999786376953,
+          "end": 110.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 110.5,
+          "end": 110.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "Oh",
+          "start": 111.5999984741211,
+          "end": 111.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "no",
+          "start": 111.86000061035156,
+          "end": 112.12000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 112.12000274658203,
+          "end": 112.44000244140625,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "fails in staging but it's fine in prod That doesn't happen But yeah if you say this",
+      "start": 112.76000213623047,
+      "end": 117.5999984741211,
+      "words": [
+        {
+          "word": "fails",
+          "start": 112.76000213623047,
+          "end": 113.4000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 113.4000015258789,
+          "end": 113.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "staging",
+          "start": 113.5999984741211,
+          "end": 113.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 113.9000015258789,
+          "end": 114.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 114.0,
+          "end": 114.12000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "fine",
+          "start": 114.12000274658203,
+          "end": 114.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 114.27999877929688,
+          "end": 114.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "prod",
+          "start": 114.55999755859375,
+          "end": 114.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "That",
+          "start": 114.58000183105469,
+          "end": 114.80000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "doesn't",
+          "start": 114.80000305175781,
+          "end": 115.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "happen",
+          "start": 115.08000183105469,
+          "end": 115.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "But",
+          "start": 115.68000030517578,
+          "end": 116.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "yeah",
+          "start": 116.36000061035156,
+          "end": 116.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 116.5199966430664,
+          "end": 116.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 116.91999816894531,
+          "end": 117.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "say",
+          "start": 117.08000183105469,
+          "end": 117.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 117.31999969482422,
+          "end": 117.5999984741211,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "you normalize bad behavior If you see this happening you should inspect your pipeline",
+      "start": 117.83999633789062,
+      "end": 123.81999969482422,
+      "words": [
+        {
+          "word": "you",
+          "start": 117.83999633789062,
+          "end": 118.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "normalize",
+          "start": 118.4800033569336,
+          "end": 119.12000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "bad",
+          "start": 119.12000274658203,
+          "end": 119.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "behavior",
+          "start": 119.81999969482422,
+          "end": 120.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "If",
+          "start": 120.73999786376953,
+          "end": 121.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 121.37999725341797,
+          "end": 121.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "see",
+          "start": 121.91999816894531,
+          "end": 122.04000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 122.04000091552734,
+          "end": 122.23999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "happening",
+          "start": 122.23999786376953,
+          "end": 122.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 122.5999984741211,
+          "end": 122.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "should",
+          "start": 122.72000122070312,
+          "end": 122.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "inspect",
+          "start": 122.9800033569336,
+          "end": 123.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 123.19999694824219,
+          "end": 123.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "pipeline",
+          "start": 123.5,
+          "end": 123.81999969482422,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "If you run into problems like this I'd argue that's a bad pattern if you hear this in a",
+      "start": 124.44000244140625,
+      "end": 135.9199981689453,
+      "words": [
+        {
+          "word": "If",
+          "start": 124.44000244140625,
+          "end": 124.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 124.5999984741211,
+          "end": 125.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "run",
+          "start": 125.0,
+          "end": 125.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "into",
+          "start": 125.54000091552734,
+          "end": 125.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "problems",
+          "start": 125.91999816894531,
+          "end": 126.76000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 126.76000213623047,
+          "end": 127.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 127.13999938964844,
+          "end": 127.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'd",
+          "start": 128.17999267578125,
+          "end": 129.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "argue",
+          "start": 129.36000061035156,
+          "end": 129.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 129.36000061035156,
+          "end": 129.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 129.6999969482422,
+          "end": 129.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "bad",
+          "start": 129.82000732421875,
+          "end": 130.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "pattern",
+          "start": 130.02000427246094,
+          "end": 130.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 130.36000061035156,
+          "end": 130.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 130.97999572753906,
+          "end": 131.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "hear",
+          "start": 131.24000549316406,
+          "end": 131.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 131.67999267578125,
+          "end": 132.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 132.0,
+          "end": 132.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 132.8000030517578,
+          "end": 135.9199981689453,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Drift is people saying bad code instead of why didn't the pipeline catch this It's when language",
+      "start": 135.9199981689453,
+      "end": 143.22000122070312,
+      "words": [
+        {
+          "word": "Drift",
+          "start": 135.9199981689453,
+          "end": 136.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 136.3800048828125,
+          "end": 137.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "people",
+          "start": 137.0399932861328,
+          "end": 137.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "saying",
+          "start": 137.82000732421875,
+          "end": 138.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "bad",
+          "start": 138.24000549316406,
+          "end": 138.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "code",
+          "start": 138.8000030517578,
+          "end": 139.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "instead",
+          "start": 139.1999969482422,
+          "end": 139.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 139.5800018310547,
+          "end": 139.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "why",
+          "start": 139.97999572753906,
+          "end": 140.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "didn't",
+          "start": 140.5,
+          "end": 140.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 140.6199951171875,
+          "end": 140.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "pipeline",
+          "start": 140.89999389648438,
+          "end": 141.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "catch",
+          "start": 141.0,
+          "end": 141.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 141.25999450683594,
+          "end": 141.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 142.1999969482422,
+          "end": 142.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "when",
+          "start": 142.5800018310547,
+          "end": 142.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "language",
+          "start": 142.83999633789062,
+          "end": 143.22000122070312,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "shifts It's basically when things or people get blamed And we don't fix this by blame",
+      "start": 143.22000122070312,
+      "end": 149.94000244140625,
+      "words": [
+        {
+          "word": "shifts",
+          "start": 143.22000122070312,
+          "end": 143.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 144.1999969482422,
+          "end": 144.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "basically",
+          "start": 144.63999938964844,
+          "end": 145.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "when",
+          "start": 145.3800048828125,
+          "end": 145.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "things",
+          "start": 145.94000244140625,
+          "end": 146.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "or",
+          "start": 146.36000061035156,
+          "end": 146.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "people",
+          "start": 146.5800018310547,
+          "end": 146.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "get",
+          "start": 146.75999450683594,
+          "end": 147.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "blamed",
+          "start": 147.02000427246094,
+          "end": 147.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 148.10000610351562,
+          "end": 148.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 148.55999755859375,
+          "end": 148.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 148.67999267578125,
+          "end": 148.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "fix",
+          "start": 148.8800048828125,
+          "end": 149.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 149.10000610351562,
+          "end": 149.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "by",
+          "start": 149.33999633789062,
+          "end": 149.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "blame",
+          "start": 149.6199951171875,
+          "end": 149.94000244140625,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "but we fix this by feedback Like Mr Miyagi teaches in the Karate Kid",
+      "start": 150.1999969482422,
+      "end": 154.6199951171875,
+      "words": [
+        {
+          "word": "but",
+          "start": 150.1999969482422,
+          "end": 150.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 150.86000061035156,
+          "end": 151.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "fix",
+          "start": 151.1199951171875,
+          "end": 151.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 151.16000366210938,
+          "end": 151.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "by",
+          "start": 151.32000732421875,
+          "end": 151.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "feedback",
+          "start": 151.94000244140625,
+          "end": 151.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "Like",
+          "start": 152.36000061035156,
+          "end": 152.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "Mr",
+          "start": 152.8000030517578,
+          "end": 153.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "Miyagi",
+          "start": 153.05999755859375,
+          "end": 153.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "teaches",
+          "start": 153.33999633789062,
+          "end": 153.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 153.77999877929688,
+          "end": 154.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 154.05999755859375,
+          "end": 154.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "Karate",
+          "start": 154.27999877929688,
+          "end": 154.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "Kid",
+          "start": 154.27999877929688,
+          "end": 154.6199951171875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "you need continuous feedback Feedback repetition matters Feedback repeated often",
+      "start": 156.05999755859375,
+      "end": 161.1199951171875,
+      "words": [
+        {
+          "word": "you",
+          "start": 156.05999755859375,
+          "end": 156.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "need",
+          "start": 156.32000732421875,
+          "end": 156.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "continuous",
+          "start": 156.39999389648438,
+          "end": 156.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "feedback",
+          "start": 156.83999633789062,
+          "end": 157.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "Feedback",
+          "start": 157.9600067138672,
+          "end": 157.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "repetition",
+          "start": 157.9600067138672,
+          "end": 159.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "matters",
+          "start": 159.05999755859375,
+          "end": 159.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "Feedback",
+          "start": 159.9600067138672,
+          "end": 159.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "repeated",
+          "start": 159.9600067138672,
+          "end": 160.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "often",
+          "start": 160.4199981689453,
+          "end": 161.1199951171875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "practice into confidence and turns confidence into resilience",
+      "start": 162.0800018310547,
+      "end": 165.9600067138672,
+      "words": [
+        {
+          "word": "practice",
+          "start": 162.36000061035156,
+          "end": 163.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "into",
+          "start": 163.05999755859375,
+          "end": 163.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "confidence",
+          "start": 163.39999389648438,
+          "end": 164.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 164.02000427246094,
+          "end": 164.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "turns",
+          "start": 164.3000030517578,
+          "end": 164.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "confidence",
+          "start": 164.60000610351562,
+          "end": 165.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "into",
+          "start": 165.0800018310547,
+          "end": 165.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "resilience",
+          "start": 165.4600067138672,
+          "end": 165.9600067138672,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Observability that's kind of part of that You do a successful deploy and there's silence Does",
+      "start": 168.9199981689453,
+      "end": 175.82000732421875,
+      "words": [
+        {
+          "word": "Observability",
+          "start": 168.9199981689453,
+          "end": 169.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 170.0800018310547,
+          "end": 170.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "kind",
+          "start": 170.5800018310547,
+          "end": 170.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 170.94000244140625,
+          "end": 171.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "part",
+          "start": 171.02000427246094,
+          "end": 171.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 171.16000366210938,
+          "end": 171.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 171.27999877929688,
+          "end": 171.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "You",
+          "start": 171.77999877929688,
+          "end": 171.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 171.97999572753906,
+          "end": 172.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 172.13999938964844,
+          "end": 172.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "successful",
+          "start": 172.72000122070312,
+          "end": 172.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "deploy",
+          "start": 172.72000122070312,
+          "end": 173.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 173.16000366210938,
+          "end": 174.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "there's",
+          "start": 174.5399932861328,
+          "end": 175.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "silence",
+          "start": 175.22000122070312,
+          "end": 175.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "Does",
+          "start": 175.72000122070312,
+          "end": 175.82000732421875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "that mean it's stable or does that mean it's invisible You need more than just a thumbs up",
+      "start": 175.82000732421875,
+      "end": 180.63999938964844,
+      "words": [
+        {
+          "word": "that",
+          "start": 175.82000732421875,
+          "end": 176.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "mean",
+          "start": 176.05999755859375,
+          "end": 176.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 176.1199951171875,
+          "end": 176.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "stable",
+          "start": 176.27999877929688,
+          "end": 176.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "or",
+          "start": 176.60000610351562,
+          "end": 176.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "does",
+          "start": 176.89999389648438,
+          "end": 177.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 177.05999755859375,
+          "end": 177.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "mean",
+          "start": 177.36000061035156,
+          "end": 177.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 177.4600067138672,
+          "end": 177.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "invisible",
+          "start": 177.67999267578125,
+          "end": 177.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "You",
+          "start": 178.27999877929688,
+          "end": 178.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "need",
+          "start": 178.67999267578125,
+          "end": 178.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "more",
+          "start": 178.83999633789062,
+          "end": 179.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "than",
+          "start": 179.0800018310547,
+          "end": 179.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 179.5,
+          "end": 180.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 180.16000366210938,
+          "end": 180.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "thumbs",
+          "start": 180.4199981689453,
+          "end": 180.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 180.47999572753906,
+          "end": 180.63999938964844,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "You need active feedback Another bad anti pattern I want to mention quickly is this guy",
+      "start": 180.67999267578125,
+      "end": 188.3800048828125,
+      "words": [
+        {
+          "word": "You",
+          "start": 180.67999267578125,
+          "end": 180.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "need",
+          "start": 180.75999450683594,
+          "end": 180.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "active",
+          "start": 180.89999389648438,
+          "end": 181.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "feedback",
+          "start": 181.25999450683594,
+          "end": 181.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "Another",
+          "start": 182.82000732421875,
+          "end": 183.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "bad",
+          "start": 183.3000030517578,
+          "end": 184.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "anti",
+          "start": 184.4199981689453,
+          "end": 184.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "pattern",
+          "start": 184.75999450683594,
+          "end": 184.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 184.86000061035156,
+          "end": 185.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "want",
+          "start": 185.1199951171875,
+          "end": 185.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 185.22000122070312,
+          "end": 185.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "mention",
+          "start": 185.72000122070312,
+          "end": 185.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "quickly",
+          "start": 185.72000122070312,
+          "end": 186.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 186.24000549316406,
+          "end": 187.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 187.89999389648438,
+          "end": 188.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "guy",
+          "start": 188.13999938964844,
+          "end": 188.3800048828125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Maybe nobody owns the pipeline This guy shows up in the end at some point and he always will",
+      "start": 190.44000244140625,
+      "end": 195.77999877929688,
+      "words": [
+        {
+          "word": "Maybe",
+          "start": 190.44000244140625,
+          "end": 190.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "nobody",
+          "start": 190.94000244140625,
+          "end": 191.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "owns",
+          "start": 191.44000244140625,
+          "end": 191.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 191.66000366210938,
+          "end": 192.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "pipeline",
+          "start": 192.1999969482422,
+          "end": 192.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "This",
+          "start": 192.60000610351562,
+          "end": 192.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "guy",
+          "start": 192.74000549316406,
+          "end": 192.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "shows",
+          "start": 192.9600067138672,
+          "end": 193.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 193.1999969482422,
+          "end": 193.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 193.39999389648438,
+          "end": 193.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 193.5399932861328,
+          "end": 193.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "end",
+          "start": 193.63999938964844,
+          "end": 193.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "at",
+          "start": 193.8800048828125,
+          "end": 194.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "some",
+          "start": 194.3800048828125,
+          "end": 194.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "point",
+          "start": 194.75999450683594,
+          "end": 194.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 194.8800048828125,
+          "end": 195.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "he",
+          "start": 195.05999755859375,
+          "end": 195.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "always",
+          "start": 195.24000549316406,
+          "end": 195.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "will",
+          "start": 195.4199981689453,
+          "end": 195.77999877929688,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Because management thinks someone needs to sign off And you get ceremony and you don't have",
+      "start": 196.0800018310547,
+      "end": 200.8000030517578,
+      "words": [
+        {
+          "word": "Because",
+          "start": 196.0800018310547,
+          "end": 196.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "management",
+          "start": 196.32000732421875,
+          "end": 196.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "thinks",
+          "start": 196.60000610351562,
+          "end": 197.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "someone",
+          "start": 197.0800018310547,
+          "end": 197.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "needs",
+          "start": 197.5800018310547,
+          "end": 197.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 197.77999877929688,
+          "end": 198.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "sign",
+          "start": 198.1199951171875,
+          "end": 198.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "off",
+          "start": 198.1199951171875,
+          "end": 198.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 198.97999572753906,
+          "end": 199.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 199.16000366210938,
+          "end": 199.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "get",
+          "start": 199.16000366210938,
+          "end": 199.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "ceremony",
+          "start": 199.33999633789062,
+          "end": 199.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 199.8000030517578,
+          "end": 200.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 200.02000427246094,
+          "end": 200.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 200.16000366210938,
+          "end": 200.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 200.24000549316406,
+          "end": 200.8000030517578,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "accountability So watch out for him And don't get me wrong on blamelessness It doesn't mean",
+      "start": 200.94000244140625,
+      "end": 206.33999633789062,
+      "words": [
+        {
+          "word": "accountability",
+          "start": 200.94000244140625,
+          "end": 201.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 202.0399932861328,
+          "end": 202.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "watch",
+          "start": 202.1999969482422,
+          "end": 202.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "out",
+          "start": 202.3800048828125,
+          "end": 202.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 202.5800018310547,
+          "end": 203.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "him",
+          "start": 203.16000366210938,
+          "end": 203.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 203.82000732421875,
+          "end": 204.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 204.32000732421875,
+          "end": 204.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "get",
+          "start": 204.5,
+          "end": 204.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 204.63999938964844,
+          "end": 204.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "wrong",
+          "start": 204.9600067138672,
+          "end": 204.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "on",
+          "start": 204.9600067138672,
+          "end": 205.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "blamelessness",
+          "start": 205.3000030517578,
+          "end": 205.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "It",
+          "start": 205.9199981689453,
+          "end": 206.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "doesn't",
+          "start": 206.05999755859375,
+          "end": 206.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "mean",
+          "start": 206.17999267578125,
+          "end": 206.33999633789062,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "it's soft We still do postmortems We still do all the things to inspect the",
+      "start": 206.33999633789062,
+      "end": 212.33999633789062,
+      "words": [
+        {
+          "word": "it's",
+          "start": 206.33999633789062,
+          "end": 206.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "soft",
+          "start": 206.5800018310547,
+          "end": 206.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "We",
+          "start": 206.9199981689453,
+          "end": 207.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "still",
+          "start": 207.02000427246094,
+          "end": 207.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 207.25999450683594,
+          "end": 208.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "postmortems",
+          "start": 208.02000427246094,
+          "end": 208.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "We",
+          "start": 209.3800048828125,
+          "end": 209.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "still",
+          "start": 209.6199951171875,
+          "end": 209.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 209.89999389648438,
+          "end": 210.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 210.24000549316406,
+          "end": 210.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 210.5399932861328,
+          "end": 210.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "things",
+          "start": 210.82000732421875,
+          "end": 210.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 210.83999633789062,
+          "end": 211.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "inspect",
+          "start": 211.33999633789062,
+          "end": 211.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 211.60000610351562,
+          "end": 212.33999633789062,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "pipeline to inspect production to make sure there's resilience",
+      "start": 212.33999633789062,
+      "end": 215.3000030517578,
+      "words": [
+        {
+          "word": "pipeline",
+          "start": 212.33999633789062,
+          "end": 212.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 212.33999633789062,
+          "end": 212.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "inspect",
+          "start": 212.33999633789062,
+          "end": 213.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "production",
+          "start": 213.39999389648438,
+          "end": 213.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 214.1999969482422,
+          "end": 214.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "make",
+          "start": 214.32000732421875,
+          "end": 214.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "sure",
+          "start": 214.47999572753906,
+          "end": 214.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "there's",
+          "start": 214.63999938964844,
+          "end": 214.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "resilience",
+          "start": 214.8800048828125,
+          "end": 215.3000030517578,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "We all know tech depth slows you down Culture depth does the exact same thing Every time you",
+      "start": 217.5399932861328,
+      "end": 222.0800018310547,
+      "words": [
+        {
+          "word": "We",
+          "start": 217.5399932861328,
+          "end": 217.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 217.89999389648438,
+          "end": 218.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "know",
+          "start": 218.17999267578125,
+          "end": 218.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "tech",
+          "start": 218.39999389648438,
+          "end": 218.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "depth",
+          "start": 218.67999267578125,
+          "end": 218.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "slows",
+          "start": 218.89999389648438,
+          "end": 219.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 219.1199951171875,
+          "end": 219.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "down",
+          "start": 219.4600067138672,
+          "end": 219.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "Culture",
+          "start": 219.83999633789062,
+          "end": 219.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "depth",
+          "start": 219.9600067138672,
+          "end": 220.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "does",
+          "start": 220.17999267578125,
+          "end": 220.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 220.4199981689453,
+          "end": 220.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "exact",
+          "start": 220.55999755859375,
+          "end": 220.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "same",
+          "start": 220.83999633789062,
+          "end": 221.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "thing",
+          "start": 221.1199951171875,
+          "end": 221.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "Every",
+          "start": 221.4199981689453,
+          "end": 221.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "time",
+          "start": 221.67999267578125,
+          "end": 221.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 221.86000061035156,
+          "end": 222.0800018310547,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "allow for drift for ceremony or silence you're building culture depth Because in the end",
+      "start": 222.5,
+      "end": 229.05999755859375,
+      "words": [
+        {
+          "word": "allow",
+          "start": 222.5,
+          "end": 222.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 222.97999572753906,
+          "end": 223.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "drift",
+          "start": 223.4600067138672,
+          "end": 223.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 224.1199951171875,
+          "end": 224.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "ceremony",
+          "start": 224.74000549316406,
+          "end": 224.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "or",
+          "start": 224.97999572753906,
+          "end": 225.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "silence",
+          "start": 225.24000549316406,
+          "end": 225.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 225.77999877929688,
+          "end": 226.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "building",
+          "start": 226.22000122070312,
+          "end": 226.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "culture",
+          "start": 226.27999877929688,
+          "end": 226.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "depth",
+          "start": 226.6199951171875,
+          "end": 226.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "Because",
+          "start": 228.1999969482422,
+          "end": 228.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 228.60000610351562,
+          "end": 228.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 228.67999267578125,
+          "end": 228.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "end",
+          "start": 228.8800048828125,
+          "end": 229.05999755859375,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "what matters is whether your team can recover learn adapt And culture shows up in those",
+      "start": 229.32000732421875,
+      "end": 235.0,
+      "words": [
+        {
+          "word": "what",
+          "start": 229.32000732421875,
+          "end": 229.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "matters",
+          "start": 229.8000030517578,
+          "end": 229.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 229.8000030517578,
+          "end": 230.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "whether",
+          "start": 230.0800018310547,
+          "end": 230.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 230.25999450683594,
+          "end": 230.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "team",
+          "start": 230.47999572753906,
+          "end": 230.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 230.60000610351562,
+          "end": 230.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "recover",
+          "start": 230.97999572753906,
+          "end": 231.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "learn",
+          "start": 232.02000427246094,
+          "end": 232.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "adapt",
+          "start": 233.0800018310547,
+          "end": 233.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 233.52000427246094,
+          "end": 234.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "culture",
+          "start": 234.0,
+          "end": 234.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "shows",
+          "start": 234.05999755859375,
+          "end": 234.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 234.39999389648438,
+          "end": 234.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 234.63999938964844,
+          "end": 234.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "those",
+          "start": 234.77999877929688,
+          "end": 235.0,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "metrics It shows up in recovery time lead time and visibility There's a reason for the four",
+      "start": 235.0,
+      "end": 242.32000732421875,
+      "words": [
+        {
+          "word": "metrics",
+          "start": 235.0,
+          "end": 235.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "It",
+          "start": 235.36000061035156,
+          "end": 235.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "shows",
+          "start": 235.5,
+          "end": 235.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 235.66000366210938,
+          "end": 235.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 235.86000061035156,
+          "end": 236.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "recovery",
+          "start": 236.0800018310547,
+          "end": 236.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "time",
+          "start": 236.32000732421875,
+          "end": 236.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "lead",
+          "start": 237.3000030517578,
+          "end": 237.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "time",
+          "start": 237.44000244140625,
+          "end": 237.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 237.67999267578125,
+          "end": 237.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "visibility",
+          "start": 237.82000732421875,
+          "end": 238.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "There's",
+          "start": 238.3800048828125,
+          "end": 238.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 238.63999938964844,
+          "end": 238.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "reason",
+          "start": 238.77999877929688,
+          "end": 239.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 239.17999267578125,
+          "end": 240.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 240.36000061035156,
+          "end": 240.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "four",
+          "start": 240.8800048828125,
+          "end": 242.32000732421875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "measure flow in the end So yeah this is where we started out with the perfect conveyor belt",
+      "start": 242.32000732421875,
+      "end": 249.16000366210938,
+      "words": [
+        {
+          "word": "measure",
+          "start": 242.32000732421875,
+          "end": 243.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "flow",
+          "start": 243.0399932861328,
+          "end": 243.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 243.36000061035156,
+          "end": 243.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 243.6199951171875,
+          "end": 243.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "end",
+          "start": 243.6199951171875,
+          "end": 243.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 246.0399932861328,
+          "end": 246.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "yeah",
+          "start": 246.5800018310547,
+          "end": 246.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 246.8000030517578,
+          "end": 247.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 247.0,
+          "end": 247.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "where",
+          "start": 247.13999938964844,
+          "end": 247.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 247.24000549316406,
+          "end": 247.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "started",
+          "start": 247.4199981689453,
+          "end": 247.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "out",
+          "start": 247.60000610351562,
+          "end": 247.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 247.94000244140625,
+          "end": 248.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 248.16000366210938,
+          "end": 248.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "perfect",
+          "start": 248.27999877929688,
+          "end": 248.52000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "conveyor",
+          "start": 248.52000427246094,
+          "end": 248.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "belt",
+          "start": 248.83999633789062,
+          "end": 249.16000366210938,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Except you know frosting gets spilled the belt breaks we send in engineers",
+      "start": 250.05999755859375,
+      "end": 254.9199981689453,
+      "words": [
+        {
+          "word": "Except",
+          "start": 250.05999755859375,
+          "end": 250.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 250.55999755859375,
+          "end": 250.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "know",
+          "start": 250.86000061035156,
+          "end": 251.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "frosting",
+          "start": 251.4199981689453,
+          "end": 251.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "gets",
+          "start": 251.72000122070312,
+          "end": 252.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "spilled",
+          "start": 252.0800018310547,
+          "end": 252.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 252.6199951171875,
+          "end": 252.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "belt",
+          "start": 252.83999633789062,
+          "end": 252.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "breaks",
+          "start": 252.83999633789062,
+          "end": 253.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 254.0800018310547,
+          "end": 254.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "send",
+          "start": 254.39999389648438,
+          "end": 254.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 254.4199981689453,
+          "end": 254.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "engineers",
+          "start": 254.67999267578125,
+          "end": 254.9199981689453,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "they talk about the problem they fix the problem And that whole thing is what ships in the end",
+      "start": 255.16000366210938,
+      "end": 259.29998779296875,
+      "words": [
+        {
+          "word": "they",
+          "start": 255.16000366210938,
+          "end": 255.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "talk",
+          "start": 255.36000061035156,
+          "end": 255.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 255.5399932861328,
+          "end": 255.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 255.75999450683594,
+          "end": 256.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "problem",
+          "start": 256.05999755859375,
+          "end": 256.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 256.1000061035156,
+          "end": 256.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "fix",
+          "start": 256.3800048828125,
+          "end": 256.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 256.3800048828125,
+          "end": 256.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "problem",
+          "start": 256.8800048828125,
+          "end": 256.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 257.0199890136719,
+          "end": 257.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 257.5,
+          "end": 257.70001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "whole",
+          "start": 257.70001220703125,
+          "end": 258.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "thing",
+          "start": 258.0,
+          "end": 258.29998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 258.29998779296875,
+          "end": 258.6000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "what",
+          "start": 258.6000061035156,
+          "end": 258.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "ships",
+          "start": 258.8599853515625,
+          "end": 259.0199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 259.0199890136719,
+          "end": 259.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 259.17999267578125,
+          "end": 259.2799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "end",
+          "start": 259.2799987792969,
+          "end": 259.29998779296875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "not just code Because like Homer Simpson knows donuts are not just fuel they're feedback",
+      "start": 259.3999938964844,
+      "end": 266.0199890136719,
+      "words": [
+        {
+          "word": "not",
+          "start": 259.3999938964844,
+          "end": 259.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 259.5799865722656,
+          "end": 259.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "code",
+          "start": 259.8999938964844,
+          "end": 260.2200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "Because",
+          "start": 261.4599914550781,
+          "end": 261.9800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 261.9800109863281,
+          "end": 262.2799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "Homer",
+          "start": 262.2799987792969,
+          "end": 262.4800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "Simpson",
+          "start": 262.4800109863281,
+          "end": 262.7200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "knows",
+          "start": 262.7200012207031,
+          "end": 263.2799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "donuts",
+          "start": 264.29998779296875,
+          "end": 264.29998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 264.29998779296875,
+          "end": 264.4800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 264.4800109863281,
+          "end": 264.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 264.6199951171875,
+          "end": 264.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "fuel",
+          "start": 264.8599853515625,
+          "end": 265.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "they're",
+          "start": 265.44000244140625,
+          "end": 265.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "feedback",
+          "start": 265.6199951171875,
+          "end": 266.0199890136719,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Thank you",
+      "start": 266.0199890136719,
+      "end": 267.2799987792969,
+      "words": [
+        {
+          "word": "Thank",
+          "start": 266.0199890136719,
+          "end": 266.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 266.9599914550781,
+          "end": 267.2799987792969,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    }
+  ],
+  "language": "en",
+  "duration": 284.305125,
+  "provider": "whisper_api",
+  "model": "whisper-1",
+  "timestamp": "2026-01-09T23:53:38.295032",
+  "cost_usd": 0.028430512499999994,
+  "vocabulary_corrections": 0
+}

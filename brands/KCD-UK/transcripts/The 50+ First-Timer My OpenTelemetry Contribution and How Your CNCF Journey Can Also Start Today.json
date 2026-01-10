@@ -1,0 +1,5981 @@
+{
+  "video_path": "C:\\Users\\chris\\Dropbox\\Scripts\\clip-video\\brands\\KCD-UK\\videos\\The 50+ First-Timer My OpenTelemetry Contribution and How Your CNCF Journey Can Also Start Today.mp4",
+  "text": "This is a presentation about how I got to contribute to CNCF projects I'm more than 50 years old so I never thought it would be something I could do at this age and I'd like to share that with you maybe inspire you to do the same So really quick I'll explain a little bit about my journey my learnings while starting my and share how you can contribute as well So people who know me one of the weirdest things about me is I grew up in a farmhouse with more than 40 cats and no electricity so that's a fun fact about me How a person like that ended up being an OpenTelemetry member I don't know but it happened So if it's happened it can happen to everyone I also as a fun fact I was at a dance boarding school when I was growing up That's maybe why I thought women can do engineering because all my teachers were women so math teacher chemistry everyone And my first coding class was when I was 10 years old and I went with my brother because of course he was the one studying coding but I liked it so I decided to go to university and get an engineering degree My work has been always on insurance and banking and we used open source but we never contributed to it so I never thought I would But like in 2018 I was lucky that I joined Elastic and then Grafana and this is where I actually get hey these companies contribute to open source we have open source projects so maybe it's possible to do that I started volunteering first as a community organiser with Software Crafters Barcelona but I also wanted to give back and for me contribute to open source was let's do some pull requests let's do something that's on GitHub and it's a contribution This year I started with open telemetry and I was very bold and said hey I'm going to go to the Kubernetes operator and just help with that But it didn't work very well for me I think it was better to start with something easier for me less technical probably and I decided because I had to read the open telemetry documentation why not translate into Spanish That's something that the team is doing It helps the documentation being accessible to everyone and it was easy to contribute I had found a great great community there especially Carol Valencia She immediately asked to have a meeting with me and we connected so she's helped me a lot She shared with me some instructions very detailed on how to do my first contribution and that helped me a lot I felt very confident that I could do it and I could always ask her to help me with any questions Just a month after that this team they actually offered me to become a member I didn't expect that and they reached out to me and said hey you're doing great I was doing just one pull request every week small pull request I tried to follow their instructions not do big pull requests just small things learn from them and iterate That's how I became a member but thanks to them because they are great sponsors But I realized I was already contributing to OpenTelemetry to the community because I was already organizing events learnings here is join the right project for you listen to contributors read the contributions be realistic be consistent they will appreciate that There's all sorts of contributions not just organizing a conference it's contributing to open source If you can work for a company that supports OSF that's great and remember to have fun How you can contribute This is I will leave the slides for you but this is important There's technical contributions and there's non code contributions so like project documentation is one of those You don't have to actually contribute to one of the 200 projects technically you can but you don't have to it's a good contribution as well If you want to join the cloud native community these are the different ways you can I do the mentorship program if you feel like you're not ready there is a mentorship program it's meant for everyone even if you're 50 that's good Where is help needed There is this URL that's very useful if you don't know it you can find issues that are looking for help There is a label with first time issues so that's the one you can actually take to contribute Another thing that's happening this month of October is the October 1st it's a good way to contribute and there is a resources for beginners that's actually very good as well And takeaways from this talk it's never too late or too early to contribute Find a project you like because then it's when you stick to it Not all contributions are cold there's all types of contributions start small be realistic be consistent seek companies who support OSS if you can and don't wait start and have fun And for you to take away if you're I don't know who has not yet contributed to open source here raise your hand not many people For you and for other contributors think of what project you would like to contribute next and start doing it And that's it thank you",
+  "segments": [
+    {
+      "text": "This is a presentation about how I got to contribute to CNCF projects I'm more than",
+      "start": 3.359999895095825,
+      "end": 9.140000343322754,
+      "words": [
+        {
+          "word": "This",
+          "start": 3.359999895095825,
+          "end": 3.880000114440918,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 3.880000114440918,
+          "end": 4.059999942779541,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 4.059999942779541,
+          "end": 4.079999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "presentation",
+          "start": 4.079999923706055,
+          "end": 4.539999961853027,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 4.539999961853027,
+          "end": 5.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "how",
+          "start": 5.0,
+          "end": 5.340000152587891,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 5.340000152587891,
+          "end": 5.840000152587891,
+          "confidence": 1.0
+        },
+        {
+          "word": "got",
+          "start": 5.840000152587891,
+          "end": 6.059999942779541,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 6.059999942779541,
+          "end": 6.460000038146973,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 6.460000038146973,
+          "end": 6.559999942779541,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 6.559999942779541,
+          "end": 7.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "CNCF",
+          "start": 7.0,
+          "end": 7.480000019073486,
+          "confidence": 1.0
+        },
+        {
+          "word": "projects",
+          "start": 7.480000019073486,
+          "end": 7.940000057220459,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'm",
+          "start": 8.380000114440918,
+          "end": 8.5600004196167,
+          "confidence": 1.0
+        },
+        {
+          "word": "more",
+          "start": 8.5600004196167,
+          "end": 8.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "than",
+          "start": 8.979999542236328,
+          "end": 9.140000343322754,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "50 years old so I never thought it would be something I could do at this age and I'd",
+      "start": 9.140000343322754,
+      "end": 14.020000457763672,
+      "words": [
+        {
+          "word": "50",
+          "start": 9.140000343322754,
+          "end": 9.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "years",
+          "start": 9.5,
+          "end": 9.699999809265137,
+          "confidence": 1.0
+        },
+        {
+          "word": "old",
+          "start": 9.699999809265137,
+          "end": 9.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 9.9399995803833,
+          "end": 10.100000381469727,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 10.100000381469727,
+          "end": 10.260000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "never",
+          "start": 10.260000228881836,
+          "end": 10.399999618530273,
+          "confidence": 1.0
+        },
+        {
+          "word": "thought",
+          "start": 10.399999618530273,
+          "end": 10.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 10.65999984741211,
+          "end": 10.859999656677246,
+          "confidence": 1.0
+        },
+        {
+          "word": "would",
+          "start": 10.859999656677246,
+          "end": 10.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 10.979999542236328,
+          "end": 11.880000114440918,
+          "confidence": 1.0
+        },
+        {
+          "word": "something",
+          "start": 11.880000114440918,
+          "end": 12.180000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 12.180000305175781,
+          "end": 12.359999656677246,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 12.359999656677246,
+          "end": 12.479999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 12.479999542236328,
+          "end": 12.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "at",
+          "start": 12.65999984741211,
+          "end": 13.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 13.0,
+          "end": 13.140000343322754,
+          "confidence": 1.0
+        },
+        {
+          "word": "age",
+          "start": 13.140000343322754,
+          "end": 13.399999618530273,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 13.399999618530273,
+          "end": 13.640000343322754,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'd",
+          "start": 13.640000343322754,
+          "end": 14.020000457763672,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "like to share that with you maybe inspire you to do the same So really quick I'll",
+      "start": 14.420000076293945,
+      "end": 20.0,
+      "words": [
+        {
+          "word": "like",
+          "start": 14.420000076293945,
+          "end": 14.9399995803833,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 14.9399995803833,
+          "end": 15.460000038146973,
+          "confidence": 1.0
+        },
+        {
+          "word": "share",
+          "start": 15.460000038146973,
+          "end": 15.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 15.5,
+          "end": 15.720000267028809,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 15.720000267028809,
+          "end": 15.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 15.920000076293945,
+          "end": 16.1200008392334,
+          "confidence": 1.0
+        },
+        {
+          "word": "maybe",
+          "start": 16.200000762939453,
+          "end": 16.399999618530273,
+          "confidence": 1.0
+        },
+        {
+          "word": "inspire",
+          "start": 16.399999618530273,
+          "end": 16.719999313354492,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 16.719999313354492,
+          "end": 16.899999618530273,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 16.899999618530273,
+          "end": 17.020000457763672,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 17.020000457763672,
+          "end": 17.139999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 17.139999389648438,
+          "end": 17.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "same",
+          "start": 17.5,
+          "end": 17.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 18.360000610351562,
+          "end": 18.780000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "really",
+          "start": 18.84000015258789,
+          "end": 19.239999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "quick",
+          "start": 19.239999771118164,
+          "end": 19.6200008392334,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'll",
+          "start": 19.700000762939453,
+          "end": 20.0,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "explain a little bit about my journey my learnings while starting my",
+      "start": 20.0,
+      "end": 24.579999923706055,
+      "words": [
+        {
+          "word": "explain",
+          "start": 20.0,
+          "end": 20.239999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 20.239999771118164,
+          "end": 20.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "little",
+          "start": 20.5,
+          "end": 20.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "bit",
+          "start": 20.5,
+          "end": 20.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 20.65999984741211,
+          "end": 20.780000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "my",
+          "start": 20.780000686645508,
+          "end": 21.079999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "journey",
+          "start": 21.079999923706055,
+          "end": 21.34000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "my",
+          "start": 21.940000534057617,
+          "end": 22.540000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "learnings",
+          "start": 22.540000915527344,
+          "end": 23.200000762939453,
+          "confidence": 1.0
+        },
+        {
+          "word": "while",
+          "start": 23.200000762939453,
+          "end": 23.459999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "starting",
+          "start": 23.459999084472656,
+          "end": 23.84000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "my",
+          "start": 23.84000015258789,
+          "end": 24.579999923706055,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "and share how you can contribute as well So people who know me one of the weirdest",
+      "start": 25.040000915527344,
+      "end": 30.520000457763672,
+      "words": [
+        {
+          "word": "and",
+          "start": 25.040000915527344,
+          "end": 25.479999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "share",
+          "start": 25.479999542236328,
+          "end": 25.780000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "how",
+          "start": 25.780000686645508,
+          "end": 26.020000457763672,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 26.020000457763672,
+          "end": 26.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 26.18000030517578,
+          "end": 26.399999618530273,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 26.399999618530273,
+          "end": 26.719999313354492,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 26.719999313354492,
+          "end": 26.959999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "well",
+          "start": 26.959999084472656,
+          "end": 27.520000457763672,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 28.700000762939453,
+          "end": 28.700000762939453,
+          "confidence": 1.0
+        },
+        {
+          "word": "people",
+          "start": 28.700000762939453,
+          "end": 28.959999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "who",
+          "start": 28.959999084472656,
+          "end": 29.260000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "know",
+          "start": 29.260000228881836,
+          "end": 29.420000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 29.420000076293945,
+          "end": 29.6200008392334,
+          "confidence": 1.0
+        },
+        {
+          "word": "one",
+          "start": 29.739999771118164,
+          "end": 29.739999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 29.739999771118164,
+          "end": 29.8799991607666,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 29.8799991607666,
+          "end": 30.34000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "weirdest",
+          "start": 30.34000015258789,
+          "end": 30.520000457763672,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "things about me is I grew up in a farmhouse with more than 40 cats and no electricity",
+      "start": 30.520000457763672,
+      "end": 35.63999938964844,
+      "words": [
+        {
+          "word": "things",
+          "start": 30.520000457763672,
+          "end": 30.719999313354492,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 30.719999313354492,
+          "end": 30.940000534057617,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 30.940000534057617,
+          "end": 31.139999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 31.139999389648438,
+          "end": 31.299999237060547,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 31.299999237060547,
+          "end": 31.579999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "grew",
+          "start": 31.579999923706055,
+          "end": 31.780000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 31.780000686645508,
+          "end": 31.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 31.979999542236328,
+          "end": 32.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 32.91999816894531,
+          "end": 33.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "farmhouse",
+          "start": 33.08000183105469,
+          "end": 33.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 33.58000183105469,
+          "end": 33.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "more",
+          "start": 33.81999969482422,
+          "end": 34.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "than",
+          "start": 34.0,
+          "end": 34.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "40",
+          "start": 34.15999984741211,
+          "end": 34.47999954223633,
+          "confidence": 1.0
+        },
+        {
+          "word": "cats",
+          "start": 34.47999954223633,
+          "end": 34.84000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 34.84000015258789,
+          "end": 35.060001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "no",
+          "start": 35.060001373291016,
+          "end": 35.2599983215332,
+          "confidence": 1.0
+        },
+        {
+          "word": "electricity",
+          "start": 35.2599983215332,
+          "end": 35.63999938964844,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "so that's a fun fact about me How a person like that ended up being an OpenTelemetry",
+      "start": 35.86000061035156,
+      "end": 40.41999816894531,
+      "words": [
+        {
+          "word": "so",
+          "start": 35.86000061035156,
+          "end": 36.040000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 36.040000915527344,
+          "end": 36.2400016784668,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 36.2400016784668,
+          "end": 36.439998626708984,
+          "confidence": 1.0
+        },
+        {
+          "word": "fun",
+          "start": 36.439998626708984,
+          "end": 36.560001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "fact",
+          "start": 36.560001373291016,
+          "end": 36.79999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "about",
+          "start": 36.79999923706055,
+          "end": 37.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 37.08000183105469,
+          "end": 37.439998626708984,
+          "confidence": 1.0
+        },
+        {
+          "word": "How",
+          "start": 37.7599983215332,
+          "end": 38.20000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 38.20000076293945,
+          "end": 38.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "person",
+          "start": 38.41999816894531,
+          "end": 38.560001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 38.560001373291016,
+          "end": 38.779998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 38.779998779296875,
+          "end": 39.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "ended",
+          "start": 39.02000045776367,
+          "end": 39.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 39.18000030517578,
+          "end": 39.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "being",
+          "start": 39.41999816894531,
+          "end": 39.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "an",
+          "start": 39.619998931884766,
+          "end": 39.779998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "OpenTelemetry",
+          "start": 39.779998779296875,
+          "end": 40.41999816894531,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "member I don't know but it happened So if it's happened it can happen to everyone",
+      "start": 40.70000076293945,
+      "end": 45.41999816894531,
+      "words": [
+        {
+          "word": "member",
+          "start": 40.70000076293945,
+          "end": 41.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 41.13999938964844,
+          "end": 41.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 41.58000183105469,
+          "end": 41.720001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "know",
+          "start": 41.720001220703125,
+          "end": 41.939998626708984,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 41.959999084472656,
+          "end": 42.220001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 42.220001220703125,
+          "end": 42.34000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "happened",
+          "start": 42.34000015258789,
+          "end": 42.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 43.279998779296875,
+          "end": 43.720001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 43.720001220703125,
+          "end": 43.880001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 43.880001068115234,
+          "end": 43.97999954223633,
+          "confidence": 1.0
+        },
+        {
+          "word": "happened",
+          "start": 43.97999954223633,
+          "end": 44.220001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 44.31999969482422,
+          "end": 44.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 44.41999816894531,
+          "end": 44.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "happen",
+          "start": 44.70000076293945,
+          "end": 44.7599983215332,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 44.7599983215332,
+          "end": 45.060001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "everyone",
+          "start": 45.060001373291016,
+          "end": 45.41999816894531,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "I also as a fun fact I was at a dance boarding school when I was growing up That's maybe",
+      "start": 46.02000045776367,
+      "end": 52.040000915527344,
+      "words": [
+        {
+          "word": "I",
+          "start": 46.02000045776367,
+          "end": 46.459999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "also",
+          "start": 46.459999084472656,
+          "end": 46.7400016784668,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 46.84000015258789,
+          "end": 47.040000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 47.040000915527344,
+          "end": 47.040000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "fun",
+          "start": 47.040000915527344,
+          "end": 47.220001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "fact",
+          "start": 47.220001220703125,
+          "end": 47.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 47.41999816894531,
+          "end": 47.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 47.619998931884766,
+          "end": 47.900001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "at",
+          "start": 47.900001525878906,
+          "end": 48.540000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 48.540000915527344,
+          "end": 48.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "dance",
+          "start": 48.65999984741211,
+          "end": 48.900001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "boarding",
+          "start": 48.900001525878906,
+          "end": 49.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "school",
+          "start": 49.15999984741211,
+          "end": 49.540000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "when",
+          "start": 49.540000915527344,
+          "end": 50.119998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 50.119998931884766,
+          "end": 50.2599983215332,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 50.2599983215332,
+          "end": 50.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "growing",
+          "start": 50.65999984741211,
+          "end": 50.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 50.65999984741211,
+          "end": 51.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "That's",
+          "start": 51.380001068115234,
+          "end": 51.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "maybe",
+          "start": 51.81999969482422,
+          "end": 52.040000915527344,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "why I thought women can do engineering because all my teachers were women so math teacher",
+      "start": 52.040000915527344,
+      "end": 56.68000030517578,
+      "words": [
+        {
+          "word": "why",
+          "start": 52.040000915527344,
+          "end": 52.279998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 52.279998779296875,
+          "end": 52.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "thought",
+          "start": 52.41999816894531,
+          "end": 52.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "women",
+          "start": 52.619998931884766,
+          "end": 52.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 52.86000061035156,
+          "end": 53.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 53.13999938964844,
+          "end": 53.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "engineering",
+          "start": 53.41999816894531,
+          "end": 53.720001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 54.060001373291016,
+          "end": 54.099998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 54.099998474121094,
+          "end": 54.439998626708984,
+          "confidence": 1.0
+        },
+        {
+          "word": "my",
+          "start": 54.439998626708984,
+          "end": 54.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "teachers",
+          "start": 54.619998931884766,
+          "end": 54.79999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "were",
+          "start": 54.79999923706055,
+          "end": 55.040000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "women",
+          "start": 55.040000915527344,
+          "end": 55.279998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 55.5,
+          "end": 56.29999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "math",
+          "start": 56.29999923706055,
+          "end": 56.459999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "teacher",
+          "start": 56.459999084472656,
+          "end": 56.68000030517578,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "chemistry everyone And my first coding class was when I was 10 years old and I went with",
+      "start": 57.220001220703125,
+      "end": 62.880001068115234,
+      "words": [
+        {
+          "word": "chemistry",
+          "start": 57.220001220703125,
+          "end": 57.220001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "everyone",
+          "start": 57.279998779296875,
+          "end": 57.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "And",
+          "start": 58.47999954223633,
+          "end": 58.900001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "my",
+          "start": 58.900001525878906,
+          "end": 59.400001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "first",
+          "start": 59.400001525878906,
+          "end": 59.97999954223633,
+          "confidence": 1.0
+        },
+        {
+          "word": "coding",
+          "start": 59.97999954223633,
+          "end": 60.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "class",
+          "start": 60.15999984741211,
+          "end": 60.400001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 60.400001525878906,
+          "end": 60.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "when",
+          "start": 60.599998474121094,
+          "end": 60.7400016784668,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 60.7400016784668,
+          "end": 60.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 60.86000061035156,
+          "end": 61.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "10",
+          "start": 61.02000045776367,
+          "end": 61.279998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "years",
+          "start": 61.279998779296875,
+          "end": 61.459999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "old",
+          "start": 61.459999084472656,
+          "end": 61.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 61.86000061035156,
+          "end": 62.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 62.02000045776367,
+          "end": 62.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "went",
+          "start": 62.619998931884766,
+          "end": 62.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 62.68000030517578,
+          "end": 62.880001068115234,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "my brother because of course he was the one studying coding but I liked it so I decided",
+      "start": 62.939998626708984,
+      "end": 67.30000305175781,
+      "words": [
+        {
+          "word": "my",
+          "start": 62.939998626708984,
+          "end": 63.380001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "brother",
+          "start": 63.380001068115234,
+          "end": 63.380001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 63.459999084472656,
+          "end": 63.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 63.68000030517578,
+          "end": 64.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "course",
+          "start": 64.08000183105469,
+          "end": 64.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "he",
+          "start": 64.08000183105469,
+          "end": 64.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 64.26000213623047,
+          "end": 64.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 64.41999816894531,
+          "end": 64.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "one",
+          "start": 64.58000183105469,
+          "end": 64.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "studying",
+          "start": 64.77999877929688,
+          "end": 65.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "coding",
+          "start": 65.0999984741211,
+          "end": 65.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 65.44000244140625,
+          "end": 65.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 65.66000366210938,
+          "end": 65.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "liked",
+          "start": 65.91999816894531,
+          "end": 66.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 66.05999755859375,
+          "end": 66.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 66.27999877929688,
+          "end": 66.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 66.5,
+          "end": 67.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "decided",
+          "start": 67.08000183105469,
+          "end": 67.30000305175781,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "to go to university and get an engineering degree My work has been always on insurance",
+      "start": 67.30000305175781,
+      "end": 72.62000274658203,
+      "words": [
+        {
+          "word": "to",
+          "start": 67.30000305175781,
+          "end": 67.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "go",
+          "start": 67.5199966430664,
+          "end": 67.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 67.63999938964844,
+          "end": 68.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "university",
+          "start": 68.18000030517578,
+          "end": 68.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 68.18000030517578,
+          "end": 68.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "get",
+          "start": 68.36000061035156,
+          "end": 68.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "an",
+          "start": 68.4800033569336,
+          "end": 68.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "engineering",
+          "start": 68.9800033569336,
+          "end": 68.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "degree",
+          "start": 68.9800033569336,
+          "end": 69.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "My",
+          "start": 70.86000061035156,
+          "end": 71.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "work",
+          "start": 71.30000305175781,
+          "end": 71.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "has",
+          "start": 71.45999908447266,
+          "end": 71.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "been",
+          "start": 71.63999938964844,
+          "end": 71.76000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "always",
+          "start": 71.76000213623047,
+          "end": 72.12000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "on",
+          "start": 72.12000274658203,
+          "end": 72.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "insurance",
+          "start": 72.36000061035156,
+          "end": 72.62000274658203,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "and banking and we used open source but we never contributed to it so I never thought",
+      "start": 72.73999786376953,
+      "end": 77.66000366210938,
+      "words": [
+        {
+          "word": "and",
+          "start": 72.73999786376953,
+          "end": 73.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "banking",
+          "start": 73.18000030517578,
+          "end": 73.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 73.23999786376953,
+          "end": 73.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 73.41999816894531,
+          "end": 73.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "used",
+          "start": 73.66000366210938,
+          "end": 73.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 73.87999725341797,
+          "end": 74.23999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "source",
+          "start": 74.23999786376953,
+          "end": 74.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 74.54000091552734,
+          "end": 74.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 74.69999694824219,
+          "end": 74.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "never",
+          "start": 74.87999725341797,
+          "end": 75.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributed",
+          "start": 75.13999938964844,
+          "end": 75.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 75.62000274658203,
+          "end": 75.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 75.94000244140625,
+          "end": 76.4000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 76.4000015258789,
+          "end": 76.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 76.87999725341797,
+          "end": 77.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "never",
+          "start": 77.18000030517578,
+          "end": 77.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "thought",
+          "start": 77.37999725341797,
+          "end": 77.66000366210938,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "I would But like in 2018 I was lucky that I joined Elastic and then Grafana and",
+      "start": 77.66000366210938,
+      "end": 84.55999755859375,
+      "words": [
+        {
+          "word": "I",
+          "start": 77.66000366210938,
+          "end": 77.9000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "would",
+          "start": 77.9000015258789,
+          "end": 78.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "But",
+          "start": 79.31999969482422,
+          "end": 79.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 79.54000091552734,
+          "end": 79.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 80.23999786376953,
+          "end": 80.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "2018",
+          "start": 80.5199966430664,
+          "end": 81.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 81.44000244140625,
+          "end": 81.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 81.5199966430664,
+          "end": 81.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "lucky",
+          "start": 81.72000122070312,
+          "end": 81.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 81.94000244140625,
+          "end": 82.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 82.13999938964844,
+          "end": 82.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "joined",
+          "start": 82.33999633789062,
+          "end": 82.4000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "Elastic",
+          "start": 82.4000015258789,
+          "end": 82.80000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 82.80000305175781,
+          "end": 83.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 83.05999755859375,
+          "end": 83.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "Grafana",
+          "start": 83.5999984741211,
+          "end": 83.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 84.13999938964844,
+          "end": 84.55999755859375,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "this is where I actually get hey these companies contribute to open source we have open source",
+      "start": 84.55999755859375,
+      "end": 89.13999938964844,
+      "words": [
+        {
+          "word": "this",
+          "start": 84.55999755859375,
+          "end": 84.73999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 84.73999786376953,
+          "end": 84.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "where",
+          "start": 84.86000061035156,
+          "end": 84.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 84.95999908447266,
+          "end": 85.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 85.05999755859375,
+          "end": 85.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "get",
+          "start": 85.5199966430664,
+          "end": 85.80000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "hey",
+          "start": 86.4800033569336,
+          "end": 86.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "these",
+          "start": 86.4800033569336,
+          "end": 87.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "companies",
+          "start": 87.13999938964844,
+          "end": 87.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 87.13999938964844,
+          "end": 87.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 87.54000091552734,
+          "end": 88.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 88.0,
+          "end": 88.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "source",
+          "start": 88.0,
+          "end": 88.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 88.26000213623047,
+          "end": 88.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 88.45999908447266,
+          "end": 88.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 88.68000030517578,
+          "end": 89.04000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "source",
+          "start": 89.04000091552734,
+          "end": 89.13999938964844,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "projects so maybe it's possible to do that I started volunteering first as a community",
+      "start": 89.36000061035156,
+      "end": 94.19999694824219,
+      "words": [
+        {
+          "word": "projects",
+          "start": 89.36000061035156,
+          "end": 89.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 89.87999725341797,
+          "end": 90.4000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "maybe",
+          "start": 90.4000015258789,
+          "end": 90.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 90.58000183105469,
+          "end": 90.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "possible",
+          "start": 90.83999633789062,
+          "end": 91.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 91.0999984741211,
+          "end": 91.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 91.33999633789062,
+          "end": 91.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 91.62000274658203,
+          "end": 91.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 92.23999786376953,
+          "end": 92.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "started",
+          "start": 92.4800033569336,
+          "end": 92.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "volunteering",
+          "start": 92.83999633789062,
+          "end": 93.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "first",
+          "start": 93.22000122070312,
+          "end": 93.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 93.58000183105469,
+          "end": 93.76000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 93.76000213623047,
+          "end": 93.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "community",
+          "start": 93.86000061035156,
+          "end": 94.19999694824219,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "organiser with Software Crafters Barcelona but I also wanted to give back and for me",
+      "start": 94.68000030517578,
+      "end": 99.95999908447266,
+      "words": [
+        {
+          "word": "organiser",
+          "start": 94.68000030517578,
+          "end": 95.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 95.19999694824219,
+          "end": 95.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "Software",
+          "start": 95.72000122070312,
+          "end": 96.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "Crafters",
+          "start": 96.0,
+          "end": 96.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "Barcelona",
+          "start": 96.4800033569336,
+          "end": 96.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 97.4800033569336,
+          "end": 97.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 97.86000061035156,
+          "end": 98.0199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "also",
+          "start": 98.0199966430664,
+          "end": 98.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "wanted",
+          "start": 98.27999877929688,
+          "end": 98.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 98.5,
+          "end": 98.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "give",
+          "start": 98.68000030517578,
+          "end": 98.9000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "back",
+          "start": 98.9000015258789,
+          "end": 99.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 99.23999786376953,
+          "end": 99.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 99.26000213623047,
+          "end": 99.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 99.44000244140625,
+          "end": 99.95999908447266,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "contribute to open source was let's do some pull requests let's do something that's on",
+      "start": 99.95999908447266,
+      "end": 103.62000274658203,
+      "words": [
+        {
+          "word": "contribute",
+          "start": 99.95999908447266,
+          "end": 100.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 100.31999969482422,
+          "end": 100.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 100.5,
+          "end": 100.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "source",
+          "start": 100.77999877929688,
+          "end": 100.9000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 100.9000015258789,
+          "end": 101.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "let's",
+          "start": 101.19999694824219,
+          "end": 101.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 101.55999755859375,
+          "end": 101.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "some",
+          "start": 101.69999694824219,
+          "end": 101.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "pull",
+          "start": 101.91999816894531,
+          "end": 102.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "requests",
+          "start": 102.05999755859375,
+          "end": 102.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "let's",
+          "start": 102.41999816894531,
+          "end": 102.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 102.63999938964844,
+          "end": 102.80000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "something",
+          "start": 102.80000305175781,
+          "end": 103.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 103.18000030517578,
+          "end": 103.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "on",
+          "start": 103.54000091552734,
+          "end": 103.80000305175781,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "GitHub and it's a contribution This year I started with open telemetry and I was very",
+      "start": 103.80000305175781,
+      "end": 111.12000274658203,
+      "words": [
+        {
+          "word": "GitHub",
+          "start": 103.80000305175781,
+          "end": 104.12000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 104.22000122070312,
+          "end": 104.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 104.27999877929688,
+          "end": 105.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 105.0999984741211,
+          "end": 105.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribution",
+          "start": 105.41999816894531,
+          "end": 105.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "This",
+          "start": 107.77999877929688,
+          "end": 108.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "year",
+          "start": 108.30000305175781,
+          "end": 108.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 108.54000091552734,
+          "end": 108.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "started",
+          "start": 108.68000030517578,
+          "end": 108.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 108.95999908447266,
+          "end": 109.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 109.26000213623047,
+          "end": 109.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "telemetry",
+          "start": 109.5,
+          "end": 109.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 110.13999938964844,
+          "end": 110.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 110.31999969482422,
+          "end": 110.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 110.41999816894531,
+          "end": 110.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "very",
+          "start": 110.5999984741211,
+          "end": 111.12000274658203,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "bold and said hey I'm going to go to the Kubernetes operator and just help with that",
+      "start": 111.12000274658203,
+      "end": 115.0,
+      "words": [
+        {
+          "word": "bold",
+          "start": 111.12000274658203,
+          "end": 111.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 111.19999694824219,
+          "end": 111.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "said",
+          "start": 111.36000061035156,
+          "end": 111.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "hey",
+          "start": 111.5999984741211,
+          "end": 111.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'm",
+          "start": 111.68000030517578,
+          "end": 111.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "going",
+          "start": 111.83999633789062,
+          "end": 111.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 111.87999725341797,
+          "end": 112.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "go",
+          "start": 112.16000366210938,
+          "end": 112.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 112.16000366210938,
+          "end": 112.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 112.5,
+          "end": 112.76000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "Kubernetes",
+          "start": 112.76000213623047,
+          "end": 112.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "operator",
+          "start": 112.87999725341797,
+          "end": 113.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 113.36000061035156,
+          "end": 113.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 113.62000274658203,
+          "end": 114.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "help",
+          "start": 114.05999755859375,
+          "end": 114.4000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 114.4000015258789,
+          "end": 114.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 114.55999755859375,
+          "end": 115.0,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "But it didn't work very well for me I think it was better to start with something easier",
+      "start": 115.0999984741211,
+      "end": 120.77999877929688,
+      "words": [
+        {
+          "word": "But",
+          "start": 115.0999984741211,
+          "end": 115.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 115.62000274658203,
+          "end": 115.73999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "didn't",
+          "start": 115.73999786376953,
+          "end": 115.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "work",
+          "start": 115.91999816894531,
+          "end": 116.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "very",
+          "start": 116.05999755859375,
+          "end": 116.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "well",
+          "start": 116.36000061035156,
+          "end": 116.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 116.66000366210938,
+          "end": 117.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 117.30000305175781,
+          "end": 117.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 118.04000091552734,
+          "end": 118.23999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "think",
+          "start": 118.23999786376953,
+          "end": 118.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 118.4800033569336,
+          "end": 119.04000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 119.04000091552734,
+          "end": 119.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "better",
+          "start": 119.18000030517578,
+          "end": 119.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 119.44000244140625,
+          "end": 119.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 119.69999694824219,
+          "end": 119.76000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 119.76000213623047,
+          "end": 119.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "something",
+          "start": 119.9800033569336,
+          "end": 120.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "easier",
+          "start": 120.36000061035156,
+          "end": 120.77999877929688,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "for me less technical probably and I decided because I had to read the open telemetry documentation",
+      "start": 120.77999877929688,
+      "end": 127.58000183105469,
+      "words": [
+        {
+          "word": "for",
+          "start": 120.77999877929688,
+          "end": 121.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 121.0999984741211,
+          "end": 121.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "less",
+          "start": 121.55999755859375,
+          "end": 121.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "technical",
+          "start": 121.95999908447266,
+          "end": 122.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "probably",
+          "start": 122.5,
+          "end": 122.9000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 122.95999908447266,
+          "end": 124.0199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 124.0199966430664,
+          "end": 124.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "decided",
+          "start": 124.31999969482422,
+          "end": 124.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 124.9000015258789,
+          "end": 125.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 125.0,
+          "end": 125.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "had",
+          "start": 125.16000366210938,
+          "end": 125.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 125.4800033569336,
+          "end": 125.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "read",
+          "start": 125.83999633789062,
+          "end": 126.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 126.0,
+          "end": 126.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 126.44000244140625,
+          "end": 126.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "telemetry",
+          "start": 126.91999816894531,
+          "end": 126.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "documentation",
+          "start": 126.9800033569336,
+          "end": 127.58000183105469,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "why not translate into Spanish That's something that the team is doing It helps the documentation",
+      "start": 127.58000183105469,
+      "end": 134.66000366210938,
+      "words": [
+        {
+          "word": "why",
+          "start": 127.58000183105469,
+          "end": 127.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 127.86000061035156,
+          "end": 128.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "translate",
+          "start": 128.3800048828125,
+          "end": 130.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "into",
+          "start": 130.0,
+          "end": 130.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "Spanish",
+          "start": 130.3000030517578,
+          "end": 130.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "That's",
+          "start": 131.1999969482422,
+          "end": 131.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "something",
+          "start": 131.3800048828125,
+          "end": 131.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 131.74000549316406,
+          "end": 131.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 131.9600067138672,
+          "end": 132.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "team",
+          "start": 132.17999267578125,
+          "end": 132.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 132.17999267578125,
+          "end": 132.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "doing",
+          "start": 132.33999633789062,
+          "end": 133.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "It",
+          "start": 133.3000030517578,
+          "end": 133.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "helps",
+          "start": 133.3000030517578,
+          "end": 133.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 133.63999938964844,
+          "end": 134.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "documentation",
+          "start": 134.1999969482422,
+          "end": 134.66000366210938,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "being accessible to everyone and it was easy to contribute I had found a great",
+      "start": 134.66000366210938,
+      "end": 140.0800018310547,
+      "words": [
+        {
+          "word": "being",
+          "start": 134.66000366210938,
+          "end": 134.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "accessible",
+          "start": 134.97999572753906,
+          "end": 135.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 135.39999389648438,
+          "end": 135.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "everyone",
+          "start": 135.6999969482422,
+          "end": 136.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 136.32000732421875,
+          "end": 136.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 136.8800048828125,
+          "end": 136.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 136.9600067138672,
+          "end": 137.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "easy",
+          "start": 137.1199951171875,
+          "end": 137.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 137.36000061035156,
+          "end": 137.52000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 137.52000427246094,
+          "end": 137.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 138.10000610351562,
+          "end": 138.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "had",
+          "start": 138.3000030517578,
+          "end": 138.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "found",
+          "start": 138.5399932861328,
+          "end": 139.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 139.16000366210938,
+          "end": 139.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "great",
+          "start": 139.3800048828125,
+          "end": 139.74000549316406,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "great community there especially Carol Valencia She immediately asked to have a meeting with",
+      "start": 140.0800018310547,
+      "end": 146.3000030517578,
+      "words": [
+        {
+          "word": "great",
+          "start": 140.0800018310547,
+          "end": 140.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "community",
+          "start": 140.0800018310547,
+          "end": 140.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "there",
+          "start": 140.27999877929688,
+          "end": 140.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "especially",
+          "start": 140.8000030517578,
+          "end": 141.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "Carol",
+          "start": 141.27999877929688,
+          "end": 142.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "Valencia",
+          "start": 142.44000244140625,
+          "end": 142.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "She",
+          "start": 143.63999938964844,
+          "end": 144.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "immediately",
+          "start": 144.0800018310547,
+          "end": 144.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "asked",
+          "start": 144.83999633789062,
+          "end": 145.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 145.3000030517578,
+          "end": 145.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 145.4600067138672,
+          "end": 145.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 145.63999938964844,
+          "end": 146.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "meeting",
+          "start": 146.0399932861328,
+          "end": 146.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 146.0399932861328,
+          "end": 146.3000030517578,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "me and we connected so she's helped me a lot She shared with me some instructions",
+      "start": 146.3000030517578,
+      "end": 151.3800048828125,
+      "words": [
+        {
+          "word": "me",
+          "start": 146.3000030517578,
+          "end": 146.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 146.5399932861328,
+          "end": 146.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 146.77999877929688,
+          "end": 146.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "connected",
+          "start": 146.9199981689453,
+          "end": 147.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 147.63999938964844,
+          "end": 147.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "she's",
+          "start": 147.9199981689453,
+          "end": 148.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "helped",
+          "start": 148.32000732421875,
+          "end": 148.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 148.3800048828125,
+          "end": 148.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 148.60000610351562,
+          "end": 148.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "lot",
+          "start": 148.89999389648438,
+          "end": 148.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "She",
+          "start": 149.5399932861328,
+          "end": 149.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "shared",
+          "start": 149.86000061035156,
+          "end": 150.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 150.0800018310547,
+          "end": 150.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 150.32000732421875,
+          "end": 150.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "some",
+          "start": 150.6199951171875,
+          "end": 150.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "instructions",
+          "start": 150.8800048828125,
+          "end": 151.3800048828125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "very detailed on how to do my first contribution and that helped me a lot I felt very confident",
+      "start": 151.5,
+      "end": 156.8800048828125,
+      "words": [
+        {
+          "word": "very",
+          "start": 151.5,
+          "end": 151.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "detailed",
+          "start": 151.82000732421875,
+          "end": 152.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "on",
+          "start": 152.5,
+          "end": 152.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "how",
+          "start": 152.74000549316406,
+          "end": 152.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 152.9199981689453,
+          "end": 153.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 153.02000427246094,
+          "end": 153.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "my",
+          "start": 153.16000366210938,
+          "end": 153.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "first",
+          "start": 153.32000732421875,
+          "end": 153.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribution",
+          "start": 153.63999938964844,
+          "end": 154.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 154.10000610351562,
+          "end": 154.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 154.9199981689453,
+          "end": 155.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "helped",
+          "start": 155.33999633789062,
+          "end": 155.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 155.36000061035156,
+          "end": 155.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 155.66000366210938,
+          "end": 155.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "lot",
+          "start": 155.89999389648438,
+          "end": 155.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 155.9600067138672,
+          "end": 156.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "felt",
+          "start": 156.16000366210938,
+          "end": 156.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "very",
+          "start": 156.3000030517578,
+          "end": 156.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "confident",
+          "start": 156.75999450683594,
+          "end": 156.8800048828125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "that I could do it and I could always ask her to help me with any questions",
+      "start": 156.8800048828125,
+      "end": 161.0800018310547,
+      "words": [
+        {
+          "word": "that",
+          "start": 156.8800048828125,
+          "end": 157.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 157.05999755859375,
+          "end": 157.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 157.17999267578125,
+          "end": 157.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 157.36000061035156,
+          "end": 157.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 157.55999755859375,
+          "end": 157.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 157.82000732421875,
+          "end": 157.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 157.89999389648438,
+          "end": 157.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 157.97999572753906,
+          "end": 158.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "always",
+          "start": 158.1199951171875,
+          "end": 158.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "ask",
+          "start": 158.44000244140625,
+          "end": 158.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "her",
+          "start": 158.66000366210938,
+          "end": 158.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 158.86000061035156,
+          "end": 159.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "help",
+          "start": 159.77999877929688,
+          "end": 160.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 160.0399932861328,
+          "end": 160.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 160.17999267578125,
+          "end": 160.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "any",
+          "start": 160.33999633789062,
+          "end": 160.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "questions",
+          "start": 160.63999938964844,
+          "end": 161.0800018310547,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Just a month after that this team they actually offered me to become a member I didn't expect",
+      "start": 162.22000122070312,
+      "end": 167.17999267578125,
+      "words": [
+        {
+          "word": "Just",
+          "start": 162.22000122070312,
+          "end": 162.52000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 162.52000427246094,
+          "end": 162.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "month",
+          "start": 162.9199981689453,
+          "end": 162.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "after",
+          "start": 162.9199981689453,
+          "end": 163.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 163.24000549316406,
+          "end": 163.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 163.94000244140625,
+          "end": 164.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "team",
+          "start": 164.24000549316406,
+          "end": 164.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 164.67999267578125,
+          "end": 164.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 164.67999267578125,
+          "end": 164.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "offered",
+          "start": 164.94000244140625,
+          "end": 165.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 165.22000122070312,
+          "end": 165.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 165.44000244140625,
+          "end": 165.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "become",
+          "start": 165.5800018310547,
+          "end": 165.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 165.74000549316406,
+          "end": 166.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "member",
+          "start": 166.16000366210938,
+          "end": 166.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 166.32000732421875,
+          "end": 166.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "didn't",
+          "start": 166.6199951171875,
+          "end": 166.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "expect",
+          "start": 166.86000061035156,
+          "end": 167.17999267578125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "that and they reached out to me and said hey you're doing great I was doing just",
+      "start": 167.17999267578125,
+      "end": 170.22000122070312,
+      "words": [
+        {
+          "word": "that",
+          "start": 167.17999267578125,
+          "end": 167.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 167.4199981689453,
+          "end": 167.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 167.5399932861328,
+          "end": 167.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "reached",
+          "start": 167.72000122070312,
+          "end": 167.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "out",
+          "start": 167.9199981689453,
+          "end": 168.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 168.13999938964844,
+          "end": 168.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 168.24000549316406,
+          "end": 168.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 168.39999389648438,
+          "end": 168.52000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "said",
+          "start": 168.52000427246094,
+          "end": 168.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "hey",
+          "start": 168.86000061035156,
+          "end": 168.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 168.8800048828125,
+          "end": 169.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "doing",
+          "start": 169.0399932861328,
+          "end": 169.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "great",
+          "start": 169.24000549316406,
+          "end": 169.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 169.55999755859375,
+          "end": 169.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 169.67999267578125,
+          "end": 169.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "doing",
+          "start": 169.8000030517578,
+          "end": 169.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 169.97999572753906,
+          "end": 170.22000122070312,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "one pull request every week small pull request I tried to follow their instructions not",
+      "start": 170.22000122070312,
+      "end": 175.4600067138672,
+      "words": [
+        {
+          "word": "one",
+          "start": 170.22000122070312,
+          "end": 170.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "pull",
+          "start": 170.4600067138672,
+          "end": 170.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "request",
+          "start": 170.55999755859375,
+          "end": 170.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "every",
+          "start": 170.86000061035156,
+          "end": 171.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "week",
+          "start": 171.22000122070312,
+          "end": 171.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "small",
+          "start": 171.89999389648438,
+          "end": 172.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "pull",
+          "start": 172.33999633789062,
+          "end": 172.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "request",
+          "start": 172.5800018310547,
+          "end": 172.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 173.0399932861328,
+          "end": 173.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "tried",
+          "start": 173.10000610351562,
+          "end": 173.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 173.3800048828125,
+          "end": 174.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "follow",
+          "start": 174.13999938964844,
+          "end": 174.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "their",
+          "start": 174.16000366210938,
+          "end": 174.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "instructions",
+          "start": 174.75999450683594,
+          "end": 175.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 175.3000030517578,
+          "end": 175.4600067138672,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "do big pull requests just small things learn from them and iterate That's how I became",
+      "start": 175.4600067138672,
+      "end": 181.0,
+      "words": [
+        {
+          "word": "do",
+          "start": 175.4600067138672,
+          "end": 175.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "big",
+          "start": 175.63999938964844,
+          "end": 176.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "pull",
+          "start": 176.02000427246094,
+          "end": 176.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "requests",
+          "start": 176.16000366210938,
+          "end": 176.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 176.8000030517578,
+          "end": 177.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "small",
+          "start": 177.39999389648438,
+          "end": 177.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "things",
+          "start": 177.74000549316406,
+          "end": 178.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "learn",
+          "start": 178.13999938964844,
+          "end": 178.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "from",
+          "start": 178.3000030517578,
+          "end": 178.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "them",
+          "start": 178.4600067138672,
+          "end": 178.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 178.77999877929688,
+          "end": 179.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "iterate",
+          "start": 179.05999755859375,
+          "end": 179.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "That's",
+          "start": 180.05999755859375,
+          "end": 180.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "how",
+          "start": 180.5,
+          "end": 180.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 180.6199951171875,
+          "end": 180.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "became",
+          "start": 180.83999633789062,
+          "end": 181.0,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "a member but thanks to them because they are great sponsors But I realized I was already",
+      "start": 181.0,
+      "end": 187.67999267578125,
+      "words": [
+        {
+          "word": "a",
+          "start": 181.0,
+          "end": 181.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "member",
+          "start": 181.4600067138672,
+          "end": 181.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 181.9199981689453,
+          "end": 182.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "thanks",
+          "start": 182.27999877929688,
+          "end": 182.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 182.32000732421875,
+          "end": 182.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "them",
+          "start": 182.5,
+          "end": 182.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 182.66000366210938,
+          "end": 182.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 182.94000244140625,
+          "end": 183.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 183.10000610351562,
+          "end": 183.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "great",
+          "start": 183.36000061035156,
+          "end": 183.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "sponsors",
+          "start": 183.77999877929688,
+          "end": 184.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "But",
+          "start": 185.9600067138672,
+          "end": 186.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 186.5800018310547,
+          "end": 186.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "realized",
+          "start": 186.75999450683594,
+          "end": 187.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 187.0,
+          "end": 187.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 187.13999938964844,
+          "end": 187.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "already",
+          "start": 187.3000030517578,
+          "end": 187.67999267578125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "contributing to OpenTelemetry to the community because I was already organizing events",
+      "start": 187.67999267578125,
+      "end": 192.52000427246094,
+      "words": [
+        {
+          "word": "contributing",
+          "start": 187.67999267578125,
+          "end": 188.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 188.1199951171875,
+          "end": 188.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "OpenTelemetry",
+          "start": 188.4199981689453,
+          "end": 189.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 189.32000732421875,
+          "end": 190.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 190.0800018310547,
+          "end": 190.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "community",
+          "start": 190.4600067138672,
+          "end": 190.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 190.89999389648438,
+          "end": 191.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 191.0399932861328,
+          "end": 191.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 191.17999267578125,
+          "end": 191.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "already",
+          "start": 191.36000061035156,
+          "end": 191.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "organizing",
+          "start": 191.72000122070312,
+          "end": 192.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "events",
+          "start": 192.0800018310547,
+          "end": 192.52000427246094,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "learnings here is join the right project for you listen to contributors read the",
+      "start": 193.75999450683594,
+      "end": 199.32000732421875,
+      "words": [
+        {
+          "word": "learnings",
+          "start": 193.83999633789062,
+          "end": 194.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "here",
+          "start": 194.36000061035156,
+          "end": 194.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 194.6199951171875,
+          "end": 194.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "join",
+          "start": 194.94000244140625,
+          "end": 195.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 195.74000549316406,
+          "end": 195.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "right",
+          "start": 195.89999389648438,
+          "end": 196.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "project",
+          "start": 196.0399932861328,
+          "end": 196.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 196.3000030517578,
+          "end": 196.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 196.55999755859375,
+          "end": 196.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "listen",
+          "start": 197.17999267578125,
+          "end": 197.52000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 197.52000427246094,
+          "end": 197.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributors",
+          "start": 197.8000030517578,
+          "end": 198.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "read",
+          "start": 198.5800018310547,
+          "end": 198.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 198.63999938964844,
+          "end": 199.32000732421875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "contributions be realistic be consistent they will appreciate that There's all sorts",
+      "start": 199.32000732421875,
+      "end": 204.3800048828125,
+      "words": [
+        {
+          "word": "contributions",
+          "start": 199.32000732421875,
+          "end": 199.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 199.66000366210938,
+          "end": 199.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "realistic",
+          "start": 199.94000244140625,
+          "end": 200.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 200.75999450683594,
+          "end": 200.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "consistent",
+          "start": 200.89999389648438,
+          "end": 201.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 201.44000244140625,
+          "end": 201.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "will",
+          "start": 201.6199951171875,
+          "end": 201.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "appreciate",
+          "start": 201.82000732421875,
+          "end": 202.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 202.16000366210938,
+          "end": 202.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "There's",
+          "start": 203.39999389648438,
+          "end": 203.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 203.9199981689453,
+          "end": 204.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "sorts",
+          "start": 204.1999969482422,
+          "end": 204.3800048828125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "of contributions not just organizing a conference it's contributing to open source If you can",
+      "start": 204.3800048828125,
+      "end": 210.25999450683594,
+      "words": [
+        {
+          "word": "of",
+          "start": 204.3800048828125,
+          "end": 204.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributions",
+          "start": 204.63999938964844,
+          "end": 204.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 205.24000549316406,
+          "end": 205.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 205.24000549316406,
+          "end": 205.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "organizing",
+          "start": 205.5,
+          "end": 206.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 206.36000061035156,
+          "end": 206.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "conference",
+          "start": 206.89999389648438,
+          "end": 206.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 207.02000427246094,
+          "end": 207.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributing",
+          "start": 207.36000061035156,
+          "end": 207.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 207.72000122070312,
+          "end": 208.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 208.0,
+          "end": 208.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "source",
+          "start": 208.24000549316406,
+          "end": 208.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "If",
+          "start": 209.39999389648438,
+          "end": 210.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 210.02000427246094,
+          "end": 210.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 210.0800018310547,
+          "end": 210.25999450683594,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "work for a company that supports OSF that's great and remember to have fun",
+      "start": 210.25999450683594,
+      "end": 214.63999938964844,
+      "words": [
+        {
+          "word": "work",
+          "start": 210.25999450683594,
+          "end": 210.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 210.4199981689453,
+          "end": 210.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 210.5399932861328,
+          "end": 210.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "company",
+          "start": 210.74000549316406,
+          "end": 210.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 210.9199981689453,
+          "end": 211.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "supports",
+          "start": 211.17999267578125,
+          "end": 211.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "OSF",
+          "start": 211.4600067138672,
+          "end": 211.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 211.9600067138672,
+          "end": 212.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "great",
+          "start": 212.10000610351562,
+          "end": 213.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 213.13999938964844,
+          "end": 213.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "remember",
+          "start": 213.5,
+          "end": 213.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 213.75999450683594,
+          "end": 214.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 214.0,
+          "end": 214.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "fun",
+          "start": 214.24000549316406,
+          "end": 214.63999938964844,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "How you can contribute This is I will leave the slides for you but this is important",
+      "start": 215.27999877929688,
+      "end": 220.05999755859375,
+      "words": [
+        {
+          "word": "How",
+          "start": 215.27999877929688,
+          "end": 215.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 215.5399932861328,
+          "end": 215.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 215.66000366210938,
+          "end": 215.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 215.9600067138672,
+          "end": 216.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "This",
+          "start": 216.94000244140625,
+          "end": 217.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 217.10000610351562,
+          "end": 217.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 217.4199981689453,
+          "end": 217.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "will",
+          "start": 217.66000366210938,
+          "end": 217.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "leave",
+          "start": 217.8000030517578,
+          "end": 217.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 217.9199981689453,
+          "end": 218.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "slides",
+          "start": 218.10000610351562,
+          "end": 218.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 218.22000122070312,
+          "end": 218.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 218.47999572753906,
+          "end": 218.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 219.0399932861328,
+          "end": 219.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 219.4600067138672,
+          "end": 219.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 219.63999938964844,
+          "end": 219.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "important",
+          "start": 219.86000061035156,
+          "end": 220.05999755859375,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "There's technical contributions and there's non code contributions so like project documentation",
+      "start": 220.1999969482422,
+      "end": 224.75999450683594,
+      "words": [
+        {
+          "word": "There's",
+          "start": 220.1999969482422,
+          "end": 220.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "technical",
+          "start": 220.4600067138672,
+          "end": 220.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributions",
+          "start": 220.8000030517578,
+          "end": 221.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 221.4600067138672,
+          "end": 221.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "there's",
+          "start": 221.66000366210938,
+          "end": 221.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "non",
+          "start": 221.89999389648438,
+          "end": 222.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "code",
+          "start": 222.25999450683594,
+          "end": 222.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributions",
+          "start": 222.33999633789062,
+          "end": 222.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 223.10000610351562,
+          "end": 223.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 223.3000030517578,
+          "end": 224.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "project",
+          "start": 224.02000427246094,
+          "end": 224.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "documentation",
+          "start": 224.3000030517578,
+          "end": 224.75999450683594,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "is one of those You don't have to actually contribute to one of the 200 projects technically",
+      "start": 224.75999450683594,
+      "end": 229.6999969482422,
+      "words": [
+        {
+          "word": "is",
+          "start": 224.75999450683594,
+          "end": 225.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "one",
+          "start": 225.02000427246094,
+          "end": 225.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 225.17999267578125,
+          "end": 225.52000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "those",
+          "start": 225.52000427246094,
+          "end": 225.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "You",
+          "start": 226.10000610351562,
+          "end": 226.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 226.5,
+          "end": 226.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 226.67999267578125,
+          "end": 226.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 226.9600067138672,
+          "end": 227.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 227.17999267578125,
+          "end": 227.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 227.67999267578125,
+          "end": 227.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 227.82000732421875,
+          "end": 228.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "one",
+          "start": 228.1199951171875,
+          "end": 228.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 228.25999450683594,
+          "end": 228.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 228.32000732421875,
+          "end": 228.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "200",
+          "start": 228.4600067138672,
+          "end": 228.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "projects",
+          "start": 228.8800048828125,
+          "end": 229.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "technically",
+          "start": 229.3000030517578,
+          "end": 229.6999969482422,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "you can but you don't have to it's a good contribution as well",
+      "start": 229.83999633789062,
+      "end": 232.47999572753906,
+      "words": [
+        {
+          "word": "you",
+          "start": 229.83999633789062,
+          "end": 230.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 230.0399932861328,
+          "end": 230.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "but",
+          "start": 230.39999389648438,
+          "end": 230.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 230.5399932861328,
+          "end": 230.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 230.66000366210938,
+          "end": 230.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 230.86000061035156,
+          "end": 231.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 231.02000427246094,
+          "end": 231.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 231.3000030517578,
+          "end": 231.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 231.32000732421875,
+          "end": 231.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "good",
+          "start": 231.4199981689453,
+          "end": 231.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribution",
+          "start": 231.63999938964844,
+          "end": 231.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 231.94000244140625,
+          "end": 232.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "well",
+          "start": 232.32000732421875,
+          "end": 232.47999572753906,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "If you want to join the cloud native community these are the different ways you can I do",
+      "start": 233.44000244140625,
+      "end": 237.6199951171875,
+      "words": [
+        {
+          "word": "If",
+          "start": 233.44000244140625,
+          "end": 233.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 233.8800048828125,
+          "end": 233.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "want",
+          "start": 233.9199981689453,
+          "end": 234.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 234.02000427246094,
+          "end": 234.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "join",
+          "start": 234.1999969482422,
+          "end": 234.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 234.24000549316406,
+          "end": 234.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "cloud",
+          "start": 234.55999755859375,
+          "end": 234.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "native",
+          "start": 234.6199951171875,
+          "end": 234.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "community",
+          "start": 234.89999389648438,
+          "end": 235.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "these",
+          "start": 235.3800048828125,
+          "end": 235.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 235.5800018310547,
+          "end": 235.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 235.6999969482422,
+          "end": 236.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "different",
+          "start": 236.17999267578125,
+          "end": 236.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "ways",
+          "start": 236.47999572753906,
+          "end": 236.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 236.6999969482422,
+          "end": 236.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 236.83999633789062,
+          "end": 237.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 237.1999969482422,
+          "end": 237.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 237.39999389648438,
+          "end": 237.6199951171875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "the mentorship program if you feel like you're not ready there is a mentorship",
+      "start": 238.22000122070312,
+      "end": 242.39999389648438,
+      "words": [
+        {
+          "word": "the",
+          "start": 238.24000549316406,
+          "end": 238.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "mentorship",
+          "start": 238.3800048828125,
+          "end": 238.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "program",
+          "start": 238.74000549316406,
+          "end": 239.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 239.39999389648438,
+          "end": 239.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 239.4600067138672,
+          "end": 239.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "feel",
+          "start": 239.63999938964844,
+          "end": 239.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 239.86000061035156,
+          "end": 240.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 240.0800018310547,
+          "end": 240.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 240.1999969482422,
+          "end": 240.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "ready",
+          "start": 240.4199981689453,
+          "end": 240.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "there",
+          "start": 241.8000030517578,
+          "end": 241.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 241.9199981689453,
+          "end": 242.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 242.02000427246094,
+          "end": 242.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "mentorship",
+          "start": 242.3800048828125,
+          "end": 242.39999389648438,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "program it's meant for everyone even if you're 50 that's good",
+      "start": 242.39999389648438,
+      "end": 246.5,
+      "words": [
+        {
+          "word": "program",
+          "start": 242.39999389648438,
+          "end": 242.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 242.8800048828125,
+          "end": 243.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "meant",
+          "start": 243.0800018310547,
+          "end": 243.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 243.16000366210938,
+          "end": 243.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "everyone",
+          "start": 243.36000061035156,
+          "end": 243.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "even",
+          "start": 243.82000732421875,
+          "end": 244.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 244.0,
+          "end": 244.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 244.22000122070312,
+          "end": 244.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "50",
+          "start": 244.39999389648438,
+          "end": 244.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 244.97999572753906,
+          "end": 245.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "good",
+          "start": 245.25999450683594,
+          "end": 246.5,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Where is help needed There is this URL that's very useful if you don't know it you can",
+      "start": 247.8800048828125,
+      "end": 252.25999450683594,
+      "words": [
+        {
+          "word": "Where",
+          "start": 247.8800048828125,
+          "end": 248.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 248.32000732421875,
+          "end": 248.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "help",
+          "start": 248.5399932861328,
+          "end": 248.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "needed",
+          "start": 248.8000030517578,
+          "end": 248.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "There",
+          "start": 249.10000610351562,
+          "end": 249.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 249.24000549316406,
+          "end": 249.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 249.36000061035156,
+          "end": 249.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "URL",
+          "start": 249.77999877929688,
+          "end": 249.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 249.8800048828125,
+          "end": 250.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "very",
+          "start": 250.16000366210938,
+          "end": 250.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "useful",
+          "start": 250.44000244140625,
+          "end": 250.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 250.9600067138672,
+          "end": 251.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 251.1999969482422,
+          "end": 251.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 251.25999450683594,
+          "end": 251.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "know",
+          "start": 251.4600067138672,
+          "end": 251.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 251.63999938964844,
+          "end": 251.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 251.94000244140625,
+          "end": 252.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 252.05999755859375,
+          "end": 252.25999450683594,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "find issues that are looking for help There is a label with first time issues so that's",
+      "start": 252.83999633789062,
+      "end": 258.4599914550781,
+      "words": [
+        {
+          "word": "find",
+          "start": 252.83999633789062,
+          "end": 253.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "issues",
+          "start": 253.27999877929688,
+          "end": 253.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 253.72000122070312,
+          "end": 253.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 253.9199981689453,
+          "end": 254.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "looking",
+          "start": 254.0399932861328,
+          "end": 254.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 254.25999450683594,
+          "end": 254.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "help",
+          "start": 254.55999755859375,
+          "end": 255.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "There",
+          "start": 256.1199951171875,
+          "end": 256.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 256.32000732421875,
+          "end": 256.3999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 256.3999938964844,
+          "end": 256.5199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "label",
+          "start": 256.5199890136719,
+          "end": 256.79998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 256.79998779296875,
+          "end": 257.1400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "first",
+          "start": 257.1400146484375,
+          "end": 257.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "time",
+          "start": 257.55999755859375,
+          "end": 257.70001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "issues",
+          "start": 257.70001220703125,
+          "end": 257.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "so",
+          "start": 258.0400085449219,
+          "end": 258.2799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 258.2799987792969,
+          "end": 258.4599914550781,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "the one you can actually take to contribute Another thing that's happening this month",
+      "start": 258.4599914550781,
+      "end": 264.7799987792969,
+      "words": [
+        {
+          "word": "the",
+          "start": 258.4599914550781,
+          "end": 258.6000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "one",
+          "start": 258.6000061035156,
+          "end": 258.7200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 258.7200012207031,
+          "end": 258.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 258.8800048828125,
+          "end": 259.0400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 259.0400085449219,
+          "end": 259.3999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "take",
+          "start": 259.3999938964844,
+          "end": 259.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 259.8999938964844,
+          "end": 260.3599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 260.3599853515625,
+          "end": 261.0199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "Another",
+          "start": 262.0400085449219,
+          "end": 262.4800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "thing",
+          "start": 262.4800109863281,
+          "end": 262.6600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 262.6600036621094,
+          "end": 263.0199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "happening",
+          "start": 263.0199890136719,
+          "end": 263.2200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 263.2200012207031,
+          "end": 264.5199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "month",
+          "start": 264.5199890136719,
+          "end": 264.7799987792969,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "of October is the October 1st it's a good way to contribute and there is a resources",
+      "start": 264.7799987792969,
+      "end": 268.4599914550781,
+      "words": [
+        {
+          "word": "of",
+          "start": 264.7799987792969,
+          "end": 265.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "October",
+          "start": 265.20001220703125,
+          "end": 265.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 265.20001220703125,
+          "end": 265.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 265.3800048828125,
+          "end": 265.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "October",
+          "start": 265.5,
+          "end": 265.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "1st",
+          "start": 265.94000244140625,
+          "end": 266.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 266.3999938964844,
+          "end": 266.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 266.55999755859375,
+          "end": 266.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "good",
+          "start": 266.67999267578125,
+          "end": 266.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "way",
+          "start": 266.82000732421875,
+          "end": 267.0199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 267.0199890136719,
+          "end": 267.2200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 267.2200012207031,
+          "end": 267.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 267.70001220703125,
+          "end": 267.739990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "there",
+          "start": 267.739990234375,
+          "end": 267.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 267.8999938964844,
+          "end": 267.9800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 267.9800109863281,
+          "end": 268.1000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "resources",
+          "start": 268.1000061035156,
+          "end": 268.4599914550781,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "for beginners that's actually very good as well",
+      "start": 268.4599914550781,
+      "end": 271.5400085449219,
+      "words": [
+        {
+          "word": "for",
+          "start": 268.4599914550781,
+          "end": 268.7799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "beginners",
+          "start": 268.7799987792969,
+          "end": 269.1600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 269.3800048828125,
+          "end": 269.6000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 269.6000061035156,
+          "end": 269.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "very",
+          "start": 269.9599914550781,
+          "end": 270.2200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "good",
+          "start": 270.2200012207031,
+          "end": 270.4200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 270.4200134277344,
+          "end": 270.6600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "well",
+          "start": 270.6600036621094,
+          "end": 271.5400085449219,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And takeaways from this talk it's never too late or too early to contribute Find a project",
+      "start": 272.0,
+      "end": 276.70001220703125,
+      "words": [
+        {
+          "word": "And",
+          "start": 272.0,
+          "end": 272.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "takeaways",
+          "start": 272.3800048828125,
+          "end": 272.70001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "from",
+          "start": 272.70001220703125,
+          "end": 272.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 272.9599914550781,
+          "end": 273.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "talk",
+          "start": 273.20001220703125,
+          "end": 273.4200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 273.4800109863281,
+          "end": 273.739990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "never",
+          "start": 273.739990234375,
+          "end": 273.9200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "too",
+          "start": 273.9200134277344,
+          "end": 274.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "late",
+          "start": 274.1199951171875,
+          "end": 274.3399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "or",
+          "start": 274.3399963378906,
+          "end": 274.6000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "too",
+          "start": 274.6000061035156,
+          "end": 274.9200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "early",
+          "start": 274.9200134277344,
+          "end": 274.9200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 274.9200134277344,
+          "end": 275.6000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 275.6000061035156,
+          "end": 275.6000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "Find",
+          "start": 276.239990234375,
+          "end": 276.2799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 276.2799987792969,
+          "end": 276.4599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "project",
+          "start": 276.4599914550781,
+          "end": 276.70001220703125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "you like because then it's when you stick to it Not all contributions are cold there's",
+      "start": 276.70001220703125,
+      "end": 281.44000244140625,
+      "words": [
+        {
+          "word": "you",
+          "start": 276.70001220703125,
+          "end": 276.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 276.94000244140625,
+          "end": 277.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 277.1000061035156,
+          "end": 277.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 277.32000732421875,
+          "end": 277.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 277.5799865722656,
+          "end": 277.6600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "when",
+          "start": 277.6600036621094,
+          "end": 277.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 277.82000732421875,
+          "end": 278.0400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "stick",
+          "start": 278.0400085449219,
+          "end": 278.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 278.20001220703125,
+          "end": 278.3599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 278.3599853515625,
+          "end": 279.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "Not",
+          "start": 279.4200134277344,
+          "end": 279.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 279.8999938964844,
+          "end": 280.2200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributions",
+          "start": 280.2200012207031,
+          "end": 280.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 280.5,
+          "end": 280.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "cold",
+          "start": 280.8999938964844,
+          "end": 281.0799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "there's",
+          "start": 281.1400146484375,
+          "end": 281.44000244140625,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "all types of contributions start small be realistic be consistent seek companies who",
+      "start": 281.44000244140625,
+      "end": 286.3399963378906,
+      "words": [
+        {
+          "word": "all",
+          "start": 281.44000244140625,
+          "end": 281.79998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "types",
+          "start": 281.79998779296875,
+          "end": 281.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 281.8999938964844,
+          "end": 282.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributions",
+          "start": 282.17999267578125,
+          "end": 282.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 282.8399963378906,
+          "end": 283.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "small",
+          "start": 283.1199951171875,
+          "end": 283.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 283.4800109863281,
+          "end": 283.6400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "realistic",
+          "start": 283.6400146484375,
+          "end": 284.0400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 284.2200012207031,
+          "end": 284.4200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "consistent",
+          "start": 284.4200134277344,
+          "end": 284.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "seek",
+          "start": 285.44000244140625,
+          "end": 285.79998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "companies",
+          "start": 285.79998779296875,
+          "end": 286.1400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "who",
+          "start": 286.1400146484375,
+          "end": 286.3399963378906,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "support OSS if you can and don't wait start and have fun",
+      "start": 286.3399963378906,
+      "end": 290.0799865722656,
+      "words": [
+        {
+          "word": "support",
+          "start": 286.3399963378906,
+          "end": 286.6400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "OSS",
+          "start": 286.6400146484375,
+          "end": 286.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 286.9599914550781,
+          "end": 287.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 287.17999267578125,
+          "end": 287.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 287.32000732421875,
+          "end": 287.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 288.17999267578125,
+          "end": 288.5199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 288.5199890136719,
+          "end": 288.79998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "wait",
+          "start": 288.79998779296875,
+          "end": 288.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 288.9200134277344,
+          "end": 289.3599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 289.3599853515625,
+          "end": 289.70001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 289.70001220703125,
+          "end": 289.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "fun",
+          "start": 289.9599914550781,
+          "end": 290.0799865722656,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And for you to take away if you're I don't know who has not yet contributed to open source here",
+      "start": 290.0799865722656,
+      "end": 295.55999755859375,
+      "words": [
+        {
+          "word": "And",
+          "start": 290.0799865722656,
+          "end": 290.760009765625,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 290.760009765625,
+          "end": 291.0199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 291.0199890136719,
+          "end": 291.29998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 291.29998779296875,
+          "end": 291.5400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "take",
+          "start": 291.5400085449219,
+          "end": 291.739990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "away",
+          "start": 291.739990234375,
+          "end": 292.1600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 292.5799865722656,
+          "end": 292.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 292.5799865722656,
+          "end": 292.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 293.1600036621094,
+          "end": 293.5400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 293.5400085449219,
+          "end": 293.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "know",
+          "start": 293.5799865722656,
+          "end": 293.70001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "who",
+          "start": 293.70001220703125,
+          "end": 293.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "has",
+          "start": 293.8800048828125,
+          "end": 294.1400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 294.1400146484375,
+          "end": 294.3399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "yet",
+          "start": 294.3399963378906,
+          "end": 294.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributed",
+          "start": 294.6199951171875,
+          "end": 294.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 294.8999938964844,
+          "end": 295.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "open",
+          "start": 295.20001220703125,
+          "end": 295.3599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "source",
+          "start": 295.3599853515625,
+          "end": 295.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "here",
+          "start": 295.44000244140625,
+          "end": 296.0,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "raise your hand not many people For you and for other contributors think of",
+      "start": 295.44000244140625,
+      "end": 303.3599853515625,
+      "words": [
+        {
+          "word": "raise",
+          "start": 296.79998779296875,
+          "end": 296.8399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 296.8399963378906,
+          "end": 297.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "hand",
+          "start": 297.17999267578125,
+          "end": 297.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 298.1000061035156,
+          "end": 298.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "many",
+          "start": 298.67999267578125,
+          "end": 298.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "people",
+          "start": 298.8999938964844,
+          "end": 299.2200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "For",
+          "start": 299.82000732421875,
+          "end": 299.9800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 299.9800109863281,
+          "end": 300.3399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 300.44000244140625,
+          "end": 300.7799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 300.7799987792969,
+          "end": 300.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "other",
+          "start": 300.9599914550781,
+          "end": 301.239990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "contributors",
+          "start": 301.239990234375,
+          "end": 301.7799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "think",
+          "start": 302.6199951171875,
+          "end": 303.1600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 303.1600036621094,
+          "end": 303.3599853515625,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "what project you would like to contribute next and start doing it",
+      "start": 303.3599853515625,
+      "end": 306.8800048828125,
+      "words": [
+        {
+          "word": "what",
+          "start": 303.3599853515625,
+          "end": 303.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "project",
+          "start": 303.5799865722656,
+          "end": 304.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 304.0,
+          "end": 304.2200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "would",
+          "start": 304.2200012207031,
+          "end": 304.3599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 304.3599853515625,
+          "end": 304.5199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 304.5199890136719,
+          "end": 304.7200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "contribute",
+          "start": 304.7200012207031,
+          "end": 304.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "next",
+          "start": 304.94000244140625,
+          "end": 305.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 305.32000732421875,
+          "end": 305.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 305.8599853515625,
+          "end": 306.0400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "doing",
+          "start": 306.0400085449219,
+          "end": 306.29998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 306.29998779296875,
+          "end": 306.8800048828125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And that's it thank you",
+      "start": 307.9200134277344,
+      "end": 309.20001220703125,
+      "words": [
+        {
+          "word": "And",
+          "start": 307.9200134277344,
+          "end": 308.4800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "that's",
+          "start": 308.4800109863281,
+          "end": 308.6000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 308.6000061035156,
+          "end": 308.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "thank",
+          "start": 308.8599853515625,
+          "end": 309.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 309.05999755859375,
+          "end": 309.20001220703125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    }
+  ],
+  "language": "en",
+  "duration": 325.125805,
+  "provider": "whisper_api",
+  "model": "whisper-1",
+  "timestamp": "2026-01-10T00:17:07.113247",
+  "cost_usd": 0.0325125805,
+  "vocabulary_corrections": 0
+}

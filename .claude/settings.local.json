@@ -23,7 +23,16 @@
       "Bash(pip show:*)",
       "Bash(uv pip show:*)",
       "Bash(dir:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(cat:*)",
+      "WebSearch",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:claude.com)",
+      "WebFetch(domain:platform.openai.com)",
+      "WebFetch(domain:openai.com)",
+      "Bash(uv run pytest:*)",
+      "Bash(powershell -Command:*)"
     ]
   }
 }

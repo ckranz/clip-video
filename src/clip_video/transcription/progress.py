@@ -7,6 +7,8 @@ interruption without re-processing completed files.
 from __future__ import annotations
 
 import json
+import os
+import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -316,12 +318,40 @@ class TranscriptionProgress:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Atomic write
+        # Write to temp file first
         temp_path = path.with_suffix(".tmp")
         with open(temp_path, "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
 
-        temp_path.replace(path)
+        # Atomic replace with retry logic for Windows/Dropbox compatibility
+        # Dropbox can lock files during sync, causing PermissionError
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                # On Windows, we may need to remove target first if it exists
+                if os.name == "nt" and path.exists():
+                    try:
+                        path.unlink()
+                    except PermissionError:
+                        # Target locked, will retry
+                        pass
+                temp_path.replace(path)
+                return
+            except PermissionError:
+                if attempt < max_retries - 1:
+                    # Wait with exponential backoff (0.1, 0.2, 0.4, 0.8, 1.6 seconds)
+                    time.sleep(0.1 * (2 ** attempt))
+                else:
+                    # Last resort: direct write without atomic rename
+                    # Less safe but works when files are locked
+                    with open(path, "w", encoding="utf-8") as f:
+                        json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
+                    # Clean up temp file
+                    try:
+                        temp_path.unlink()
+                    except (PermissionError, FileNotFoundError):
+                        pass
+                    return
 
     @classmethod
     def load(cls, path: Path | str) -> "TranscriptionProgress":

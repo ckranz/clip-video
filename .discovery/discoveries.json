@@ -1,513 +1,385 @@
 {
   "discoveries": [
     {
-      "id": "disc_001",
+      "id": "D001",
       "domain": "functionality",
       "type": "requirement",
-      "content": "Input workflow: folder of video files + transcript to match. Source videos often from YouTube (user-owned).",
-      "confidence": "stated",
-      "source_exchange": 1,
-      "related_domains": ["data", "integration"],
-      "timestamp": "2026-01-09T12:05:00.000Z",
-      "tags": ["input", "workflow", "youtube"]
+      "title": "Clip Duration Constraints",
+      "description": "Clips must be between 30 seconds and 2 minutes in length to be compatible with YouTube Shorts format",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip duration >= 30 seconds",
+        "Clip duration <= 120 seconds",
+        "System rejects or flags clips outside this range"
+      ]
     },
     {
-      "id": "disc_002",
+      "id": "D002",
       "domain": "functionality",
       "type": "requirement",
-      "content": "May need initial processing phase to generate transcripts for all source videos before matching can begin.",
-      "confidence": "stated",
-      "source_exchange": 1,
-      "related_domains": ["data", "integration"],
-      "timestamp": "2026-01-09T12:05:00.000Z",
-      "tags": ["transcription", "preprocessing"]
+      "title": "Complete Sentence Boundaries",
+      "description": "Clips must not start or end mid-sentence. The AI must detect sentence boundaries and ensure clean cuts",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip starts at beginning of a sentence",
+        "Clip ends at end of a sentence",
+        "Validation pass checks sentence completeness"
+      ]
     },
     {
-      "id": "disc_003",
+      "id": "D003",
       "domain": "functionality",
-      "type": "insight",
-      "content": "Word/phrase clip dictionary approach - pre-cut clips organized by word/phrase for reuse across projects.",
-      "confidence": "stated",
-      "source_exchange": 1,
-      "related_domains": ["data", "reusability"],
-      "timestamp": "2026-01-09T12:05:00.000Z",
-      "tags": ["dictionary", "clips", "organization"]
+      "type": "requirement",
+      "title": "Topic Coverage",
+      "description": "Each clip must cover a complete topic or idea, not be cut off mid-explanation",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "AI validates topic completeness",
+        "Clip conveys a coherent message"
+      ]
     },
     {
-      "id": "disc_004",
+      "id": "D004",
       "domain": "functionality",
-      "type": "constraint",
-      "content": "Prefer not reusing clips from the same source video multiple times in a single output project.",
-      "confidence": "stated",
-      "source_exchange": 1,
-      "related_domains": ["use_cases"],
-      "timestamp": "2026-01-09T12:05:00.000Z",
-      "tags": ["variety", "constraint"]
+      "type": "requirement",
+      "title": "Optional Hooks",
+      "description": "Hooks (attention-grabbing openings) are desired but not mandatory. System should identify hook opportunities without forcing them",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System identifies potential hooks",
+        "Clips without hooks are still valid",
+        "Hook presence is tracked but not required"
+      ]
     },
     {
-      "id": "disc_005",
+      "id": "D005",
       "domain": "functionality",
+      "type": "requirement",
+      "title": "Standalone Clip Validity",
+      "description": "Each clip must make sense as a standalone piece of content without requiring context from the full video",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip is self-contained",
+        "No unresolved references to earlier/later content",
+        "Viewer can understand without watching full video"
+      ]
+    },
+    {
+      "id": "D006",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Brand Relevance",
+      "description": "Clips must be relevant to the brand context. For KCD (Kubernetes Community Days), content should relate to CNCF and Cloud Native topics",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Brand context is loaded from brand configuration",
+        "AI validates content relevance to brand keywords/topics",
+        "Irrelevant clips are flagged or excluded"
+      ]
+    },
+    {
+      "id": "D007",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Transcript Validation",
+      "description": "All clip selections must be validated against the original transcript to ensure accuracy",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip timestamps map to actual transcript segments",
+        "Text content matches transcript",
+        "Validation pass confirms transcript alignment"
+      ]
+    },
+    {
+      "id": "D008",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Non-Overlapping Clips",
+      "description": "Each clip must be independent - no reusing the same sentences or sentence parts across different clips",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "No timestamp overlap between clips",
+        "No shared sentences between clips",
+        "System tracks used segments"
+      ]
+    },
+    {
+      "id": "D009",
+      "domain": "functionality",
+      "type": "existing_capability",
+      "title": "Caption System Already Supports Required Styling",
+      "description": "The existing CaptionStyle class in captions/styles.py already supports white text (font_color='FFFFFF'), black stroke (border_color='000000'), and lower-third positioning (CaptionPosition.LOWER_THIRD). YOUTUBE_SHORTS_STYLE is pre-configured with these settings.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "YOUTUBE_SHORTS_STYLE uses white font color",
+        "YOUTUBE_SHORTS_STYLE uses black border",
+        "YOUTUBE_SHORTS_STYLE uses lower_third position"
+      ],
+      "related_files": ["clip_video/captions/styles.py:152-163"]
+    },
+    {
+      "id": "D010",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "Current Workflow is Single-Pass, Not Multi-Pass",
+      "description": "The current HighlightsProcessor.process() runs a single LLM analysis pass. There is no validation pass where a second LLM call reviews and validates the clip selections against quality criteria.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "Add validation pass after initial analysis",
+        "Validation checks all 8 quality criteria (D001-D008)",
+        "Failed clips can be revised or rejected"
+      ],
+      "related_files": ["clip_video/modes/highlights.py:816-851"]
+    },
+    {
+      "id": "D011",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "Duration Constraints Need Adjustment",
+      "description": "Current HighlightsConfig has min_duration=15.0 and max_duration=60.0. User requirements specify 30-120 seconds for YouTube Shorts compatibility.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "min_duration changed to 30.0",
+        "max_duration changed to 120.0"
+      ],
+      "related_files": ["clip_video/modes/highlights.py:173-174"]
+    },
+    {
+      "id": "D012",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "No Sentence Boundary Detection",
+      "description": "Current LLM analysis does not explicitly validate that clips start/end at sentence boundaries. This needs to be added to the prompt and/or a validation pass.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "LLM prompt includes sentence boundary requirement",
+        "Validation pass checks sentence completeness"
+      ]
+    },
+    {
+      "id": "D013",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "No Overlap Detection Between Clips",
+      "description": "Current implementation does not check for overlapping timestamps between selected clips. Clips could potentially share segments.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "System checks for timestamp overlap",
+        "Overlapping clips are rejected or adjusted"
+      ]
+    },
+    {
+      "id": "D014",
+      "domain": "integration",
       "type": "decision",
-      "content": "Output clip naming: source video filename + clip identifier suffix for traceability.",
-      "confidence": "stated",
-      "source_exchange": 1,
-      "related_domains": ["data"],
-      "timestamp": "2026-01-09T12:05:00.000Z",
-      "tags": ["naming", "output", "traceability"]
+      "title": "Validation Uses Same LLM with Reframed Prompt",
+      "description": "The validation pass will use the same LLM provider as the analysis pass, but with a different prompt focused on quality validation. This keeps the architecture simpler and cost tracking consistent.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Validation pass uses same LLM instance",
+        "Validation prompt is distinct from analysis prompt",
+        "Validation focuses on quality criteria checking"
+      ]
     },
     {
-      "id": "disc_006",
-      "domain": "functionality",
-      "type": "insight",
-      "content": "Phrases sometimes work better than individual words - selection is context-dependent on the target music video.",
-      "confidence": "stated",
-      "source_exchange": 1,
-      "related_domains": ["use_cases"],
-      "timestamp": "2026-01-09T12:05:00.000Z",
-      "tags": ["phrases", "matching", "flexibility"]
-    },
-    {
-      "id": "disc_007",
-      "domain": "data",
-      "type": "requirement",
-      "content": "Clip dictionary organized by 'brand' (e.g., a conference). Dictionary persists across multiple song projects within same brand.",
-      "confidence": "stated",
-      "source_exchange": 2,
-      "related_domains": ["functionality", "reusability"],
-      "timestamp": "2026-01-09T12:10:00.000Z",
-      "tags": ["brand", "organization", "persistence"]
-    },
-    {
-      "id": "disc_008",
-      "domain": "data",
-      "type": "requirement",
-      "content": "Multiple brands supported - each brand has its own separate clip library that can be used for multiple songs.",
-      "confidence": "stated",
-      "source_exchange": 2,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:10:00.000Z",
-      "tags": ["brand", "multi-tenant"]
-    },
-    {
-      "id": "disc_009",
-      "domain": "functionality",
+      "id": "D015",
+      "domain": "integration",
       "type": "decision",
-      "content": "Phrase boundaries are manually curated, not auto-detected. Phrases requested on-demand when a song project needs them.",
-      "confidence": "stated",
-      "source_exchange": 2,
-      "related_domains": ["use_cases"],
-      "timestamp": "2026-01-09T12:10:00.000Z",
-      "tags": ["phrases", "manual", "curation"]
+      "title": "Rejected Clips Are Replaced with New Selections",
+      "description": "When a clip fails validation, it is rejected entirely and the system attempts to find a replacement selection from the transcript. The replacement must also pass the same quality gates.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Failed clips trigger replacement selection",
+        "Replacement clips go through same validation",
+        "Process can iterate until target count reached or no more candidates"
+      ]
     },
     {
-      "id": "disc_010",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Dictionary building is lyrics-driven: feed in target lyrics, use that as basis for what words/phrases to extract from source videos.",
-      "confidence": "stated",
-      "source_exchange": 2,
-      "related_domains": ["use_cases"],
-      "timestamp": "2026-01-09T12:10:00.000Z",
-      "tags": ["lyrics", "dictionary", "workflow"]
-    },
-    {
-      "id": "disc_011",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Search interface needed: 'source the phrase X from the video library in brand Y' - search across sources for specific phrases.",
-      "confidence": "stated",
-      "source_exchange": 2,
-      "related_domains": ["integration"],
-      "timestamp": "2026-01-09T12:10:00.000Z",
-      "tags": ["search", "phrases", "interface"]
-    },
-    {
-      "id": "disc_012",
-      "domain": "functionality",
-      "type": "insight",
-      "content": "Match selection is human-in-the-loop: phonetic quality matching is nice-to-have, but final selection is manual. Visual quality not a factor.",
-      "confidence": "stated",
-      "source_exchange": 2,
-      "related_domains": ["use_cases"],
-      "timestamp": "2026-01-09T12:10:00.000Z",
-      "tags": ["selection", "human-in-loop", "manual"]
-    },
-    {
-      "id": "disc_013",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Highlights Mode: batch processing of 30+ videos after a conference event to generate scheduled social content.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["performance", "use_cases"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["batch", "highlights", "conference"]
-    },
-    {
-      "id": "disc_014",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Target platforms: YouTube and LinkedIn. Output needs portrait format conversion for shorts/reels.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["integration"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["platforms", "youtube", "linkedin", "portrait"]
-    },
-    {
-      "id": "disc_015",
-      "domain": "functionality",
-      "type": "insight",
-      "content": "Portrait conversion can use fixed crop area since speakers typically in fixed location - simpler than full visual tracking.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["performance"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["portrait", "crop", "simplification"]
-    },
-    {
-      "id": "disc_016",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Highlights input includes session description alongside video - used to identify hooks and insightful moments.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["data"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["input", "description", "context"]
-    },
-    {
-      "id": "disc_017",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Highlight selection goals: (1) hook viewers into watching full video, OR (2) deliver standalone insightful knowledge snippet.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["use_cases"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["highlights", "hooks", "insights"]
-    },
-    {
-      "id": "disc_018",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Highlights output: clip file + title/hook text. Title for YouTube, post content for LinkedIn.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["data"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["output", "title", "description"]
-    },
-    {
-      "id": "disc_019",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "On-screen captions essential, especially for LinkedIn. Must be burned into video.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["integration"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["captions", "accessibility", "linkedin"]
-    },
-    {
-      "id": "disc_020",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Caption enhancement: inject brand-specific emojis/logos when certain terms mentioned (e.g., Kubernetes logo when 'Kubernetes' spoken).",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["data", "reusability"],
-      "timestamp": "2026-01-09T12:15:00.000Z",
-      "tags": ["captions", "emoji", "logos", "brand"]
-    },
-    {
-      "id": "disc_021",
-      "domain": "data",
-      "type": "requirement",
-      "content": "Brand-specific emoji/icon/logo mapping: user-curated list per brand. Different conferences have different visual assets.",
-      "confidence": "stated",
-      "source_exchange": 3,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["brand", "emoji", "logos", "configuration"]
-    },
-    {
-      "id": "disc_022",
-      "domain": "functionality",
+      "id": "D016",
+      "domain": "integration",
       "type": "decision",
-      "content": "CLI tool interface - no web UI or desktop app needed.",
-      "confidence": "stated",
-      "source_exchange": 4,
-      "related_domains": ["deployment"],
-      "timestamp": "2026-01-09T12:20:00.000Z",
-      "tags": ["cli", "interface"]
+      "title": "Human Review Queue for Rejected Clips",
+      "description": "Rejected clips should be stored in a human review queue rather than silently discarded. This allows manual override for edge cases and provides transparency into what was rejected and why.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Rejected clips saved to review queue with rejection reason",
+        "Review queue is accessible for human inspection",
+        "Human can override rejection and force-include clip"
+      ]
     },
     {
-      "id": "disc_023",
-      "domain": "functionality",
+      "id": "D017",
+      "domain": "integration",
       "type": "decision",
-      "content": "Clip output: dump candidates to folder for manual review in video editor. Search interface outputs to folder too.",
-      "confidence": "stated",
-      "source_exchange": 4,
-      "related_domains": ["data"],
-      "timestamp": "2026-01-09T12:20:00.000Z",
-      "tags": ["output", "folder", "review"]
+      "title": "Replacement Clips Must Not Overlap with Approved Clips",
+      "description": "When finding replacement selections for rejected clips, the system must exclude segments already used by clips that passed validation. This ensures non-overlapping requirement is maintained.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System tracks approved segment ranges",
+        "Replacement search excludes approved ranges",
+        "New selections validated for overlap before approval"
+      ]
     },
     {
-      "id": "disc_024",
-      "domain": "functionality",
-      "type": "requirement",
-      "content": "Save/resume project state needed, though most work is batch processed.",
-      "confidence": "stated",
-      "source_exchange": 4,
-      "related_domains": ["data"],
-      "timestamp": "2026-01-09T12:20:00.000Z",
-      "tags": ["state", "resume", "persistence"]
-    },
-    {
-      "id": "disc_025",
+      "id": "D018",
       "domain": "error_handling",
-      "type": "requirement",
-      "content": "Idempotent processing: if cataloguing/transcribing is interrupted (even mid-video), it can be resumed without re-doing completed work.",
-      "confidence": "stated",
-      "source_exchange": 4,
-      "related_domains": ["functionality", "performance"],
-      "timestamp": "2026-01-09T12:20:00.000Z",
-      "tags": ["idempotent", "resume", "reliability"]
+      "type": "decision",
+      "title": "Maximum 3 Replacement Attempts Per Rejected Clip",
+      "description": "When a clip is rejected, the system will attempt up to 3 replacement candidates before moving on. If all 3 fail, the slot is left unfilled and processing continues with remaining clips.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System attempts max 3 replacements per rejected clip",
+        "After 3 failures, slot remains unfilled",
+        "Processing continues regardless of replacement success"
+      ]
     },
     {
-      "id": "disc_026",
+      "id": "D019",
       "domain": "error_handling",
-      "type": "requirement",
-      "content": "Failure tolerant for unreliable internet - network issues shouldn't corrupt state or lose progress.",
-      "confidence": "stated",
-      "source_exchange": 4,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:20:00.000Z",
-      "tags": ["network", "reliability", "offline"]
+      "type": "decision",
+      "title": "Target 5 Clips, Minimum 3 Acceptable",
+      "description": "Default target is 5 clips per video. A video is considered successfully processed if at least 3 clips pass validation. Videos with fewer than 3 clips may need manual review but are not failures.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Default target_clips = 5",
+        "Minimum acceptable clips = 3",
+        "Videos with 3+ clips marked as success",
+        "Videos with <3 clips flagged for attention but not failed"
+      ]
     },
     {
-      "id": "disc_027",
+      "id": "D020",
+      "domain": "error_handling",
+      "type": "decision",
+      "title": "Early Stop When Transcript Exhausted",
+      "description": "For shorter videos like 5-minute lightning talks, the system should stop early if all viable transcript segments have been used. Report actual clips found (e.g., 'found 3 of 5 requested clips').",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System detects when no more viable segments remain",
+        "Processing stops gracefully when exhausted",
+        "Final report shows actual vs requested clip count"
+      ]
+    },
+    {
+      "id": "D021",
+      "domain": "error_handling",
+      "type": "decision",
+      "title": "Cost Ceiling of £5 Per Video Run",
+      "description": "Total LLM cost for processing a single video should not exceed £5 GBP. If cost ceiling is approached, system should stop iterations and finalize with clips found so far.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System tracks cumulative LLM cost per video",
+        "Cost ceiling set to £5 GBP (configurable)",
+        "Processing halts gracefully when ceiling approached",
+        "Final report includes total cost"
+      ]
+    },
+    {
+      "id": "D022",
       "domain": "data",
       "type": "decision",
-      "content": "Storage format: no preference - use whatever is best for the use case. Human-readability not required. Portability not needed independently (entire project shared together).",
-      "confidence": "stated",
-      "source_exchange": 5,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:25:00.000Z",
-      "tags": ["storage", "format", "flexibility"]
+      "title": "File-Based Review Queue Storage",
+      "description": "KISS approach: rejected clips stored as individual JSON files in a dedicated review/ folder within the project directory. Simple, portable, works with existing file-based architecture.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Review folder created at project_root/review/",
+        "Each rejected clip saved as separate JSON file",
+        "File naming includes clip ID and rejection timestamp"
+      ]
     },
     {
-      "id": "disc_028",
-      "domain": "data",
-      "type": "requirement",
-      "content": "Keep full transcripts and source videos for future reuse. Extracted clips stored separately. Both retained to support creating new outputs from same source material.",
-      "confidence": "stated",
-      "source_exchange": 5,
-      "related_domains": ["functionality", "reusability"],
-      "timestamp": "2026-01-09T12:25:00.000Z",
-      "tags": ["transcripts", "retention", "reuse"]
-    },
-    {
-      "id": "disc_029",
+      "id": "D023",
       "domain": "data",
       "type": "decision",
-      "content": "Videos referenced where they live. User copies videos into project. Suggested structure: brand/source/ for source video storage.",
-      "confidence": "stated",
-      "source_exchange": 5,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:25:00.000Z",
-      "tags": ["video", "storage", "structure"]
-    },
-    {
-      "id": "disc_030",
-      "domain": "integration",
-      "type": "constraint",
-      "content": "Preference for free/cheap transcription. Speed not priority if pause/resume works - can run overnight/weekend. Typical workload: 30-35 videos x 30min = 15-20 hours content.",
-      "confidence": "stated",
-      "source_exchange": 6,
-      "related_domains": ["performance", "functionality"],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["transcription", "cost", "batch"]
-    },
-    {
-      "id": "disc_031",
-      "domain": "integration",
-      "type": "requirement",
-      "content": "Need cost/time estimation before processing. Acceptable threshold ~$20 for full conference. If under a few dollars for API, quality/speed wins. Make provider configurable.",
-      "confidence": "stated",
-      "source_exchange": 6,
-      "related_domains": ["functionality", "observability"],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["cost", "estimation", "configuration"]
-    },
-    {
-      "id": "disc_032",
-      "domain": "integration",
-      "type": "decision",
-      "content": "LLM for highlight detection: Claude/OpenAI APIs acceptable. Considered low cost for the requirement.",
-      "confidence": "stated",
-      "source_exchange": 6,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["llm", "api", "highlights"]
-    },
-    {
-      "id": "disc_033",
-      "domain": "integration",
-      "type": "decision",
-      "content": "Video codecs: no specific requirements. Use common, compatible, efficient formats. No need for 4K output.",
-      "confidence": "stated",
-      "source_exchange": 6,
-      "related_domains": ["performance"],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["video", "codec", "output"]
-    },
-    {
-      "id": "disc_034",
-      "domain": "integration",
-      "type": "decision",
-      "content": "Audio handling: no special requirements. Content is 99% speech, not hi-fidelity music.",
-      "confidence": "stated",
-      "source_exchange": 6,
-      "related_domains": [],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["audio", "speech"]
-    },
-    {
-      "id": "disc_035",
-      "domain": "integration",
-      "type": "requirement",
-      "content": "Caption burning: direct text overlay, lower-thirds positioning. Auto-sized and auto-wrapped to fit video window.",
-      "confidence": "stated",
-      "source_exchange": 6,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["captions", "overlay", "positioning"]
-    },
-    {
-      "id": "disc_036",
-      "domain": "integration",
-      "type": "insight",
-      "content": "Nice-to-have: highlighted word animation as speaker talks (karaoke-style). Not essential, but would enhance captions.",
-      "confidence": "stated",
-      "source_exchange": 6,
-      "related_domains": ["functionality"],
-      "timestamp": "2026-01-09T12:30:00.000Z",
-      "tags": ["captions", "animation", "enhancement"]
-    },
-    {
-      "id": "disc_037",
-      "domain": "dependencies",
-      "type": "decision",
-      "content": "Runtime: Python preferred. No strong user preference, but Python ecosystem stronger for video/ML tooling.",
-      "confidence": "stated",
-      "source_exchange": 7,
-      "related_domains": ["integration"],
-      "timestamp": "2026-01-09T12:35:00.000Z",
-      "tags": ["python", "runtime", "ecosystem"]
-    },
-    {
-      "id": "disc_038",
-      "domain": "dependencies",
-      "type": "constraint",
-      "content": "Development machine: Microsoft Surface Book Pro, 32GB RAM, dedicated GPU (laptop-grade, not high-powered). Windows 11.",
-      "confidence": "stated",
-      "source_exchange": 7,
-      "related_domains": ["performance", "deployment"],
-      "timestamp": "2026-01-09T12:35:00.000Z",
-      "tags": ["hardware", "windows", "gpu", "laptop"]
-    },
-    {
-      "id": "disc_039",
-      "domain": "dependencies",
-      "type": "insight",
-      "content": "GPU is laptop-grade, limiting local Whisper performance. May favor API transcription or slower local processing.",
-      "confidence": "inferred",
-      "source_exchange": 7,
-      "related_domains": ["performance", "integration"],
-      "timestamp": "2026-01-09T12:35:00.000Z",
-      "tags": ["gpu", "whisper", "transcription", "performance"]
-    },
-    {
-      "id": "disc_040",
-      "domain": "dependencies",
-      "type": "decision",
-      "content": "Target video editor: DaVinci Resolve. User recently switched and still learning. Exported clips should be easily importable.",
-      "confidence": "stated",
-      "source_exchange": 7,
-      "related_domains": ["integration", "functionality"],
-      "timestamp": "2026-01-09T12:35:00.000Z",
-      "tags": ["davinci", "editor", "export", "workflow"]
-    },
-    {
-      "id": "disc_041",
-      "domain": "dependencies",
-      "type": "insight",
-      "content": "DaVinci Resolve compatibility: standard MP4/MOV containers with H.264/H.265 video and AAC audio import seamlessly. Avoid exotic codecs.",
-      "confidence": "inferred",
-      "source_exchange": 7,
-      "related_domains": ["integration"],
-      "timestamp": "2026-01-09T12:35:00.000Z",
-      "tags": ["davinci", "codec", "compatibility"]
+      "title": "Review Queue Contents",
+      "description": "Each review queue entry includes: rejected clip info with rejection reason, full transcript segment for context, and a preview command to easily regenerate/test the clip.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Rejection reason captured and stored",
+        "Full transcript segment text included",
+        "Timestamp range for the segment included",
+        "CLI command to preview/regenerate clip included"
+      ]
     }
   ],
   "exchanges": [
     {
-      "id": 1,
-      "domain": "functionality",
-      "question": "For Lyric Match Mode, walk me through your ideal workflow step-by-step: inputs, matching interface, handling multiple source videos.",
-      "answer": "Input: folder of video files + transcript. Videos often from YouTube (owned). May need preprocessing for transcripts. Want word/phrase clip dictionary approach. Prefer not reusing same source video. Output naming: source filename + clip identifier.",
-      "extracted_discoveries": ["disc_001", "disc_002", "disc_003", "disc_004", "disc_005", "disc_006"],
-      "timestamp": "2026-01-09T12:05:00.000Z"
+      "id": "E001",
+      "timestamp": "2026-01-10T10:05:00.000Z",
+      "question": "What does 'validates the transcript' mean specifically? What validation criteria should be applied to determine if a clip selection is good?",
+      "answer": "Clips must meet multiple quality criteria: 30-120 seconds duration (YouTube Shorts compatible), complete sentences (no mid-sentence cuts), topic coverage, optional hooks (desired but not forced), standalone validity (makes sense without full video context), brand relevance (KCD = Kubernetes Community Days, CNCF/Cloud Native), validated against transcript, and non-overlapping (each clip independent, no reused sentences).",
+      "discoveries_extracted": ["D001", "D002", "D003", "D004", "D005", "D006", "D007", "D008"],
+      "domain": "functionality"
     },
     {
-      "id": 2,
-      "domain": "functionality",
-      "question": "Dictionary persistence (project vs library), phrase boundary detection method, and match selection criteria.",
-      "answer": "Brand-based persistence spanning multiple projects. Phrase boundaries manually curated and lyrics-driven. Search interface for sourcing phrases. Match selection is human-in-the-loop, phonetic matching nice-to-have.",
-      "extracted_discoveries": ["disc_007", "disc_008", "disc_009", "disc_010", "disc_011", "disc_012"],
-      "timestamp": "2026-01-09T12:10:00.000Z"
+      "id": "E002",
+      "timestamp": "2026-01-10T10:15:00.000Z",
+      "question": "For the multi-pass validation: Should validation use the same LLM, a different LLM, or a hybrid approach? And for clips that fail validation, should they be rejected, adjusted, or flagged for human review?",
+      "answer": "Use the same LLM as analysis but with a reframed validation prompt. Rejected clips should be replaced with new selections that pass the same quality gates. Rejected clips go into a human review queue rather than being silently discarded. Replacement selections must not overlap with already-approved clips.",
+      "discoveries_extracted": ["D014", "D015", "D016", "D017"],
+      "domain": "integration"
     },
     {
-      "id": 3,
-      "domain": "functionality",
-      "question": "Highlights Mode: input setup, topic configuration, and output expectations.",
-      "answer": "Batch process 30+ videos post-conference. Target YouTube/LinkedIn with portrait format. Input includes session description. Output: clip + title/hook. On-screen captions essential with brand-specific emoji/logo injection for mentioned terms.",
-      "extracted_discoveries": ["disc_013", "disc_014", "disc_015", "disc_016", "disc_017", "disc_018", "disc_019", "disc_020", "disc_021"],
-      "timestamp": "2026-01-09T12:15:00.000Z"
+      "id": "E003",
+      "timestamp": "2026-01-10T10:25:00.000Z",
+      "question": "For the iterative replacement workflow, what are the termination conditions? Maximum iterations per clip, minimum acceptable clip count, handling transcript exhaustion, and cost ceiling?",
+      "answer": "Maximum 3 replacement attempts per rejected clip, then continue. Target is 5 clips but minimum 3 is acceptable. Fine to stop early when transcript is exhausted (common with 5-minute lightning talks). Cost ceiling of £5 total per video run.",
+      "discoveries_extracted": ["D018", "D019", "D020", "D021"],
+      "domain": "error_handling"
     },
     {
-      "id": 4,
-      "domain": "functionality",
-      "question": "User interface model, human-in-the-loop interaction, and project state management.",
-      "answer": "CLI tool. Output dumped to folders for review. Save/resume needed. Must be idempotent and failure-tolerant for unreliable internet.",
-      "extracted_discoveries": ["disc_022", "disc_023", "disc_024", "disc_025", "disc_026"],
-      "timestamp": "2026-01-09T12:20:00.000Z"
-    },
-    {
-      "id": 5,
-      "domain": "data",
-      "question": "Storage format preferences, transcript retention strategy, and video file handling approach.",
-      "answer": "No format preference - use best for use case. Keep full transcripts and videos for future reuse. Videos referenced in place, user copies to brand/source/ structure.",
-      "extracted_discoveries": ["disc_027", "disc_028", "disc_029"],
-      "timestamp": "2026-01-09T12:25:00.000Z"
-    },
-    {
-      "id": 6,
-      "domain": "integration",
-      "question": "Transcription provider preferences, LLM for highlight detection, and video processing requirements.",
-      "answer": "Prefer free/cheap, quality matters, speed OK if resumable. Cost estimation needed, ~$20 threshold. Claude/OpenAI for LLM. Standard codecs, speech audio. Direct text overlay captions, lower-thirds, auto-sized. Word highlighting nice-to-have.",
-      "extracted_discoveries": ["disc_030", "disc_031", "disc_032", "disc_033", "disc_034", "disc_035", "disc_036"],
-      "timestamp": "2026-01-09T12:30:00.000Z"
-    },
-    {
-      "id": 7,
-      "domain": "dependencies",
-      "question": "Runtime preference (Node.js vs Python), local machine setup (GPU, RAM, OS), and existing video editing tools.",
-      "answer": "No strong preference, Python seems stronger. Microsoft Surface Book Pro with 32GB RAM and laptop-grade dedicated GPU. Windows 11. Recently moved to DaVinci Resolve, still learning it.",
-      "extracted_discoveries": ["disc_037", "disc_038", "disc_039", "disc_040", "disc_041"],
-      "timestamp": "2026-01-09T12:35:00.000Z"
+      "id": "E004",
+      "timestamp": "2026-01-10T10:35:00.000Z",
+      "question": "For the human review queue, what format/storage would work best? File-based, centralized JSON, or part of project state? And what should be included in each review entry?",
+      "answer": "KISS - simple file-based review with clips stored in a specific review folder. Include all suggested content: rejected clip info with rejection reason, full transcript segment for context, and a preview command to easily regenerate/test the clip.",
+      "discoveries_extracted": ["D022", "D023"],
+      "domain": "data"
     }
   ]
 }

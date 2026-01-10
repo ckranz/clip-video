@@ -42,9 +42,16 @@ class ClaudeLLM(LLMProvider):
     Requires ANTHROPIC_API_KEY environment variable or api_key in config.
     """
 
-    # Pricing per million tokens (as of early 2025)
+    # Pricing per million tokens (as of Jan 2026)
     PRICING = {
+        # Claude 4.5 series (latest)
+        "claude-sonnet-4-5-20241219": {"input": 3.0, "output": 15.0},
+        "claude-opus-4-5-20241219": {"input": 5.0, "output": 25.0},
+        "claude-haiku-4-5-20241219": {"input": 1.0, "output": 5.0},
+        # Claude 4 series
         "claude-sonnet-4-20250514": {"input": 3.0, "output": 15.0},
+        "claude-opus-4-20250514": {"input": 15.0, "output": 75.0},
+        # Legacy models
         "claude-3-5-sonnet-20241022": {"input": 3.0, "output": 15.0},
         "claude-3-haiku-20240307": {"input": 0.25, "output": 1.25},
         "claude-3-opus-20240229": {"input": 15.0, "output": 75.0},

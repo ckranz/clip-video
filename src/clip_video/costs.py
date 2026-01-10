@@ -388,28 +388,28 @@ class CostTracker:
         return cls.from_dict(data)
 
 
-# Pricing constants (USD per unit)
+# Pricing constants (USD per unit) - as of Jan 2026
 class Pricing:
     """API pricing constants."""
 
     # Whisper API pricing (per minute)
     WHISPER_API_PER_MINUTE = 0.006
 
-    # Claude pricing (per 1M tokens)
+    # Claude Sonnet 4.5 pricing (per 1M tokens) - default
     CLAUDE_INPUT_PER_1M = 3.00
     CLAUDE_OUTPUT_PER_1M = 15.00
 
-    # Claude Haiku pricing (per 1M tokens)
-    CLAUDE_HAIKU_INPUT_PER_1M = 0.25
-    CLAUDE_HAIKU_OUTPUT_PER_1M = 1.25
+    # Claude Haiku 4.5 pricing (per 1M tokens)
+    CLAUDE_HAIKU_INPUT_PER_1M = 1.00
+    CLAUDE_HAIKU_OUTPUT_PER_1M = 5.00
 
-    # OpenAI GPT-4o pricing (per 1M tokens)
-    GPT4O_INPUT_PER_1M = 2.50
-    GPT4O_OUTPUT_PER_1M = 10.00
+    # OpenAI GPT-4.1 pricing (per 1M tokens) - default
+    GPT4O_INPUT_PER_1M = 2.00
+    GPT4O_OUTPUT_PER_1M = 8.00
 
-    # OpenAI GPT-4o mini pricing (per 1M tokens)
-    GPT4O_MINI_INPUT_PER_1M = 0.15
-    GPT4O_MINI_OUTPUT_PER_1M = 0.60
+    # OpenAI GPT-4.1 mini pricing (per 1M tokens)
+    GPT4O_MINI_INPUT_PER_1M = 0.10
+    GPT4O_MINI_OUTPUT_PER_1M = 0.40
 
 
 @dataclass

@@ -1,0 +1,4035 @@
+{
+  "video_path": "C:\\Users\\chris\\Dropbox\\Scripts\\clip-video\\brands\\KCD-UK\\videos\\Omotayo Adeleke - AI-Powered Observability in Kubernetes Beyond Logs and Metrics.mp4",
+  "text": "Thank you everyone My name is Omotari Adelike I'm a software developer and a cloud devops enthusiast About a few weeks not weeks a month ago one of our clusters crashed And ten minutes before then everything was alright The grafana dashboards were green the prometheus metrics were alright And then all of a sudden everything crashed So that got me What if our observability stack could actually see this coming and prevent it from So in this talk I'll be breezing through our AI apps communicating to kubernetes and seeing incidents before they happen and preventing them So currently what we have right now we have our traditional systems wait for incidents to happen before reacting And with AI AI kind of flips the model because with AI we can predict what could happen correctly and then prevent it from happening So I'm pretty sure somebody is asking what does a road got to do with any of this So the point is that what we currently have I imagine it to be like you're driving and then when an incident happens you're looking at the rearview mirror in order to do something in order to react But with AI we're looking forward and anything that pops up on the road we see it and we're able to find our way through So how does AI fit into all this Probitius gives us the metrics Grafana gives us the visualization we could visualize everything that is happening in our system with Grafana But with AI it supports the anomalies in our systems and then it helps us with predictive scaling and then it actually helps us do other stuff too And reward impact of AI Teams are already using ML models to forecast CPU spikes as you already see AI is helping teams detect noisy neighbors in multi tenant clusters It's preventing it's predicting for evictions even before they happen So there's a whole lot of good that AI we've been enjoying with AI in our Kubernetes clusters So we all have stories of our frustrations with AI and it isn't magic That's the thing it isn't magic AI is as good as data This is also to remind us that it's just like our critical infrastructures it requires good data and it also requires constant monitoring So you can't just wave AI in front of your problems like a magic wand and then it all disappears No But the implication of this is that false positives could occur and when this happens this could lead to alerts this could lead to alert deluge this could lead to stress because of constant notifications that we do not even need So in order to fix this all we need to do to remedy this is to monitor machine learning alert rates and adjust the sensitivity So basically start small validate the inputs and we're not putting up with humans definitely humans are part of the process So as AI suggests we have humans on the team that are cross checking the result of this So what's the future Imagine clusters that predict failures and then self heal This is the future This is not science fiction It's already imagined in both academics research and industry research and in early production So you don't have to start with something expansive Just start small It could be that you train a small anomaly model of your premature data to test measure and as you do all this you're learning something The idea is to build confidence AI just like any other autonomous tool is to help us build confidence So as we start small we build confidence and this will help us for mass adoption So this my friend is how we move from firefighting at 3am to resilience Thank you Thank you",
+  "segments": [
+    {
+      "text": "Thank you everyone My name is Omotari Adelike I'm a software developer and a cloud devops enthusiast",
+      "start": 2.559999942779541,
+      "end": 8.4399995803833,
+      "words": [
+        {
+          "word": "Thank",
+          "start": 2.559999942779541,
+          "end": 3.2799999713897705,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 3.2799999713897705,
+          "end": 3.440000057220459,
+          "confidence": 1.0
+        },
+        {
+          "word": "everyone",
+          "start": 3.440000057220459,
+          "end": 3.7200000286102295,
+          "confidence": 1.0
+        },
+        {
+          "word": "My",
+          "start": 4.119999885559082,
+          "end": 4.139999866485596,
+          "confidence": 1.0
+        },
+        {
+          "word": "name",
+          "start": 4.139999866485596,
+          "end": 4.300000190734863,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 4.300000190734863,
+          "end": 4.519999980926514,
+          "confidence": 1.0
+        },
+        {
+          "word": "Omotari",
+          "start": 4.519999980926514,
+          "end": 4.800000190734863,
+          "confidence": 1.0
+        },
+        {
+          "word": "Adelike",
+          "start": 4.800000190734863,
+          "end": 5.21999979019165,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'm",
+          "start": 5.519999980926514,
+          "end": 5.599999904632568,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 5.599999904632568,
+          "end": 5.820000171661377,
+          "confidence": 1.0
+        },
+        {
+          "word": "software",
+          "start": 5.820000171661377,
+          "end": 6.019999980926514,
+          "confidence": 1.0
+        },
+        {
+          "word": "developer",
+          "start": 6.019999980926514,
+          "end": 6.460000038146973,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 6.460000038146973,
+          "end": 7.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 7.0,
+          "end": 7.480000019073486,
+          "confidence": 1.0
+        },
+        {
+          "word": "cloud",
+          "start": 7.480000019073486,
+          "end": 7.599999904632568,
+          "confidence": 1.0
+        },
+        {
+          "word": "devops",
+          "start": 7.599999904632568,
+          "end": 7.940000057220459,
+          "confidence": 1.0
+        },
+        {
+          "word": "enthusiast",
+          "start": 7.940000057220459,
+          "end": 8.4399995803833,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "About a few weeks not weeks a month ago one of our clusters crashed",
+      "start": 9.880000114440918,
+      "end": 16.780000686645508,
+      "words": [
+        {
+          "word": "About",
+          "start": 9.880000114440918,
+          "end": 10.600000381469727,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 10.600000381469727,
+          "end": 11.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "few",
+          "start": 11.0,
+          "end": 11.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "weeks",
+          "start": 11.0,
+          "end": 11.359999656677246,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 11.399999618530273,
+          "end": 11.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "weeks",
+          "start": 11.920000076293945,
+          "end": 12.15999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 12.539999961853027,
+          "end": 12.880000114440918,
+          "confidence": 1.0
+        },
+        {
+          "word": "month",
+          "start": 12.880000114440918,
+          "end": 12.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "ago",
+          "start": 12.979999542236328,
+          "end": 13.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "one",
+          "start": 14.600000381469727,
+          "end": 15.260000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 15.260000228881836,
+          "end": 15.380000114440918,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 15.380000114440918,
+          "end": 15.539999961853027,
+          "confidence": 1.0
+        },
+        {
+          "word": "clusters",
+          "start": 15.539999961853027,
+          "end": 15.819999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "crashed",
+          "start": 15.819999694824219,
+          "end": 16.780000686645508,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And ten minutes before then everything was alright The grafana dashboards were green the prometheus metrics were alright",
+      "start": 17.84000015258789,
+      "end": 26.18000030517578,
+      "words": [
+        {
+          "word": "And",
+          "start": 17.84000015258789,
+          "end": 17.8799991607666,
+          "confidence": 1.0
+        },
+        {
+          "word": "ten",
+          "start": 17.8799991607666,
+          "end": 18.3799991607666,
+          "confidence": 1.0
+        },
+        {
+          "word": "minutes",
+          "start": 18.3799991607666,
+          "end": 18.579999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "before",
+          "start": 18.579999923706055,
+          "end": 18.959999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 18.959999084472656,
+          "end": 19.260000228881836,
+          "confidence": 1.0
+        },
+        {
+          "word": "everything",
+          "start": 19.3799991607666,
+          "end": 19.719999313354492,
+          "confidence": 1.0
+        },
+        {
+          "word": "was",
+          "start": 19.719999313354492,
+          "end": 19.920000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "alright",
+          "start": 19.920000076293945,
+          "end": 20.239999771118164,
+          "confidence": 1.0
+        },
+        {
+          "word": "The",
+          "start": 20.920000076293945,
+          "end": 21.280000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "grafana",
+          "start": 21.280000686645508,
+          "end": 21.579999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "dashboards",
+          "start": 21.579999923706055,
+          "end": 22.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "were",
+          "start": 22.18000030517578,
+          "end": 22.559999465942383,
+          "confidence": 1.0
+        },
+        {
+          "word": "green",
+          "start": 22.559999465942383,
+          "end": 22.979999542236328,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 23.700000762939453,
+          "end": 24.639999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "prometheus",
+          "start": 24.639999389648438,
+          "end": 24.639999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "metrics",
+          "start": 24.639999389648438,
+          "end": 25.299999237060547,
+          "confidence": 1.0
+        },
+        {
+          "word": "were",
+          "start": 25.299999237060547,
+          "end": 25.639999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "alright",
+          "start": 25.639999389648438,
+          "end": 26.18000030517578,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And then all of a sudden everything crashed So that got me",
+      "start": 26.18000030517578,
+      "end": 33.15999984741211,
+      "words": [
+        {
+          "word": "And",
+          "start": 26.18000030517578,
+          "end": 27.420000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 27.420000076293945,
+          "end": 27.780000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 27.860000610351562,
+          "end": 28.780000686645508,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 28.780000686645508,
+          "end": 28.84000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 28.84000015258789,
+          "end": 29.299999237060547,
+          "confidence": 1.0
+        },
+        {
+          "word": "sudden",
+          "start": 29.299999237060547,
+          "end": 29.299999237060547,
+          "confidence": 1.0
+        },
+        {
+          "word": "everything",
+          "start": 29.84000015258789,
+          "end": 30.1200008392334,
+          "confidence": 1.0
+        },
+        {
+          "word": "crashed",
+          "start": 30.1200008392334,
+          "end": 30.959999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 31.780000686645508,
+          "end": 31.860000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 32.31999969482422,
+          "end": 32.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "got",
+          "start": 32.58000183105469,
+          "end": 32.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "me",
+          "start": 32.599998474121094,
+          "end": 33.15999984741211,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "What if our observability stack could actually see this coming and prevent it from",
+      "start": 33.880001068115234,
+      "end": 41.13999938964844,
+      "words": [
+        {
+          "word": "What",
+          "start": 33.880001068115234,
+          "end": 34.34000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "if",
+          "start": 34.34000015258789,
+          "end": 34.900001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 34.900001525878906,
+          "end": 35.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "observability",
+          "start": 35.70000076293945,
+          "end": 36.380001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "stack",
+          "start": 36.380001068115234,
+          "end": 37.29999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 37.29999923706055,
+          "end": 37.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 37.65999984741211,
+          "end": 37.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "see",
+          "start": 37.86000061035156,
+          "end": 38.220001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 38.220001220703125,
+          "end": 38.540000915527344,
+          "confidence": 1.0
+        },
+        {
+          "word": "coming",
+          "start": 38.540000915527344,
+          "end": 38.7599983215332,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 38.7599983215332,
+          "end": 39.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "prevent",
+          "start": 39.31999969482422,
+          "end": 40.47999954223633,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 40.47999954223633,
+          "end": 40.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "from",
+          "start": 40.68000030517578,
+          "end": 41.13999938964844,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So in this talk I'll be breezing through our AI apps communicating to kubernetes and seeing incidents before they happen and preventing them",
+      "start": 41.84000015258789,
+      "end": 52.880001068115234,
+      "words": [
+        {
+          "word": "So",
+          "start": 41.84000015258789,
+          "end": 42.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 42.279998779296875,
+          "end": 42.400001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 42.400001525878906,
+          "end": 42.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "talk",
+          "start": 42.599998474121094,
+          "end": 42.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'll",
+          "start": 42.81999969482422,
+          "end": 42.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 42.91999816894531,
+          "end": 43.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "breezing",
+          "start": 43.599998474121094,
+          "end": 43.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "through",
+          "start": 43.63999938964844,
+          "end": 44.02000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 44.02000045776367,
+          "end": 44.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 44.63999938964844,
+          "end": 45.220001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "apps",
+          "start": 45.220001220703125,
+          "end": 46.459999084472656,
+          "confidence": 1.0
+        },
+        {
+          "word": "communicating",
+          "start": 46.540000915527344,
+          "end": 47.119998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 47.119998931884766,
+          "end": 47.439998626708984,
+          "confidence": 1.0
+        },
+        {
+          "word": "kubernetes",
+          "start": 47.439998626708984,
+          "end": 47.7599983215332,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 48.5,
+          "end": 49.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "seeing",
+          "start": 49.13999938964844,
+          "end": 49.29999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "incidents",
+          "start": 49.29999923706055,
+          "end": 51.099998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "before",
+          "start": 51.099998474121094,
+          "end": 51.400001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 51.400001525878906,
+          "end": 51.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "happen",
+          "start": 51.65999984741211,
+          "end": 51.7599983215332,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 52.15999984741211,
+          "end": 52.380001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "preventing",
+          "start": 52.380001068115234,
+          "end": 52.619998931884766,
+          "confidence": 1.0
+        },
+        {
+          "word": "them",
+          "start": 52.619998931884766,
+          "end": 52.880001068115234,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So currently what we have right now we have our traditional systems wait for incidents to happen before reacting",
+      "start": 52.880001068115234,
+      "end": 62.08000183105469,
+      "words": [
+        {
+          "word": "So",
+          "start": 52.880001068115234,
+          "end": 53.380001068115234,
+          "confidence": 1.0
+        },
+        {
+          "word": "currently",
+          "start": 53.779998779296875,
+          "end": 54.2400016784668,
+          "confidence": 1.0
+        },
+        {
+          "word": "what",
+          "start": 54.5,
+          "end": 54.560001373291016,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 54.560001373291016,
+          "end": 54.70000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 54.70000076293945,
+          "end": 54.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "right",
+          "start": 54.91999816894531,
+          "end": 55.20000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "now",
+          "start": 55.20000076293945,
+          "end": 55.599998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 56.29999923706055,
+          "end": 56.400001525878906,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 56.400001525878906,
+          "end": 56.52000045776367,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 56.52000045776367,
+          "end": 56.65999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "traditional",
+          "start": 56.65999984741211,
+          "end": 56.939998626708984,
+          "confidence": 1.0
+        },
+        {
+          "word": "systems",
+          "start": 56.939998626708984,
+          "end": 58.20000076293945,
+          "confidence": 1.0
+        },
+        {
+          "word": "wait",
+          "start": 58.380001068115234,
+          "end": 59.29999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 59.29999923706055,
+          "end": 59.720001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "incidents",
+          "start": 59.720001220703125,
+          "end": 60.099998474121094,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 60.099998474121094,
+          "end": 60.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "happen",
+          "start": 60.91999816894531,
+          "end": 60.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "before",
+          "start": 60.91999816894531,
+          "end": 61.29999923706055,
+          "confidence": 1.0
+        },
+        {
+          "word": "reacting",
+          "start": 61.29999923706055,
+          "end": 62.08000183105469,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And with AI AI kind of flips the model because with AI we can predict what could happen correctly and then prevent it from happening",
+      "start": 63.380001068115234,
+      "end": 72.18000030517578,
+      "words": [
+        {
+          "word": "And",
+          "start": 63.380001068115234,
+          "end": 63.939998626708984,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 63.939998626708984,
+          "end": 64.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 64.5,
+          "end": 64.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 64.76000213623047,
+          "end": 65.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "kind",
+          "start": 65.19999694824219,
+          "end": 65.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 65.31999969482422,
+          "end": 65.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "flips",
+          "start": 65.55999755859375,
+          "end": 65.80000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 65.80000305175781,
+          "end": 66.0199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "model",
+          "start": 66.0199966430664,
+          "end": 66.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 66.81999969482422,
+          "end": 67.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 67.05999755859375,
+          "end": 67.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 67.37999725341797,
+          "end": 67.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 67.91999816894531,
+          "end": 68.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "can",
+          "start": 68.08000183105469,
+          "end": 68.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "predict",
+          "start": 68.37999725341797,
+          "end": 68.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "what",
+          "start": 68.81999969482422,
+          "end": 69.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 69.27999877929688,
+          "end": 69.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "happen",
+          "start": 69.37999725341797,
+          "end": 69.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "correctly",
+          "start": 69.63999938964844,
+          "end": 70.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 70.73999786376953,
+          "end": 71.04000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 71.04000091552734,
+          "end": 71.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "prevent",
+          "start": 71.26000213623047,
+          "end": 71.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 71.5,
+          "end": 71.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "from",
+          "start": 71.66000366210938,
+          "end": 71.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "happening",
+          "start": 71.95999908447266,
+          "end": 72.18000030517578,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So I'm pretty sure somebody is asking what does a road got to do with any of this",
+      "start": 72.5199966430664,
+      "end": 77.94000244140625,
+      "words": [
+        {
+          "word": "So",
+          "start": 72.5199966430664,
+          "end": 73.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "I'm",
+          "start": 73.08000183105469,
+          "end": 73.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "pretty",
+          "start": 73.37999725341797,
+          "end": 73.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "sure",
+          "start": 73.58000183105469,
+          "end": 73.69999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "somebody",
+          "start": 73.69999694824219,
+          "end": 74.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 74.0,
+          "end": 74.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "asking",
+          "start": 74.27999877929688,
+          "end": 74.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "what",
+          "start": 75.04000091552734,
+          "end": 75.12000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "does",
+          "start": 75.12000274658203,
+          "end": 75.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 75.55999755859375,
+          "end": 75.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "road",
+          "start": 75.81999969482422,
+          "end": 76.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "got",
+          "start": 76.05999755859375,
+          "end": 76.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 76.30000305175781,
+          "end": 76.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 76.44000244140625,
+          "end": 76.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 76.54000091552734,
+          "end": 77.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "any",
+          "start": 77.18000030517578,
+          "end": 77.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 77.55999755859375,
+          "end": 77.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 77.66000366210938,
+          "end": 77.94000244140625,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So the point is that what we currently have I imagine it to be like you're driving and then when an incident happens you're looking at the rearview mirror in order to do something in order to react",
+      "start": 77.94000244140625,
+      "end": 94.45999908447266,
+      "words": [
+        {
+          "word": "So",
+          "start": 77.94000244140625,
+          "end": 78.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 78.77999877929688,
+          "end": 78.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "point",
+          "start": 78.9800033569336,
+          "end": 79.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 79.26000213623047,
+          "end": 79.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 79.4800033569336,
+          "end": 79.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "what",
+          "start": 80.19999694824219,
+          "end": 80.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 80.22000122070312,
+          "end": 80.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "currently",
+          "start": 80.33999633789062,
+          "end": 80.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 80.66000366210938,
+          "end": 81.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "I",
+          "start": 82.41999816894531,
+          "end": 82.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "imagine",
+          "start": 82.55999755859375,
+          "end": 82.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 82.83999633789062,
+          "end": 82.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 82.95999908447266,
+          "end": 83.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 83.08000183105469,
+          "end": 83.23999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 83.23999786376953,
+          "end": 83.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 84.54000091552734,
+          "end": 85.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "driving",
+          "start": 85.08000183105469,
+          "end": 85.4000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 86.30000305175781,
+          "end": 86.31999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 86.31999969482422,
+          "end": 86.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "when",
+          "start": 87.08000183105469,
+          "end": 87.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "an",
+          "start": 87.36000061035156,
+          "end": 87.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "incident",
+          "start": 87.62000274658203,
+          "end": 87.76000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "happens",
+          "start": 87.76000213623047,
+          "end": 88.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 88.66000366210938,
+          "end": 89.37999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "looking",
+          "start": 89.37999725341797,
+          "end": 89.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "at",
+          "start": 89.95999908447266,
+          "end": 90.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 90.68000030517578,
+          "end": 91.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "rearview",
+          "start": 91.0999984741211,
+          "end": 91.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "mirror",
+          "start": 91.68000030517578,
+          "end": 92.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 92.0,
+          "end": 92.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "order",
+          "start": 92.77999877929688,
+          "end": 92.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 92.83999633789062,
+          "end": 92.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 92.9800033569336,
+          "end": 93.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "something",
+          "start": 93.26000213623047,
+          "end": 93.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 93.68000030517578,
+          "end": 93.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "order",
+          "start": 93.91999816894531,
+          "end": 93.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 93.91999816894531,
+          "end": 94.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "react",
+          "start": 94.05999755859375,
+          "end": 94.45999908447266,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "But with AI we're looking forward and anything that pops up on the road we see it and we're able to find our way through",
+      "start": 94.86000061035156,
+      "end": 105.16000366210938,
+      "words": [
+        {
+          "word": "But",
+          "start": 94.86000061035156,
+          "end": 94.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 95.12000274658203,
+          "end": 95.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 95.33999633789062,
+          "end": 95.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "we're",
+          "start": 95.87999725341797,
+          "end": 96.80000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "looking",
+          "start": 96.80000305175781,
+          "end": 97.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "forward",
+          "start": 97.05999755859375,
+          "end": 97.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 98.0,
+          "end": 98.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "anything",
+          "start": 98.72000122070312,
+          "end": 99.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 99.19999694824219,
+          "end": 99.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "pops",
+          "start": 99.5999984741211,
+          "end": 99.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 99.62000274658203,
+          "end": 99.80000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "on",
+          "start": 99.80000305175781,
+          "end": 100.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 100.0,
+          "end": 100.08000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "road",
+          "start": 100.08000183105469,
+          "end": 100.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 100.95999908447266,
+          "end": 101.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "see",
+          "start": 101.41999816894531,
+          "end": 101.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 101.63999938964844,
+          "end": 102.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 102.45999908447266,
+          "end": 102.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "we're",
+          "start": 102.72000122070312,
+          "end": 103.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "able",
+          "start": 103.19999694824219,
+          "end": 103.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 103.19999694824219,
+          "end": 104.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "find",
+          "start": 104.18000030517578,
+          "end": 104.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 104.68000030517578,
+          "end": 104.91999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "way",
+          "start": 104.91999816894531,
+          "end": 105.0199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "through",
+          "start": 105.0199966430664,
+          "end": 105.16000366210938,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So how does AI fit into all this Probitius gives us the metrics Grafana gives us the visualization we could visualize everything that is happening in our system with Grafana",
+      "start": 105.16000366210938,
+      "end": 117.80000305175781,
+      "words": [
+        {
+          "word": "So",
+          "start": 105.16000366210938,
+          "end": 105.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "how",
+          "start": 105.5199966430664,
+          "end": 105.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "does",
+          "start": 105.81999969482422,
+          "end": 105.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 105.9800033569336,
+          "end": 106.58000183105469,
+          "confidence": 1.0
+        },
+        {
+          "word": "fit",
+          "start": 106.58000183105469,
+          "end": 106.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "into",
+          "start": 106.94000244140625,
+          "end": 107.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 107.16000366210938,
+          "end": 107.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 107.36000061035156,
+          "end": 107.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "Probitius",
+          "start": 109.05999755859375,
+          "end": 109.19999694824219,
+          "confidence": 1.0
+        },
+        {
+          "word": "gives",
+          "start": 109.19999694824219,
+          "end": 109.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "us",
+          "start": 109.62000274658203,
+          "end": 109.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 109.81999969482422,
+          "end": 109.9800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "metrics",
+          "start": 109.9800033569336,
+          "end": 110.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "Grafana",
+          "start": 111.22000122070312,
+          "end": 111.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "gives",
+          "start": 111.22000122070312,
+          "end": 111.5999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "us",
+          "start": 111.5999984741211,
+          "end": 112.4800033569336,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 112.4800033569336,
+          "end": 112.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "visualization",
+          "start": 112.77999877929688,
+          "end": 113.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 114.0199966430664,
+          "end": 114.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 114.13999938964844,
+          "end": 114.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "visualize",
+          "start": 114.33999633789062,
+          "end": 114.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "everything",
+          "start": 114.62000274658203,
+          "end": 115.26000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 115.26000213623047,
+          "end": 115.95999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 115.95999908447266,
+          "end": 116.0999984741211,
+          "confidence": 1.0
+        },
+        {
+          "word": "happening",
+          "start": 116.0999984741211,
+          "end": 116.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 116.36000061035156,
+          "end": 116.54000091552734,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 116.54000091552734,
+          "end": 116.68000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "system",
+          "start": 116.68000030517578,
+          "end": 116.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 116.94000244140625,
+          "end": 117.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "Grafana",
+          "start": 117.55999755859375,
+          "end": 117.80000305175781,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "But with AI it supports the anomalies in our systems and then it helps us with predictive scaling and then it actually helps us do other stuff too",
+      "start": 117.80000305175781,
+      "end": 132.05999755859375,
+      "words": [
+        {
+          "word": "But",
+          "start": 117.80000305175781,
+          "end": 118.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 119.0,
+          "end": 119.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 119.0,
+          "end": 119.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 119.69999694824219,
+          "end": 120.30000305175781,
+          "confidence": 1.0
+        },
+        {
+          "word": "supports",
+          "start": 120.30000305175781,
+          "end": 120.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 120.83999633789062,
+          "end": 121.5199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "anomalies",
+          "start": 121.5199966430664,
+          "end": 121.9000015258789,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 121.9000015258789,
+          "end": 122.62000274658203,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 122.62000274658203,
+          "end": 122.87999725341797,
+          "confidence": 1.0
+        },
+        {
+          "word": "systems",
+          "start": 122.87999725341797,
+          "end": 123.23999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 124.33999633789062,
+          "end": 124.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 124.45999908447266,
+          "end": 124.76000213623047,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 124.76000213623047,
+          "end": 125.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "helps",
+          "start": 125.0,
+          "end": 125.0199966430664,
+          "confidence": 1.0
+        },
+        {
+          "word": "us",
+          "start": 125.0199966430664,
+          "end": 125.18000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 125.18000030517578,
+          "end": 125.41999816894531,
+          "confidence": 1.0
+        },
+        {
+          "word": "predictive",
+          "start": 125.41999816894531,
+          "end": 125.73999786376953,
+          "confidence": 1.0
+        },
+        {
+          "word": "scaling",
+          "start": 125.73999786376953,
+          "end": 126.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 126.5199966430664,
+          "end": 127.45999908447266,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 127.45999908447266,
+          "end": 127.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 127.66000366210938,
+          "end": 127.81999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "actually",
+          "start": 127.81999969482422,
+          "end": 128.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "helps",
+          "start": 128.0399932861328,
+          "end": 128.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "us",
+          "start": 128.27999877929688,
+          "end": 129.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 129.0399932861328,
+          "end": 129.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "other",
+          "start": 129.27999877929688,
+          "end": 129.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "stuff",
+          "start": 129.60000610351562,
+          "end": 129.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "too",
+          "start": 130.22000122070312,
+          "end": 132.05999755859375,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "And reward impact of AI Teams are already using ML models to forecast CPU spikes as you already see AI is helping teams detect noisy neighbors in multi tenant clusters",
+      "start": 132.05999755859375,
+      "end": 148.17999267578125,
+      "words": [
+        {
+          "word": "And",
+          "start": 132.05999755859375,
+          "end": 132.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "reward",
+          "start": 132.60000610351562,
+          "end": 133.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "impact",
+          "start": 133.94000244140625,
+          "end": 134.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 134.25999450683594,
+          "end": 134.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 134.8000030517578,
+          "end": 134.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "Teams",
+          "start": 136.0,
+          "end": 136.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 136.0,
+          "end": 136.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "already",
+          "start": 136.16000366210938,
+          "end": 136.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "using",
+          "start": 136.3800048828125,
+          "end": 136.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "ML",
+          "start": 136.72000122070312,
+          "end": 137.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "models",
+          "start": 137.3000030517578,
+          "end": 137.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 137.6999969482422,
+          "end": 138.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "forecast",
+          "start": 138.0399932861328,
+          "end": 138.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "CPU",
+          "start": 138.4199981689453,
+          "end": 139.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "spikes",
+          "start": 139.5,
+          "end": 140.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 141.5,
+          "end": 141.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 141.94000244140625,
+          "end": 142.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "already",
+          "start": 142.17999267578125,
+          "end": 142.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "see",
+          "start": 142.72000122070312,
+          "end": 143.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 143.9600067138672,
+          "end": 144.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 144.1999969482422,
+          "end": 144.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "helping",
+          "start": 144.24000549316406,
+          "end": 144.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "teams",
+          "start": 144.60000610351562,
+          "end": 145.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "detect",
+          "start": 145.22000122070312,
+          "end": 145.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "noisy",
+          "start": 145.82000732421875,
+          "end": 146.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "neighbors",
+          "start": 146.24000549316406,
+          "end": 146.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 146.60000610351562,
+          "end": 147.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "multi",
+          "start": 147.10000610351562,
+          "end": 147.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "tenant",
+          "start": 147.3800048828125,
+          "end": 147.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "clusters",
+          "start": 147.72000122070312,
+          "end": 148.17999267578125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "It's preventing it's predicting for evictions even before they happen So there's a whole lot of good that AI we've been enjoying with AI in our Kubernetes clusters",
+      "start": 148.17999267578125,
+      "end": 165.82000732421875,
+      "words": [
+        {
+          "word": "It's",
+          "start": 148.17999267578125,
+          "end": 149.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "preventing",
+          "start": 149.60000610351562,
+          "end": 150.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 150.55999755859375,
+          "end": 152.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "predicting",
+          "start": 152.13999938964844,
+          "end": 152.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 152.55999755859375,
+          "end": 152.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "evictions",
+          "start": 152.8800048828125,
+          "end": 153.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "even",
+          "start": 153.89999389648438,
+          "end": 154.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "before",
+          "start": 154.0800018310547,
+          "end": 154.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "they",
+          "start": 154.36000061035156,
+          "end": 155.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "happen",
+          "start": 155.05999755859375,
+          "end": 155.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 155.5800018310547,
+          "end": 155.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "there's",
+          "start": 156.22000122070312,
+          "end": 156.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 156.5800018310547,
+          "end": 156.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "whole",
+          "start": 156.82000732421875,
+          "end": 157.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "lot",
+          "start": 157.1999969482422,
+          "end": 157.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 157.44000244140625,
+          "end": 157.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "good",
+          "start": 157.55999755859375,
+          "end": 157.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 157.9199981689453,
+          "end": 158.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 158.25999450683594,
+          "end": 158.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "we've",
+          "start": 159.9600067138672,
+          "end": 160.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "been",
+          "start": 160.6199951171875,
+          "end": 160.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "enjoying",
+          "start": 160.66000366210938,
+          "end": 161.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 161.0,
+          "end": 161.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 161.67999267578125,
+          "end": 161.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 161.67999267578125,
+          "end": 164.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 164.4600067138672,
+          "end": 164.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "Kubernetes",
+          "start": 164.67999267578125,
+          "end": 165.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "clusters",
+          "start": 165.1199951171875,
+          "end": 165.82000732421875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So we all have stories of our frustrations with AI and it isn't magic That's the thing it isn't magic AI is as good as data This is also to remind us that it's just like our critical infrastructures it requires good data and it also requires constant monitoring",
+      "start": 168.33999633789062,
+      "end": 189.8800048828125,
+      "words": [
+        {
+          "word": "So",
+          "start": 168.33999633789062,
+          "end": 168.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 168.9600067138672,
+          "end": 169.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 169.5800018310547,
+          "end": 169.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 169.77999877929688,
+          "end": 170.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "stories",
+          "start": 170.0,
+          "end": 170.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 170.47999572753906,
+          "end": 170.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 170.83999633789062,
+          "end": 171.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "frustrations",
+          "start": 171.10000610351562,
+          "end": 171.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 171.33999633789062,
+          "end": 172.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 172.25999450683594,
+          "end": 172.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 172.25999450683594,
+          "end": 173.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 173.74000549316406,
+          "end": 174.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "isn't",
+          "start": 174.82000732421875,
+          "end": 175.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "magic",
+          "start": 175.05999755859375,
+          "end": 175.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "That's",
+          "start": 175.52000427246094,
+          "end": 175.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 175.86000061035156,
+          "end": 176.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "thing",
+          "start": 176.0,
+          "end": 176.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 176.3000030517578,
+          "end": 177.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "isn't",
+          "start": 177.22000122070312,
+          "end": 177.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "magic",
+          "start": 177.47999572753906,
+          "end": 177.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 178.5,
+          "end": 178.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 178.8000030517578,
+          "end": 179.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 179.1199951171875,
+          "end": 179.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "good",
+          "start": 179.44000244140625,
+          "end": 179.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 179.55999755859375,
+          "end": 180.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "data",
+          "start": 180.36000061035156,
+          "end": 181.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "This",
+          "start": 182.0800018310547,
+          "end": 182.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 182.25999450683594,
+          "end": 182.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "also",
+          "start": 182.36000061035156,
+          "end": 182.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 182.5399932861328,
+          "end": 182.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "remind",
+          "start": 182.74000549316406,
+          "end": 182.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "us",
+          "start": 182.89999389648438,
+          "end": 183.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 183.16000366210938,
+          "end": 183.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "it's",
+          "start": 183.3000030517578,
+          "end": 183.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 183.4199981689453,
+          "end": 183.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 183.6199951171875,
+          "end": 183.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "our",
+          "start": 183.82000732421875,
+          "end": 183.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "critical",
+          "start": 183.9199981689453,
+          "end": 184.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "infrastructures",
+          "start": 184.22000122070312,
+          "end": 184.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 185.55999755859375,
+          "end": 185.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "requires",
+          "start": 185.8000030517578,
+          "end": 186.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "good",
+          "start": 186.13999938964844,
+          "end": 186.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "data",
+          "start": 186.6999969482422,
+          "end": 187.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 187.3800048828125,
+          "end": 187.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 187.89999389648438,
+          "end": 188.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "also",
+          "start": 188.1199951171875,
+          "end": 188.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "requires",
+          "start": 188.24000549316406,
+          "end": 188.72000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "constant",
+          "start": 188.72000122070312,
+          "end": 189.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "monitoring",
+          "start": 189.33999633789062,
+          "end": 189.8800048828125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So you can't just wave AI in front of your problems like a magic wand and then it all disappears No But the implication of this is that false positives could occur and when this happens this could lead to alerts this could lead to alert deluge this could lead to stress because of constant notifications that we do not even need",
+      "start": 189.8800048828125,
+      "end": 217.1199951171875,
+      "words": [
+        {
+          "word": "So",
+          "start": 189.8800048828125,
+          "end": 190.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 191.25999450683594,
+          "end": 191.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "can't",
+          "start": 191.3000030517578,
+          "end": 191.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 191.6999969482422,
+          "end": 192.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "wave",
+          "start": 192.3800048828125,
+          "end": 192.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 192.6199951171875,
+          "end": 192.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 192.94000244140625,
+          "end": 193.1999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "front",
+          "start": 193.1999969482422,
+          "end": 193.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 193.25999450683594,
+          "end": 193.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 193.36000061035156,
+          "end": 193.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "problems",
+          "start": 193.5,
+          "end": 194.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 194.1999969482422,
+          "end": 194.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 194.4199981689453,
+          "end": 194.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "magic",
+          "start": 194.83999633789062,
+          "end": 194.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "wand",
+          "start": 194.83999633789062,
+          "end": 195.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 195.4600067138672,
+          "end": 195.4600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 195.4600067138672,
+          "end": 195.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "it",
+          "start": 195.67999267578125,
+          "end": 195.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 195.86000061035156,
+          "end": 196.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "disappears",
+          "start": 196.5,
+          "end": 196.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "No",
+          "start": 197.82000732421875,
+          "end": 197.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "But",
+          "start": 198.9600067138672,
+          "end": 199.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 199.60000610351562,
+          "end": 199.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "implication",
+          "start": 199.60000610351562,
+          "end": 199.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 199.8800048828125,
+          "end": 200.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 200.0800018310547,
+          "end": 200.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 200.24000549316406,
+          "end": 200.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 200.39999389648438,
+          "end": 201.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "false",
+          "start": 201.5399932861328,
+          "end": 201.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "positives",
+          "start": 201.8000030517578,
+          "end": 202.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 202.17999267578125,
+          "end": 202.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "occur",
+          "start": 202.75999450683594,
+          "end": 203.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 203.66000366210938,
+          "end": 203.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "when",
+          "start": 203.77999877929688,
+          "end": 203.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 203.89999389648438,
+          "end": 204.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "happens",
+          "start": 204.10000610351562,
+          "end": 204.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 204.9199981689453,
+          "end": 204.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 204.97999572753906,
+          "end": 205.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "lead",
+          "start": 205.17999267578125,
+          "end": 205.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 205.25999450683594,
+          "end": 208.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "alerts",
+          "start": 208.16000366210938,
+          "end": 208.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 209.1199951171875,
+          "end": 209.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 209.39999389648438,
+          "end": 209.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "lead",
+          "start": 209.6199951171875,
+          "end": 209.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 209.66000366210938,
+          "end": 210.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "alert",
+          "start": 210.0800018310547,
+          "end": 210.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "deluge",
+          "start": 210.0800018310547,
+          "end": 210.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 210.63999938964844,
+          "end": 210.86000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 210.86000061035156,
+          "end": 210.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "lead",
+          "start": 210.9199981689453,
+          "end": 211.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 211.02000427246094,
+          "end": 211.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "stress",
+          "start": 211.60000610351562,
+          "end": 212.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "because",
+          "start": 212.6199951171875,
+          "end": 213.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 213.83999633789062,
+          "end": 214.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "constant",
+          "start": 214.0800018310547,
+          "end": 214.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "notifications",
+          "start": 214.63999938964844,
+          "end": 215.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 215.83999633789062,
+          "end": 216.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 216.25999450683594,
+          "end": 216.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 216.44000244140625,
+          "end": 216.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 216.60000610351562,
+          "end": 216.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "even",
+          "start": 216.63999938964844,
+          "end": 216.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "need",
+          "start": 216.9199981689453,
+          "end": 217.1199951171875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So in order to fix this all we need to do to remedy this is to monitor machine learning alert rates and adjust the sensitivity So basically start small validate the inputs and we're not putting up with humans definitely humans are part of the process",
+      "start": 218.5,
+      "end": 233.3800048828125,
+      "words": [
+        {
+          "word": "So",
+          "start": 218.5,
+          "end": 219.02000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 219.02000427246094,
+          "end": 219.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "order",
+          "start": 219.5399932861328,
+          "end": 219.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 219.5399932861328,
+          "end": 219.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "fix",
+          "start": 219.75999450683594,
+          "end": 219.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 219.9600067138672,
+          "end": 220.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 220.94000244140625,
+          "end": 221.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 221.05999755859375,
+          "end": 221.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "need",
+          "start": 221.13999938964844,
+          "end": 221.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 221.27999877929688,
+          "end": 221.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 221.47999572753906,
+          "end": 221.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 221.5800018310547,
+          "end": 221.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "remedy",
+          "start": 221.82000732421875,
+          "end": 222.0,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 222.0,
+          "end": 222.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 222.27999877929688,
+          "end": 222.5800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 222.5800018310547,
+          "end": 222.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "monitor",
+          "start": 222.75999450683594,
+          "end": 223.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "machine",
+          "start": 223.17999267578125,
+          "end": 223.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "learning",
+          "start": 223.74000549316406,
+          "end": 224.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "alert",
+          "start": 224.0399932861328,
+          "end": 224.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "rates",
+          "start": 224.33999633789062,
+          "end": 225.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 225.13999938964844,
+          "end": 225.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "adjust",
+          "start": 225.39999389648438,
+          "end": 225.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 225.66000366210938,
+          "end": 226.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "sensitivity",
+          "start": 226.24000549316406,
+          "end": 226.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 226.9199981689453,
+          "end": 226.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "basically",
+          "start": 227.05999755859375,
+          "end": 227.36000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 227.5800018310547,
+          "end": 227.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "small",
+          "start": 227.74000549316406,
+          "end": 228.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "validate",
+          "start": 228.67999267578125,
+          "end": 228.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 228.94000244140625,
+          "end": 229.25999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "inputs",
+          "start": 229.25999450683594,
+          "end": 229.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 230.32000732421875,
+          "end": 230.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "we're",
+          "start": 230.32000732421875,
+          "end": 230.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 230.67999267578125,
+          "end": 230.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "putting",
+          "start": 230.8000030517578,
+          "end": 230.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "up",
+          "start": 230.9600067138672,
+          "end": 231.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 231.10000610351562,
+          "end": 231.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "humans",
+          "start": 231.27999877929688,
+          "end": 231.52000427246094,
+          "confidence": 1.0
+        },
+        {
+          "word": "definitely",
+          "start": 231.5800018310547,
+          "end": 231.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "humans",
+          "start": 231.97999572753906,
+          "end": 232.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 232.32000732421875,
+          "end": 232.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "part",
+          "start": 232.6199951171875,
+          "end": 232.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 232.75999450683594,
+          "end": 232.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 232.8000030517578,
+          "end": 232.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "process",
+          "start": 232.9600067138672,
+          "end": 233.3800048828125,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So as AI suggests we have humans on the team that are cross checking the result of this So what's the future Imagine clusters that predict failures and then self heal This is the future This is not science fiction It's already imagined in both academics research and industry research and in early production",
+      "start": 233.3800048828125,
+      "end": 257.4599914550781,
+      "words": [
+        {
+          "word": "So",
+          "start": 233.3800048828125,
+          "end": 233.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 234.22000122070312,
+          "end": 234.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 234.82000732421875,
+          "end": 235.0800018310547,
+          "confidence": 1.0
+        },
+        {
+          "word": "suggests",
+          "start": 235.0800018310547,
+          "end": 236.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 237.44000244140625,
+          "end": 237.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 237.55999755859375,
+          "end": 237.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "humans",
+          "start": 237.75999450683594,
+          "end": 238.10000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "on",
+          "start": 238.10000610351562,
+          "end": 238.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 238.24000549316406,
+          "end": 238.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "team",
+          "start": 238.3800048828125,
+          "end": 238.89999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 238.89999389648438,
+          "end": 239.3000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "are",
+          "start": 239.3000030517578,
+          "end": 239.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "cross",
+          "start": 239.74000549316406,
+          "end": 240.13999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "checking",
+          "start": 240.13999938964844,
+          "end": 240.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 240.5,
+          "end": 242.16000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "result",
+          "start": 242.16000366210938,
+          "end": 242.4199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 242.4199981689453,
+          "end": 242.60000610351562,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 242.60000610351562,
+          "end": 242.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 243.25999450683594,
+          "end": 243.47999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "what's",
+          "start": 243.52000427246094,
+          "end": 243.77999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 243.77999877929688,
+          "end": 243.9199981689453,
+          "confidence": 1.0
+        },
+        {
+          "word": "future",
+          "start": 243.9199981689453,
+          "end": 244.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "Imagine",
+          "start": 244.89999389648438,
+          "end": 245.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "clusters",
+          "start": 245.32000732421875,
+          "end": 245.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 245.75999450683594,
+          "end": 246.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "predict",
+          "start": 246.0399932861328,
+          "end": 246.24000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "failures",
+          "start": 246.24000549316406,
+          "end": 246.75999450683594,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 246.75999450683594,
+          "end": 247.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "then",
+          "start": 247.05999755859375,
+          "end": 247.27999877929688,
+          "confidence": 1.0
+        },
+        {
+          "word": "self",
+          "start": 247.27999877929688,
+          "end": 247.63999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "heal",
+          "start": 247.63999938964844,
+          "end": 247.6999969482422,
+          "confidence": 1.0
+        },
+        {
+          "word": "This",
+          "start": 248.32000732421875,
+          "end": 248.66000366210938,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 248.66000366210938,
+          "end": 248.74000549316406,
+          "confidence": 1.0
+        },
+        {
+          "word": "the",
+          "start": 248.74000549316406,
+          "end": 248.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "future",
+          "start": 248.83999633789062,
+          "end": 249.0399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "This",
+          "start": 249.10000610351562,
+          "end": 249.22000122070312,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 249.22000122070312,
+          "end": 249.33999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "not",
+          "start": 249.33999633789062,
+          "end": 249.5399932861328,
+          "confidence": 1.0
+        },
+        {
+          "word": "science",
+          "start": 249.5399932861328,
+          "end": 249.8000030517578,
+          "confidence": 1.0
+        },
+        {
+          "word": "fiction",
+          "start": 249.8000030517578,
+          "end": 250.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "It's",
+          "start": 251.02000427246094,
+          "end": 251.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "already",
+          "start": 251.17999267578125,
+          "end": 251.39999389648438,
+          "confidence": 1.0
+        },
+        {
+          "word": "imagined",
+          "start": 251.39999389648438,
+          "end": 251.83999633789062,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 251.83999633789062,
+          "end": 252.17999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "both",
+          "start": 252.17999267578125,
+          "end": 252.67999267578125,
+          "confidence": 1.0
+        },
+        {
+          "word": "academics",
+          "start": 252.67999267578125,
+          "end": 253.05999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "research",
+          "start": 253.39999389648438,
+          "end": 253.9600067138672,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 254.77999877929688,
+          "end": 255.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "industry",
+          "start": 255.1199951171875,
+          "end": 255.5,
+          "confidence": 1.0
+        },
+        {
+          "word": "research",
+          "start": 255.5,
+          "end": 255.97999572753906,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 256.6000061035156,
+          "end": 256.8800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "in",
+          "start": 256.8800048828125,
+          "end": 256.9800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "early",
+          "start": 256.9800109863281,
+          "end": 257.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "production",
+          "start": 257.1199951171875,
+          "end": 257.4599914550781,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "So you don't have to start with something expansive Just start small It could be that you train a small anomaly model of your premature data to test measure and as you do all this you're learning something",
+      "start": 257.4599914550781,
+      "end": 279.32000732421875,
+      "words": [
+        {
+          "word": "So",
+          "start": 257.4599914550781,
+          "end": 258.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 258.5400085449219,
+          "end": 261.5400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "don't",
+          "start": 261.5400085449219,
+          "end": 261.739990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "have",
+          "start": 261.739990234375,
+          "end": 261.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 261.8999938964844,
+          "end": 262.6600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 262.6600036621094,
+          "end": 263.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "with",
+          "start": 263.1199951171875,
+          "end": 263.2799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "something",
+          "start": 263.2799987792969,
+          "end": 263.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "expansive",
+          "start": 263.55999755859375,
+          "end": 264.32000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "Just",
+          "start": 265.5199890136719,
+          "end": 265.6400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 265.6400146484375,
+          "end": 265.9200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "small",
+          "start": 265.9200134277344,
+          "end": 266.260009765625,
+          "confidence": 1.0
+        },
+        {
+          "word": "It",
+          "start": 266.79998779296875,
+          "end": 266.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "could",
+          "start": 266.8599853515625,
+          "end": 266.9800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "be",
+          "start": 266.9800109863281,
+          "end": 267.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "that",
+          "start": 267.1199951171875,
+          "end": 267.2799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 267.2799987792969,
+          "end": 267.4200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "train",
+          "start": 267.4200134277344,
+          "end": 267.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "a",
+          "start": 267.6199951171875,
+          "end": 267.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "small",
+          "start": 267.8999938964844,
+          "end": 268.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "anomaly",
+          "start": 268.44000244140625,
+          "end": 268.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "model",
+          "start": 268.94000244140625,
+          "end": 269.29998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "of",
+          "start": 269.29998779296875,
+          "end": 270.739990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "your",
+          "start": 270.739990234375,
+          "end": 270.9200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "premature",
+          "start": 270.9200134277344,
+          "end": 271.239990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "data",
+          "start": 271.239990234375,
+          "end": 271.8399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 271.8399963378906,
+          "end": 273.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "test",
+          "start": 273.1199951171875,
+          "end": 273.9200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "measure",
+          "start": 274.7200012207031,
+          "end": 274.7200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 275.8999938964844,
+          "end": 275.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 275.9599914550781,
+          "end": 276.7200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 276.7200012207031,
+          "end": 276.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "do",
+          "start": 276.82000732421875,
+          "end": 277.0400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "all",
+          "start": 277.0400085449219,
+          "end": 277.3399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 277.3399963378906,
+          "end": 278.1600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "you're",
+          "start": 278.6000061035156,
+          "end": 278.82000732421875,
+          "confidence": 1.0
+        },
+        {
+          "word": "learning",
+          "start": 278.82000732421875,
+          "end": 278.9800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "something",
+          "start": 278.9800109863281,
+          "end": 279.32000732421875,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "The idea is to build confidence AI just like any other autonomous tool is to help us build confidence So as we start small we build confidence and this will help us for mass adoption So this my friend is how we move from firefighting at 3am to resilience Thank you",
+      "start": 279.32000732421875,
+      "end": 298.8999938964844,
+      "words": [
+        {
+          "word": "The",
+          "start": 279.32000732421875,
+          "end": 279.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "idea",
+          "start": 279.6199951171875,
+          "end": 280.239990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 280.239990234375,
+          "end": 280.4800109863281,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 280.4800109863281,
+          "end": 280.7200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "build",
+          "start": 280.7200012207031,
+          "end": 280.7200012207031,
+          "confidence": 1.0
+        },
+        {
+          "word": "confidence",
+          "start": 280.7200012207031,
+          "end": 281.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "AI",
+          "start": 281.94000244140625,
+          "end": 282.1400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "just",
+          "start": 282.3399963378906,
+          "end": 282.3399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "like",
+          "start": 282.3399963378906,
+          "end": 282.6199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "any",
+          "start": 282.6199951171875,
+          "end": 282.739990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "other",
+          "start": 282.739990234375,
+          "end": 283.3999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "autonomous",
+          "start": 283.3999938964844,
+          "end": 284.20001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "tool",
+          "start": 284.20001220703125,
+          "end": 285.260009765625,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 286.0799865722656,
+          "end": 286.0799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 286.0799865722656,
+          "end": 286.29998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "help",
+          "start": 286.29998779296875,
+          "end": 286.6400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "us",
+          "start": 286.6400146484375,
+          "end": 286.8399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "build",
+          "start": 286.8399963378906,
+          "end": 287.1600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "confidence",
+          "start": 287.1600036621094,
+          "end": 287.5400085449219,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 287.739990234375,
+          "end": 287.8999938964844,
+          "confidence": 1.0
+        },
+        {
+          "word": "as",
+          "start": 288.05999755859375,
+          "end": 288.1199951171875,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 288.1199951171875,
+          "end": 288.260009765625,
+          "confidence": 1.0
+        },
+        {
+          "word": "start",
+          "start": 288.260009765625,
+          "end": 288.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "small",
+          "start": 288.44000244140625,
+          "end": 288.6600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 288.67999267578125,
+          "end": 288.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "build",
+          "start": 288.94000244140625,
+          "end": 288.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "confidence",
+          "start": 288.94000244140625,
+          "end": 289.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "and",
+          "start": 289.8800048828125,
+          "end": 290.0199890136719,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 290.0199890136719,
+          "end": 290.1600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "will",
+          "start": 290.1600036621094,
+          "end": 290.239990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "help",
+          "start": 290.239990234375,
+          "end": 290.3800048828125,
+          "confidence": 1.0
+        },
+        {
+          "word": "us",
+          "start": 290.3800048828125,
+          "end": 290.4200134277344,
+          "confidence": 1.0
+        },
+        {
+          "word": "for",
+          "start": 290.4200134277344,
+          "end": 290.7799987792969,
+          "confidence": 1.0
+        },
+        {
+          "word": "mass",
+          "start": 290.7799987792969,
+          "end": 291.29998779296875,
+          "confidence": 1.0
+        },
+        {
+          "word": "adoption",
+          "start": 291.29998779296875,
+          "end": 291.8399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "So",
+          "start": 292.4599914550781,
+          "end": 292.6400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "this",
+          "start": 293.0199890136719,
+          "end": 293.739990234375,
+          "confidence": 1.0
+        },
+        {
+          "word": "my",
+          "start": 293.94000244140625,
+          "end": 293.94000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "friend",
+          "start": 293.94000244140625,
+          "end": 294.1000061035156,
+          "confidence": 1.0
+        },
+        {
+          "word": "is",
+          "start": 294.2799987792969,
+          "end": 294.44000244140625,
+          "confidence": 1.0
+        },
+        {
+          "word": "how",
+          "start": 294.44000244140625,
+          "end": 294.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "we",
+          "start": 294.5799865722656,
+          "end": 294.70001220703125,
+          "confidence": 1.0
+        },
+        {
+          "word": "move",
+          "start": 294.70001220703125,
+          "end": 294.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "from",
+          "start": 294.8599853515625,
+          "end": 295.3399963378906,
+          "confidence": 1.0
+        },
+        {
+          "word": "firefighting",
+          "start": 295.3399963378906,
+          "end": 295.9599914550781,
+          "confidence": 1.0
+        },
+        {
+          "word": "at",
+          "start": 295.9599914550781,
+          "end": 296.1600036621094,
+          "confidence": 1.0
+        },
+        {
+          "word": "3am",
+          "start": 296.1600036621094,
+          "end": 296.55999755859375,
+          "confidence": 1.0
+        },
+        {
+          "word": "to",
+          "start": 296.55999755859375,
+          "end": 297.6400146484375,
+          "confidence": 1.0
+        },
+        {
+          "word": "resilience",
+          "start": 297.6400146484375,
+          "end": 298.3599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "Thank",
+          "start": 298.67999267578125,
+          "end": 298.8599853515625,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 298.8599853515625,
+          "end": 298.8999938964844,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    },
+    {
+      "text": "Thank you",
+      "start": 315.5400085449219,
+      "end": 315.6000061035156,
+      "words": [
+        {
+          "word": "Thank",
+          "start": 315.5400085449219,
+          "end": 315.5799865722656,
+          "confidence": 1.0
+        },
+        {
+          "word": "you",
+          "start": 315.5799865722656,
+          "end": 315.6000061035156,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 1.0
+    }
+  ],
+  "language": "en",
+  "duration": 315.652063,
+  "provider": "whisper_api",
+  "model": "whisper-1",
+  "timestamp": "2026-01-10T00:05:24.755972",
+  "cost_usd": 0.0315652063,
+  "vocabulary_corrections": 0
+}

@@ -27,7 +27,7 @@ class TestLLMConfig:
         config = LLMConfig()
 
         assert config.provider == LLMProviderType.CLAUDE
-        assert config.model == "claude-sonnet-4-20250514"
+        assert config.model == "claude-sonnet-4-5-20241219"
         assert config.max_tokens == 4096
         assert config.temperature == 0.3
 
@@ -35,7 +35,7 @@ class TestLLMConfig:
         """Test that OpenAI provider gets correct default model."""
         config = LLMConfig(provider=LLMProviderType.OPENAI)
 
-        assert config.model == "gpt-4o"
+        assert config.model == "gpt-4.1"
 
     def test_custom_model(self):
         """Test setting a custom model."""

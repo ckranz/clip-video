@@ -6,11 +6,20 @@ Uses Typer for a modern, type-hinted CLI experience.
 from __future__ import annotations
 
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
+from dotenv import load_dotenv
 from rich.console import Console
+
+# Load environment variables from .env files
+# Priority: local .env > ~/.clip-video/.env
+_user_env = Path.home() / ".clip-video" / ".env"
+if _user_env.exists():
+    load_dotenv(_user_env)
+load_dotenv()  # Load local .env (overrides user-level)
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from rich.table import Table
@@ -552,6 +561,10 @@ def highlights(
         int,
         typer.Option("--count", "-n", help="Number of highlights to generate"),
     ] = 5,
+    yes: Annotated[
+        bool,
+        typer.Option("--yes", "-y", help="Skip confirmation prompts"),
+    ] = False,
 ) -> None:
     """Generate highlight clips from a video.
 
@@ -566,28 +579,171 @@ def highlights(
         console.print(f"[red]Error:[/red] Video file not found: {video}")
         raise typer.Exit(1)
 
-    # TODO: Implement highlights logic in task 16
-    console.print(f"[yellow]Highlights mode not yet implemented.[/yellow]")
-    console.print(f"Brand: {brand_name}")
-    console.print(f"Video: {video}")
-    if description:
-        console.print(f"Description: {description}")
-    console.print(f"Count: {count}")
+    from clip_video.modes.highlights import (
+        HighlightsConfig,
+        HighlightsProcessor,
+        HighlightsProject,
+    )
+    from clip_video.transcription import TranscriptionResult
+
+    brand_path = get_brand_path(brand_name)
+    config = load_brand_config(brand_name)
+
+    # Check for existing transcript
+    transcript_path = brand_path / "transcripts" / f"{video.stem}.json"
+    if not transcript_path.exists():
+        console.print(f"[red]Error:[/red] No transcript found for {video.name}")
+        console.print(f"Run: clip-video transcribe {brand_name} --video {video}")
+        raise typer.Exit(1)
+
+    # Load transcript
+    transcript_result = TranscriptionResult.load(transcript_path)
+
+    # Create highlights config
+    highlights_config = HighlightsConfig(target_clips=count)
+
+    # Create processor with progress callback
+    def progress_callback(stage: str, progress: float) -> None:
+        pass  # Progress shown via rich progress bar
+
+    processor = HighlightsProcessor(config=highlights_config, progress_callback=progress_callback)
+
+    # Estimate cost
+    transcript_text = "\n".join(
+        f"[{seg.start:.1f}s - {seg.end:.1f}s] {seg.text}"
+        for seg in transcript_result.segments
+    )
+    estimated_cost = processor.get_cost_estimate(transcript_text)
+
+    console.print(Panel(
+        f"[bold]Highlights Generation[/bold]\n\n"
+        f"Video: {video.name}\n"
+        f"Target clips: {count}\n"
+        f"LLM Provider: {config.llm_provider}\n"
+        f"Estimated LLM cost: ${estimated_cost:.3f} USD",
+        title="Highlights Plan",
+    ))
+
+    if not yes and estimated_cost > 0.01:
+        if not typer.confirm("Proceed with highlights generation?"):
+            console.print("[yellow]Cancelled.[/yellow]")
+            raise typer.Exit(0)
+
+    # Create project
+    project_name = f"{video.stem}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    project_root = brand_path / "highlights" / project_name
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        console=console,
+    ) as progress_bar:
+        task = progress_bar.add_task("Creating project...", total=6)
+
+        # Create project
+        project = processor.create_project(
+            name=project_name,
+            brand_name=brand_name,
+            video_path=video,
+            description_path=description,
+            project_root=project_root,
+        )
+        progress_bar.update(task, advance=1, description="Analyzing transcript...")
+
+        # Set transcript
+        project.transcript_text = transcript_text
+        project.save()
+
+        # Analyze
+        try:
+            analysis = processor.analyze(project)
+            progress_bar.update(task, advance=1, description=f"Found {len(analysis.segments)} highlights...")
+        except Exception as e:
+            console.print(f"\n[red]Error during analysis:[/red] {e}")
+            raise typer.Exit(1)
+
+        if not analysis.segments:
+            console.print("\n[yellow]No highlight segments identified.[/yellow]")
+            raise typer.Exit(0)
+
+        # Extract clips
+        progress_bar.update(task, description="Extracting clips...")
+        try:
+            processor.extract_clips(project)
+            progress_bar.update(task, advance=1, description="Converting to portrait...")
+        except Exception as e:
+            console.print(f"\n[red]Error extracting clips:[/red] {e}")
+            raise typer.Exit(1)
+
+        # Convert to portrait
+        try:
+            processor.convert_to_portrait(project)
+            progress_bar.update(task, advance=1, description="Burning captions...")
+        except Exception as e:
+            console.print(f"\n[red]Error converting to portrait:[/red] {e}")
+            raise typer.Exit(1)
+
+        # Burn captions
+        try:
+            processor.burn_captions(project, transcript_result.segments)
+            progress_bar.update(task, advance=1, description="Generating metadata...")
+        except Exception as e:
+            console.print(f"\n[red]Error burning captions:[/red] {e}")
+            raise typer.Exit(1)
+
+        # Generate metadata
+        try:
+            processor.generate_metadata(project)
+            progress_bar.update(task, advance=1, description="Complete!")
+        except Exception as e:
+            console.print(f"\n[red]Error generating metadata:[/red] {e}")
+            raise typer.Exit(1)
+
+    # Show results
+    console.print()
+    console.print(Panel(
+        f"[bold green]Highlights Generated![/bold green]\n\n"
+        f"Clips created: {len(project.clips)}\n"
+        f"Output folder: {project.final_clips_dir}\n\n"
+        + "\n".join(
+            f"  {clip.clip_id}: {clip.segment.summary[:50]}..."
+            for clip in project.clips[:5]
+        )
+        + ("\n  ..." if len(project.clips) > 5 else ""),
+        title="Results",
+    ))
 
 
 @app.command()
 def highlights_batch(
     brand_name: Annotated[str, typer.Argument(help="Name of the brand")],
-    video_list: Annotated[Path, typer.Argument(help="Path to file listing videos to process")],
+    video_list: Annotated[Path, typer.Argument(help="Path to file listing videos to process (or directory)")],
     count: Annotated[
         int,
         typer.Option("--count", "-n", help="Number of highlights per video"),
     ] = 5,
+    resume: Annotated[
+        bool,
+        typer.Option("--resume", "-r", help="Resume an existing batch job"),
+    ] = False,
+    yes: Annotated[
+        bool,
+        typer.Option("--yes", "-y", help="Skip confirmation prompts"),
+    ] = False,
+    parallel: Annotated[
+        int,
+        typer.Option("--parallel", "-p", help="Number of parallel workers (1 = sequential)"),
+    ] = 1,
 ) -> None:
     """Batch process multiple videos for highlights.
 
-    Reads a list of video files and processes each one to generate
-    highlight clips. Progress is saved for resume capability.
+    Reads a list of video files (one per line) or a directory and processes
+    each one to generate highlight clips. Progress is saved for resume capability.
+
+    The video list file should contain video filenames (one per line).
+    Videos are expected to be in the brand's videos/ folder.
     """
     if not brand_exists(brand_name):
         console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
@@ -597,10 +753,230 @@ def highlights_batch(
         console.print(f"[red]Error:[/red] Video list file not found: {video_list}")
         raise typer.Exit(1)
 
-    # TODO: Implement batch processing in task 17
-    console.print(f"[yellow]Batch highlights not yet implemented.[/yellow]")
-    console.print(f"Brand: {brand_name}")
-    console.print(f"Video list: {video_list}")
+    from clip_video.batch import BatchConfig, BatchProcessor, BatchJob
+    from clip_video.modes.highlights import HighlightsConfig
+    from clip_video.transcription import TranscriptionResult
+
+    brand_path = get_brand_path(brand_name)
+    videos_dir = brand_path / "videos"
+    transcripts_dir = brand_path / "transcripts"
+
+    # Load video list
+    if video_list.is_dir():
+        video_extensions = {".mp4", ".mkv", ".avi", ".mov", ".webm", ".m4v"}
+        video_paths = [f for f in video_list.iterdir() if f.suffix.lower() in video_extensions]
+    else:
+        # Read video list file - each line is a filename
+        lines = video_list.read_text(encoding="utf-8").strip().splitlines()
+        video_paths = []
+        for line in lines:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            # Check if it's a full path or just a filename
+            video_path = Path(line)
+            if not video_path.is_absolute():
+                video_path = videos_dir / line
+            if video_path.exists():
+                video_paths.append(video_path)
+            else:
+                console.print(f"[yellow]Warning:[/yellow] Video not found: {line}")
+
+    if not video_paths:
+        console.print("[red]Error:[/red] No valid videos found in the list.")
+        raise typer.Exit(1)
+
+    # Check which videos have transcripts
+    videos_with_transcripts = []
+    videos_without_transcripts = []
+    for vp in video_paths:
+        transcript_path = transcripts_dir / f"{vp.stem}.json"
+        if transcript_path.exists():
+            videos_with_transcripts.append(vp)
+        else:
+            videos_without_transcripts.append(vp)
+
+    if videos_without_transcripts:
+        console.print(f"\n[yellow]Warning:[/yellow] {len(videos_without_transcripts)} videos missing transcripts:")
+        for vp in videos_without_transcripts[:5]:
+            console.print(f"  - {vp.name}")
+        if len(videos_without_transcripts) > 5:
+            console.print(f"  ... and {len(videos_without_transcripts) - 5} more")
+        console.print(f"\nRun: clip-video transcribe {brand_name}")
+
+    if not videos_with_transcripts:
+        console.print("\n[red]Error:[/red] No videos have transcripts. Transcribe first.")
+        raise typer.Exit(1)
+
+    # Create batch job name
+    job_name = f"batch_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    job_root = brand_path / "batch_jobs" / job_name
+
+    # Check for existing job to resume
+    if resume:
+        existing_jobs = list((brand_path / "batch_jobs").glob("*/batch_state.json"))
+        if existing_jobs:
+            # Load most recent job
+            latest_job_file = max(existing_jobs, key=lambda p: p.stat().st_mtime)
+            console.print(f"[cyan]Resuming batch job:[/cyan] {latest_job_file.parent.name}")
+            batch_config = BatchConfig(
+                max_parallel=parallel,
+                continue_on_error=True,
+                skip_completed=True,
+                highlights_config=HighlightsConfig(target_clips=count),
+            )
+            job = BatchJob.load(latest_job_file, batch_config)
+        else:
+            console.print("[yellow]No existing batch job found. Starting new batch.[/yellow]")
+            resume = False
+
+    if not resume:
+        # Show plan
+        console.print(Panel(
+            f"[bold]Batch Highlights Generation[/bold]\n\n"
+            f"Videos to process: {len(videos_with_transcripts)}\n"
+            f"Highlights per video: {count}\n"
+            f"Parallel workers: {parallel}\n"
+            f"Output folder: {brand_path / 'highlights'}",
+            title="Batch Plan",
+        ))
+
+        if not yes:
+            if not typer.confirm("Proceed with batch processing?"):
+                console.print("[yellow]Cancelled.[/yellow]")
+                raise typer.Exit(0)
+
+        # Create batch config and job
+        batch_config = BatchConfig(
+            max_parallel=parallel,
+            continue_on_error=True,
+            skip_completed=True,
+            highlights_config=HighlightsConfig(target_clips=count),
+        )
+
+        processor = BatchProcessor(config=batch_config)
+        job = processor.create_job(
+            name=job_name,
+            brand_name=brand_name,
+            video_paths=videos_with_transcripts,
+            job_root=job_root,
+        )
+
+    # Process with progress display
+    processor = BatchProcessor(config=batch_config)
+
+    console.print()
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        console=console,
+    ) as progress_bar:
+        task = progress_bar.add_task(
+            "Processing videos...",
+            total=len(videos_with_transcripts),
+        )
+
+        # Process each video
+        pending = job.get_pending_videos()
+        for i, video_path in enumerate(pending):
+            progress_bar.update(
+                task,
+                description=f"Processing {video_path.name}...",
+                completed=job.completed_count,
+            )
+
+            # Load transcript
+            transcript_path = transcripts_dir / f"{video_path.stem}.json"
+            try:
+                transcript_result = TranscriptionResult.load(transcript_path)
+            except Exception as e:
+                # Mark as failed and continue
+                result = job.results.get(str(video_path))
+                if result:
+                    result.status = BatchProcessor.__module__  # Use VideoStatus
+                    from clip_video.batch import VideoStatus
+                    result.status = VideoStatus.FAILED
+                    result.error_message = f"Failed to load transcript: {e}"
+                job.save()
+                continue
+
+            # Process with the single video highlights logic
+            try:
+                from clip_video.modes.highlights import HighlightsProcessor, HighlightsConfig as HC
+                from clip_video.batch import VideoStatus
+
+                highlights_config = HC(target_clips=count)
+                hl_processor = HighlightsProcessor(config=highlights_config)
+
+                project_name = f"{video_path.stem}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                project_root = brand_path / "highlights" / project_name
+
+                project = hl_processor.create_project(
+                    name=project_name,
+                    brand_name=brand_name,
+                    video_path=video_path,
+                    project_root=project_root,
+                )
+
+                # Set transcript
+                transcript_text = "\n".join(
+                    f"[{seg.start:.1f}s - {seg.end:.1f}s] {seg.text}"
+                    for seg in transcript_result.segments
+                )
+                project.transcript_text = transcript_text
+                project.save()
+
+                # Run pipeline
+                hl_processor.analyze(project)
+                hl_processor.extract_clips(project)
+                hl_processor.convert_to_portrait(project)
+                hl_processor.burn_captions(project, transcript_result.segments)
+                hl_processor.generate_metadata(project)
+
+                # Update job result
+                result = job.results.get(str(video_path))
+                if result:
+                    result.status = VideoStatus.COMPLETED
+                    result.project_name = project_name
+                    result.clips_generated = len(project.clips)
+                    result.clip_paths = [
+                        str(c.final_clip_path) for c in project.clips if c.final_clip_path
+                    ]
+                    result.completed_at = datetime.now().isoformat()
+
+            except Exception as e:
+                from clip_video.batch import VideoStatus
+                result = job.results.get(str(video_path))
+                if result:
+                    result.status = VideoStatus.FAILED
+                    result.error_message = str(e)
+                    result.completed_at = datetime.now().isoformat()
+                console.print(f"\n[red]Error processing {video_path.name}:[/red] {e}")
+
+            job.save()
+            progress_bar.update(task, completed=job.completed_count + job.failed_count)
+
+    # Generate report
+    report = job.generate_report()
+
+    # Show results
+    console.print()
+    console.print(Panel(
+        f"[bold]Batch Complete[/bold]\n\n"
+        f"Total videos: {job.total_videos}\n"
+        f"Completed: [green]{job.completed_count}[/green]\n"
+        f"Failed: [red]{job.failed_count}[/red]\n"
+        f"Total clips generated: {job.total_clips_generated}\n\n"
+        f"Report saved: {job.report_file}",
+        title="Results",
+    ))
+
+    if job.failed_count > 0:
+        console.print("\n[yellow]Failed videos:[/yellow]")
+        for path, error in job.get_failed_videos()[:5]:
+            console.print(f"  - {path.name}: {error[:50]}...")
 
 
 # =============================================================================
