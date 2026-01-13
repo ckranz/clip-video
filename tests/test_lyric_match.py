@@ -20,11 +20,16 @@ class TestLyricMatchConfig:
         """Test default configuration values."""
         config = LyricMatchConfig()
 
-        assert config.max_candidates_per_target == 5
+        assert config.max_candidates_per_target == 10  # Changed for variety
         assert config.prefer_diversity is True
         assert config.extract_words is True
         assert config.extract_phrases is True
         assert config.output_format == "mp4"
+        assert config.min_word_length == 1  # Capture all words
+        assert config.use_stop_words is False  # Don't filter stop words
+        assert config.min_phrase_words == 2
+        assert config.max_phrase_words == 5
+        assert config.shuffle_candidates is True  # For variety across videos
 
 
 class TestLineClipSet:
@@ -337,7 +342,7 @@ Third line too""")
 
         assert "Lyric Match Project: my_song" in report
         assert "Brand: test_brand" in report
-        assert "Coverage:" in report
+        assert "Word coverage:" in report
 
     def test_get_video_paths(self, tmp_path):
         """Test getting video file paths."""

@@ -12,15 +12,89 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
+class PortraitSettings(BaseModel):
+    """Portrait conversion settings for a brand."""
+
+    # Horizontal crop offset (0.0=left, 0.5=center, 1.0=right)
+    crop_x_offset: float = 0.5
+    # For pixel-based offset on specific source resolution
+    crop_x_pixels: int | None = None  # e.g., 13 for 13px from left
+    crop_source_width: int | None = None  # e.g., 1280 - reference width for pixel calc
+
+
+class LogoSettings(BaseModel):
+    """Logo overlay settings for a brand."""
+
+    enabled: bool = False
+    # Path to logo file (relative to brand directory)
+    image_path: str = "logo/logo.png"
+    # Position: "top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"
+    position: str = "top-center"
+    # Size as percentage of video height (0.0-1.0)
+    height_percent: float = 0.15
+    # Opacity (0.0-1.0, 1.0 = fully opaque)
+    opacity: float = 1.0
+    # Margin from edge in pixels
+    margin: int = 20
+
+
+class SocialCopyStyle(BaseModel):
+    """Style settings for social media copy generation.
+
+    Configures how titles, descriptions, and captions are written
+    for clips when promoting content on social media.
+    """
+
+    # Whether to generate social copy alongside clips
+    enabled: bool = True
+    # Language/locale for spelling (british, american)
+    locale: str = "british"
+    # Tone: informative, casual, enthusiastic, professional
+    tone: str = "informative"
+    # Voice description - free text describing the brand's voice
+    voice_description: str = ""
+    # Phrases/patterns to avoid (AI tells, cliches, etc.)
+    avoid_phrases: list[str] = Field(default_factory=lambda: [
+        "game-changer",
+        "crushing it",
+        "let that sink in",
+        "here's the thing",
+        "but here's the kicker",
+        "I'll be honest",
+        "hot take",
+        "unpopular opinion",
+        "this is huge",
+        "mind = blown",
+    ])
+    # Preferred phrases or patterns to include
+    preferred_phrases: list[str] = Field(default_factory=list)
+    # Whether to include hashtags
+    include_hashtags: bool = True
+    # Default hashtags for the brand
+    default_hashtags: list[str] = Field(default_factory=list)
+    # Maximum length for hook/title (characters)
+    max_hook_length: int = 100
+    # Maximum length for description (characters)
+    max_description_length: int = 280
+    # Custom system prompt additions (appended to base prompt)
+    custom_prompt: str = ""
+
+
 class BrandConfig(BaseModel):
     """Configuration for a brand/organization."""
 
     name: str
     description: str = ""
-    # Default crop region for portrait conversion (center of frame)
+    # Default crop region for portrait conversion (center of frame) - DEPRECATED
     crop_region: dict[str, int] = Field(
         default_factory=lambda: {"x": 420, "y": 0, "width": 1080, "height": 1920}
     )
+    # Portrait conversion settings
+    portrait: PortraitSettings = Field(default_factory=PortraitSettings)
+    # Logo overlay settings
+    logo: LogoSettings = Field(default_factory=LogoSettings)
+    # Social copy style settings
+    social_copy: SocialCopyStyle = Field(default_factory=SocialCopyStyle)
     # Caption styling
     caption_font: str = "Arial"
     caption_size: int = 48
@@ -35,6 +109,29 @@ class BrandConfig(BaseModel):
     # API provider preferences
     transcription_provider: str = "whisper_api"  # or "whisper_local"
     llm_provider: str = "claude"  # or "openai"
+
+    def get_crop_x_offset(self, source_width: int) -> float:
+        """Calculate crop X offset, handling pixel-based config.
+
+        Args:
+            source_width: Width of the source video
+
+        Returns:
+            X offset as float (0.0-1.0)
+        """
+        # If pixel-based offset is configured
+        if self.portrait.crop_x_pixels is not None:
+            ref_width = self.portrait.crop_source_width or 1280
+            # Scale the pixel offset if source width differs from reference
+            scaled_pixels = self.portrait.crop_x_pixels * (source_width / ref_width)
+            # Calculate crop width for 9:16 from source height (assuming 16:9 source)
+            source_height = int(source_width * 9 / 16)
+            crop_width = int(source_height * 9 / 16)
+            max_x = source_width - crop_width
+            if max_x > 0:
+                return scaled_pixels / max_x
+            return 0.5
+        return self.portrait.crop_x_offset
 
 
 class ProjectConfig(BaseModel):

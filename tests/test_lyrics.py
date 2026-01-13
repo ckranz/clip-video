@@ -138,14 +138,43 @@ Third line""")
         text = """Short
 This is a longer line that becomes a phrase"""
 
-        parser = LyricsParser(auto_phrase_lines=True, min_phrase_words=2)
+        # Test with subphrase generation disabled (legacy behavior)
+        parser = LyricsParser(
+            auto_phrase_lines=True,
+            min_phrase_words=2,
+            generate_subphrases=False,
+        )
         lyrics = parser.parse_text(text)
 
         # Short line (1 word) should not get auto-phrase
         assert lyrics.lines[0].phrases == []
 
-        # Longer line should get auto-phrase
+        # Longer line should get one phrase (the full line)
         assert len(lyrics.lines[1].phrases) == 1
+
+    def test_subphrase_generation(self):
+        """Test generating sliding window subphrases from lines."""
+        text = """One two three four five"""
+
+        parser = LyricsParser(
+            auto_phrase_lines=True,
+            min_phrase_words=2,
+            max_phrase_words=3,
+            generate_subphrases=True,
+        )
+        lyrics = parser.parse_text(text)
+
+        phrases = lyrics.lines[0].phrases
+        # Should have 2-word and 3-word phrases:
+        # 2-word: "one two", "two three", "three four", "four five" (4)
+        # 3-word: "one two three", "two three four", "three four five" (3)
+        assert len(phrases) == 7
+
+        # Check some expected phrases
+        assert "one two" in phrases
+        assert "two three" in phrases
+        assert "one two three" in phrases
+        assert "three four five" in phrases
 
     def test_all_words_unique(self):
         """Test that all_words returns unique words."""
@@ -423,11 +452,12 @@ Singing loud x2"""
         lyrics_file = tmp_path / "test_song.txt"
         lyrics_file.write_text(lyrics_content)
 
-        # Parse and extract
+        # Parse and extract (with stop words enabled for this test)
         extraction = PhraseExtractor.from_lyrics_file(
             lyrics_file,
             extract_words=True,
             extract_phrases=True,
+            use_stop_words=True,  # Explicitly test stop word filtering
         )
 
         # Verify
@@ -442,8 +472,32 @@ Singing loud x2"""
         assert "brown" in extraction.unique_words
         assert "fox" in extraction.unique_words
 
-        # Check that stop words were filtered
+        # Check that stop words were filtered (when use_stop_words=True)
         assert "the" not in extraction.unique_words
+
+    def test_full_workflow_no_stop_words(self, tmp_path):
+        """Test workflow without stop word filtering (default for lyric matching)."""
+        lyrics_content = """Title: Test Song
+Artist: Test Artist
+
+The quick brown fox"""
+
+        lyrics_file = tmp_path / "test_song.txt"
+        lyrics_file.write_text(lyrics_content)
+
+        # Parse and extract with default settings (no stop word filtering)
+        extraction = PhraseExtractor.from_lyrics_file(
+            lyrics_file,
+            extract_words=True,
+            extract_phrases=True,
+            # use_stop_words defaults to False for lyric matching
+        )
+
+        # All words should be extracted including stop words
+        assert "the" in extraction.unique_words
+        assert "quick" in extraction.unique_words
+        assert "brown" in extraction.unique_words
+        assert "fox" in extraction.unique_words
 
     def test_extract_and_save(self, tmp_path):
         """Test extracting and saving results."""

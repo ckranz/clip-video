@@ -95,11 +95,12 @@ class SearchResult:
         )
 
     @classmethod
-    def from_phrase_match(cls, match: PhraseMatch) -> "SearchResult":
+    def from_phrase_match(cls, match: PhraseMatch, min_duration: float = 0.5) -> "SearchResult":
         """Create from a PhraseMatch object.
 
         Args:
             match: PhraseMatch from transcript index
+            min_duration: Minimum duration in seconds (for single words with no duration)
 
         Returns:
             SearchResult object
@@ -110,10 +111,16 @@ class SearchResult:
         else:
             avg_confidence = 1.0
 
+        # Ensure minimum duration - Whisper sometimes returns 0-duration for single words
+        start = match.start
+        end = match.end
+        if end <= start:
+            end = start + min_duration
+
         return cls(
             phrase=match.phrase,
-            start=match.start,
-            end=match.end,
+            start=start,
+            end=end,
             project_name=match.project_name,
             video_id=match.video_id,
             confidence=avg_confidence,

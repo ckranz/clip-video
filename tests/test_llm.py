@@ -27,7 +27,7 @@ class TestLLMConfig:
         config = LLMConfig()
 
         assert config.provider == LLMProviderType.CLAUDE
-        assert config.model == "claude-sonnet-4-5-20241219"
+        assert config.model == "claude-sonnet-4-5-20250929"
         assert config.max_tokens == 4096
         assert config.temperature == 0.3
 

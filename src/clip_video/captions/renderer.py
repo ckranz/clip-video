@@ -11,11 +11,70 @@ import subprocess
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Iterator
+from typing import List, Iterator, Tuple
 
 from clip_video.captions.styles import CaptionStyle, DEFAULT_STYLE
 from clip_video.ffmpeg_binary import get_ffmpeg_path
 from clip_video.ffmpeg import FFmpegWrapper, VideoInfo
+
+
+def slice_text_into_phrases(
+    text: str,
+    start_time: float,
+    end_time: float,
+    max_words_per_phrase: int = 4,
+) -> List[Tuple[str, float, float]]:
+    """Slice text into short phrases with timing.
+
+    Distributes timing evenly across phrases based on word count.
+
+    Args:
+        text: Full text to slice
+        start_time: Start time of the full text
+        end_time: End time of the full text
+        max_words_per_phrase: Maximum words per phrase (default 4)
+
+    Returns:
+        List of (phrase_text, phrase_start, phrase_end) tuples
+    """
+    words = text.split()
+    if not words:
+        return []
+
+    total_duration = end_time - start_time
+    total_words = len(words)
+
+    # Calculate time per word
+    time_per_word = total_duration / total_words if total_words > 0 else 0
+
+    phrases = []
+    current_phrase_words = []
+    phrase_start_time = start_time
+    word_count = 0
+
+    for i, word in enumerate(words):
+        current_phrase_words.append(word)
+        word_count += 1
+
+        # End phrase if we hit max words or it's the last word
+        if word_count >= max_words_per_phrase or i == len(words) - 1:
+            phrase_text = " ".join(current_phrase_words)
+            # Calculate end time based on words consumed
+            words_consumed = sum(len(p[0].split()) for p in phrases) + len(current_phrase_words)
+            phrase_end_time = start_time + (words_consumed * time_per_word)
+
+            # Ensure last phrase ends exactly at end_time
+            if i == len(words) - 1:
+                phrase_end_time = end_time
+
+            phrases.append((phrase_text, phrase_start_time, phrase_end_time))
+
+            # Reset for next phrase
+            current_phrase_words = []
+            phrase_start_time = phrase_end_time
+            word_count = 0
+
+    return phrases
 
 
 @dataclass
@@ -120,24 +179,44 @@ class CaptionTrack:
         cls,
         segments: list[dict],
         style: CaptionStyle | None = None,
+        slice_into_phrases: bool = False,
+        max_words_per_phrase: int = 4,
     ) -> "CaptionTrack":
         """Create a caption track from transcript segments.
 
         Args:
             segments: List of segments with 'text', 'start', 'end' keys
             style: Optional default style
+            slice_into_phrases: If True, slice each segment into short phrases
+            max_words_per_phrase: Max words per phrase when slicing (default 4)
 
         Returns:
-            CaptionTrack with captions for each segment
+            CaptionTrack with captions for each segment (or phrase)
         """
         track = cls(default_style=style or DEFAULT_STYLE)
 
         for segment in segments:
-            track.add_caption(
-                text=segment["text"],
-                start_time=segment["start"],
-                end_time=segment["end"],
-            )
+            text = segment["text"]
+            start = segment["start"]
+            end = segment["end"]
+
+            if slice_into_phrases:
+                # Slice into short phrases for single-line captions
+                phrases = slice_text_into_phrases(
+                    text, start, end, max_words_per_phrase
+                )
+                for phrase_text, phrase_start, phrase_end in phrases:
+                    track.add_caption(
+                        text=phrase_text,
+                        start_time=phrase_start,
+                        end_time=phrase_end,
+                    )
+            else:
+                track.add_caption(
+                    text=text,
+                    start_time=start,
+                    end_time=end,
+                )
 
         track.sort_by_time()
         return track
@@ -281,6 +360,30 @@ class CaptionRenderer:
                 video_codec, audio_codec, crf
             )
 
+    def _calculate_max_chars_per_line(
+        self,
+        video_width: int,
+        font_size: int,
+        max_width_percent: float = 0.9,
+    ) -> int:
+        """Calculate max characters per line based on video dimensions.
+
+        Args:
+            video_width: Width of the video in pixels
+            font_size: Font size in pixels
+            max_width_percent: Maximum width as percentage of video width
+
+        Returns:
+            Maximum characters that fit per line
+        """
+        # Estimate average character width as ~0.55 of font size for most fonts
+        # This is conservative to avoid overflow
+        avg_char_width = font_size * 0.55
+        max_width_pixels = video_width * max_width_percent
+        max_chars = int(max_width_pixels / avg_char_width)
+        # Ensure at least 10 characters per line
+        return max(10, max_chars)
+
     def _render_with_drawtext(
         self,
         input_path: Path,
@@ -302,8 +405,17 @@ class CaptionRenderer:
             cap_style = caption.style or style
             params = cap_style.to_drawtext_params(video_info.width, video_info.height)
 
-            # Escape text for FFmpeg
+            # Use text directly (phrase slicing should already have short text)
+            # Only wrap if text is too long for a single line
             text = caption.text
+            max_chars = self._calculate_max_chars_per_line(
+                video_info.width,
+                cap_style.font_size,
+                cap_style.max_width_percent,
+            )
+            if len(text) > max_chars:
+                text = caption.get_wrapped_text(max_chars)
+
             if cap_style.uppercase:
                 text = text.upper()
             text = self._escape_drawtext(text)
@@ -413,11 +525,17 @@ class CaptionRenderer:
         Returns:
             Escaped text
         """
-        # Escape single quotes, colons, and backslashes
+        # Escape backslashes first (must be done before other escapes)
         text = text.replace("\\", "\\\\")
-        text = text.replace("'", "'\\''")
+        # Escape colons (FFmpeg filter separator)
         text = text.replace(":", "\\:")
+        # Escape percent signs (FFmpeg variable expansion)
         text = text.replace("%", "\\%")
+        # Remove apostrophes/single quotes entirely - they cause issues on Windows
+        # and removing them is cleaner than showing escaped characters
+        text = text.replace("'", "")
+        text = text.replace("'", "")  # Curly apostrophe
+        text = text.replace("'", "")  # Another curly variant
         return text
 
     def create_srt_file(

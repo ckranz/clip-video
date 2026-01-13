@@ -10,6 +10,7 @@ Implements the full lyric match workflow:
 from __future__ import annotations
 
 import json
+import random
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -36,16 +37,20 @@ class LyricMatchConfig:
         extract_phrases: Whether to search for phrases
         clip_padding: Padding to add before/after clips
         output_format: Video output format
+        shuffle_candidates: Shuffle candidates before limiting (for variety)
     """
 
-    max_candidates_per_target: int = 5
+    max_candidates_per_target: int = 10
     prefer_diversity: bool = True
     extract_words: bool = True
     extract_phrases: bool = True
     clip_padding: ClipPadding = field(default_factory=ClipPadding)
     output_format: str = "mp4"
-    min_word_length: int = 2
-    use_stop_words: bool = True
+    min_word_length: int = 1
+    use_stop_words: bool = False  # For lyric matching, we want ALL words
+    min_phrase_words: int = 2
+    max_phrase_words: int = 5
+    shuffle_candidates: bool = True  # Shuffle to get variety across videos
 
 
 @dataclass
@@ -146,7 +151,7 @@ class LyricMatchProject:
 
     @property
     def coverage_percent(self) -> float:
-        """Overall coverage percentage."""
+        """Overall coverage percentage (all targets)."""
         if not self.line_clip_sets:
             return 0.0
 
@@ -160,6 +165,53 @@ class LyricMatchProject:
             if t.text in lcs.clips and lcs.clips[t.text]
         )
         return (covered / total_targets) * 100
+
+    def get_word_coverage(self) -> tuple[int, int, list[str]]:
+        """Get word coverage stats.
+
+        Returns:
+            Tuple of (words_found, total_words, missing_words)
+        """
+        total_words = 0
+        found_words = 0
+        missing_words = []
+
+        for lcs in self.line_clip_sets:
+            for target in lcs.targets:
+                if not target.is_phrase:  # Single word
+                    total_words += 1
+                    if target.text in lcs.clips and lcs.clips[target.text]:
+                        found_words += 1
+                    else:
+                        missing_words.append(target.text)
+
+        # Deduplicate missing words while preserving order
+        seen = set()
+        unique_missing = []
+        for word in missing_words:
+            if word not in seen:
+                seen.add(word)
+                unique_missing.append(word)
+
+        return found_words, total_words, unique_missing
+
+    def get_phrase_coverage(self) -> tuple[int, int]:
+        """Get phrase coverage stats.
+
+        Returns:
+            Tuple of (phrases_found, total_phrases)
+        """
+        total_phrases = 0
+        found_phrases = 0
+
+        for lcs in self.line_clip_sets:
+            for target in lcs.targets:
+                if target.is_phrase:  # Multi-word phrase
+                    total_phrases += 1
+                    if target.text in lcs.clips and lcs.clips[target.text]:
+                        found_phrases += 1
+
+        return found_phrases, total_phrases
 
     def get_coverage_gaps(self) -> list[dict]:
         """Get list of targets missing clips.
@@ -327,8 +379,12 @@ class LyricMatchProcessor:
         Returns:
             LyricMatchProject instance
         """
-        # Parse lyrics
-        parser = LyricsParser()
+        # Parse lyrics with phrase constraints
+        parser = LyricsParser(
+            min_phrase_words=self.config.min_phrase_words,
+            max_phrase_words=self.config.max_phrase_words,
+            generate_subphrases=True,  # Generate sliding window subphrases
+        )
         lyrics = parser.parse_file(lyrics_file)
 
         # Extract targets
@@ -337,6 +393,8 @@ class LyricMatchProcessor:
             extract_phrases=self.config.extract_phrases,
             min_word_length=self.config.min_word_length,
             use_stop_words=self.config.use_stop_words,
+            min_phrase_words=self.config.min_phrase_words,
+            max_phrase_words=self.config.max_phrase_words,
         )
         extraction_list = extractor.extract(lyrics)
 
@@ -387,6 +445,104 @@ class LyricMatchProcessor:
             return None
         return LyricMatchProject.load(project_path)
 
+    def update_project(
+        self,
+        project: LyricMatchProject,
+        lyrics_file: Path,
+    ) -> tuple[list[ExtractionTarget], list[ExtractionTarget]]:
+        """Update an existing project with new lyrics.
+
+        Re-parses the lyrics file and merges with existing project state.
+        Preserves existing clips for unchanged targets, only adds new targets.
+
+        Args:
+            project: Existing project to update
+            lyrics_file: Path to updated lyrics file
+
+        Returns:
+            Tuple of (new_targets, removed_targets)
+        """
+        # Parse new lyrics
+        parser = LyricsParser(
+            min_phrase_words=self.config.min_phrase_words,
+            max_phrase_words=self.config.max_phrase_words,
+            generate_subphrases=True,
+        )
+        lyrics = parser.parse_file(lyrics_file)
+
+        # Extract new targets
+        extractor = PhraseExtractor(
+            extract_words=self.config.extract_words,
+            extract_phrases=self.config.extract_phrases,
+            min_word_length=self.config.min_word_length,
+            use_stop_words=self.config.use_stop_words,
+            min_phrase_words=self.config.min_phrase_words,
+            max_phrase_words=self.config.max_phrase_words,
+        )
+        new_extraction_list = extractor.extract(lyrics)
+
+        # Get old and new target texts
+        old_targets = set()
+        for lcs in project.line_clip_sets:
+            for t in lcs.targets:
+                old_targets.add(t.text)
+
+        new_targets_set = set()
+        for t in new_extraction_list.all_targets:
+            new_targets_set.add(t.text)
+
+        # Find additions and removals
+        added_texts = new_targets_set - old_targets
+        removed_texts = old_targets - new_targets_set
+
+        # Build mapping of existing clips by target text
+        existing_clips: dict[str, list[Path]] = {}
+        for lcs in project.line_clip_sets:
+            for target_text, clip_paths in lcs.clips.items():
+                if target_text not in existing_clips:
+                    existing_clips[target_text] = []
+                existing_clips[target_text].extend(clip_paths)
+
+        # Update project with new extraction list
+        project.extraction_list = new_extraction_list
+        project.lyrics_file = lyrics_file.absolute()
+
+        # Rebuild line clip sets preserving existing clips
+        project.line_clip_sets = []
+        for line_num, targets in new_extraction_list.lines_in_order:
+            # Find original line text
+            line_text = ""
+            for line in lyrics.content_lines:
+                if line.line_number == line_num:
+                    line_text = line.raw_text.strip()
+                    break
+
+            # Create line clip set
+            lcs = LineClipSet(
+                line_number=line_num,
+                line_text=line_text,
+                targets=list(targets),
+            )
+
+            # Restore existing clips for targets that still exist
+            for target in targets:
+                if target.text in existing_clips:
+                    # Filter to only clips that still exist on disk
+                    valid_clips = [p for p in existing_clips[target.text] if p.exists()]
+                    if valid_clips:
+                        lcs.clips[target.text] = valid_clips
+
+            project.line_clip_sets.append(lcs)
+
+        # Save updated project
+        project.save()
+
+        # Return lists of actual target objects
+        added = [t for t in new_extraction_list.all_targets if t.text in added_texts]
+        removed = [ExtractionTarget(text=t, source_line=0, source_text="") for t in removed_texts]
+
+        return added, removed
+
     def search_all(
         self,
         project: LyricMatchProject,
@@ -416,11 +572,19 @@ class LyricMatchProcessor:
             if target.text in all_results:
                 continue
 
-            # Search for target
+            # Search for target - get more than needed so we can shuffle
             results = self.searcher.search(
                 target.text,
-                max_results=self.config.max_candidates_per_target * 2,
+                max_results=self.config.max_candidates_per_target * 5,
             )
+
+            # Shuffle and limit results for variety across videos
+            if self.config.shuffle_candidates and results.results:
+                shuffled = list(results.results)
+                random.shuffle(shuffled)
+                results.results = shuffled[:self.config.max_candidates_per_target]
+                results.total_count = len(results.results)
+
             all_results[target.text] = results
 
             # Also search alternatives
@@ -428,8 +592,14 @@ class LyricMatchProcessor:
                 if alt not in all_results:
                     alt_results = self.searcher.search(
                         alt,
-                        max_results=self.config.max_candidates_per_target,
+                        max_results=self.config.max_candidates_per_target * 5,
                     )
+                    # Shuffle alternatives too
+                    if self.config.shuffle_candidates and alt_results.results:
+                        shuffled = list(alt_results.results)
+                        random.shuffle(shuffled)
+                        alt_results.results = shuffled[:self.config.max_candidates_per_target]
+                        alt_results.total_count = len(alt_results.results)
                     all_results[alt] = alt_results
 
         return all_results
@@ -495,16 +665,25 @@ class LyricMatchProcessor:
                 if not video_path or not video_path.exists():
                     continue
 
-                # Generate output filename
+                # Generate output filename - one folder per word/phrase
                 safe_target = "".join(
                     c if c.isalnum() or c in "-_" else "_"
                     for c in target.text
-                )[:30]
+                )[:50]
+
+                # Sanitize video_id for filename
+                safe_video_id = "".join(
+                    c if c.isalnum() or c in "-_" else "_"
+                    for c in result.video_id
+                )[:40]
+
                 clip_filename = (
-                    f"line{lcs.line_number:03d}_{safe_target}_"
-                    f"{result.video_id}_{result.start:.1f}s.{self.config.output_format}"
+                    f"{safe_video_id}_{result.start:.1f}s.{self.config.output_format}"
                 )
-                output_path = clips_dir / f"line_{lcs.line_number:03d}" / clip_filename
+
+                # Flat structure: clips/{word_or_phrase}/
+                target_dir = clips_dir / safe_target
+                output_path = target_dir / clip_filename
                 output_path.parent.mkdir(parents=True, exist_ok=True)
 
                 # Skip if already extracted
@@ -580,35 +759,62 @@ class LyricMatchProcessor:
         lines.append(f"Lyrics: {project.lyrics_file.name}")
         lines.append("")
 
+        # Get word and phrase coverage
+        words_found, total_words, missing_words = project.get_word_coverage()
+        phrases_found, total_phrases = project.get_phrase_coverage()
+
+        word_coverage_pct = (words_found / total_words * 100) if total_words > 0 else 100.0
+        phrase_coverage_pct = (phrases_found / total_phrases * 100) if total_phrases > 0 else 100.0
+
         summary = project.get_summary()
         lines.append("## Summary")
         lines.append(f"- Total lines: {summary['total_lines']}")
-        lines.append(f"- Total targets: {summary['total_targets']}")
-        lines.append(f"- Clips extracted: {summary['total_clips_extracted']}")
-        lines.append(f"- Coverage: {summary['coverage_percent']}%")
+        lines.append(f"- **Word coverage: {words_found}/{total_words} ({word_coverage_pct:.0f}%)**")
+        lines.append(f"- Phrase coverage: {phrases_found}/{total_phrases} ({phrase_coverage_pct:.0f}%)")
+        lines.append(f"- Total clips extracted: {summary['total_clips_extracted']}")
         lines.append("")
+
+        # Missing words (critical)
+        if missing_words:
+            lines.append("## ⚠️ Missing Words (Action Required)")
+            lines.append("")
+            lines.append("These words need lyrics changes, more source material, or manual recording:")
+            lines.append("")
+            for word in missing_words:
+                lines.append(f"- \"{word}\"")
+            lines.append("")
 
         # Coverage by line
         lines.append("## Coverage by Line")
         for lcs in project.line_clip_sets:
-            status = "✓" if lcs.coverage == 100 else "○" if lcs.coverage > 0 else "✗"
+            # Count words vs phrases for this line
+            line_words = [t for t in lcs.targets if not t.is_phrase]
+            line_phrases = [t for t in lcs.targets if t.is_phrase]
+            words_with_clips = sum(1 for t in line_words if t.text in lcs.clips and lcs.clips[t.text])
+
+            word_status = "✓" if words_with_clips == len(line_words) else "○" if words_with_clips > 0 else "✗"
             lines.append(
-                f"{status} Line {lcs.line_number}: {lcs.line_text[:50]}... "
-                f"({lcs.total_clips} clips, {lcs.coverage:.0f}%)"
+                f"{word_status} Line {lcs.line_number}: {lcs.line_text[:50]}{'...' if len(lcs.line_text) > 50 else ''} "
+                f"(words: {words_with_clips}/{len(line_words)}, phrases: {len([t for t in line_phrases if t.text in lcs.clips and lcs.clips[t.text]])}/{len(line_phrases)})"
             )
         lines.append("")
 
-        # Missing targets
+        # Missing phrases (informational)
         gaps = project.get_coverage_gaps()
-        if gaps:
-            lines.append("## Missing Targets")
-            for gap in gaps:
-                lines.append(
-                    f"- Line {gap['line_number']}: \"{gap['target_text']}\" "
-                    f"({'phrase' if gap['is_phrase'] else 'word'})"
-                )
-        else:
-            lines.append("## All targets covered!")
+        missing_phrase_gaps = [g for g in gaps if g['is_phrase']]
+        if missing_phrase_gaps:
+            lines.append(f"## Missing Phrases ({len(missing_phrase_gaps)} total)")
+            lines.append("")
+            lines.append("Phrases are nice-to-have but not required - you can build them from individual words.")
+            lines.append("")
+            # Only show first 20 to avoid overwhelming the report
+            for gap in missing_phrase_gaps[:20]:
+                lines.append(f"- \"{gap['target_text']}\"")
+            if len(missing_phrase_gaps) > 20:
+                lines.append(f"- ... and {len(missing_phrase_gaps) - 20} more")
+
+        if not missing_words and not missing_phrase_gaps:
+            lines.append("## ✓ All targets covered!")
 
         return "\n".join(lines)
 

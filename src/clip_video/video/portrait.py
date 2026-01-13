@@ -7,13 +7,16 @@ format optimized for YouTube Shorts, TikTok, and Instagram Reels.
 from __future__ import annotations
 
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, TYPE_CHECKING
 
 from clip_video.ffmpeg_binary import get_ffmpeg_path
 from clip_video.ffmpeg import FFmpegWrapper, VideoInfo
+
+if TYPE_CHECKING:
+    from clip_video.config import LogoSettings
 
 
 class AspectRatio(str, Enum):
@@ -38,6 +41,28 @@ class AspectRatio(str, Enum):
 
 
 @dataclass
+class LogoOverlayConfig:
+    """Configuration for logo overlay on video.
+
+    Attributes:
+        enabled: Whether to add logo overlay
+        logo_path: Path to the logo image file
+        position: Position on video (top-left, top-center, top-right,
+                  bottom-left, bottom-center, bottom-right)
+        height_percent: Logo height as percentage of video height (0.0-1.0)
+        opacity: Logo opacity (0.0-1.0, 1.0 = fully opaque)
+        margin: Margin from edge in pixels
+    """
+
+    enabled: bool = False
+    logo_path: Path | None = None
+    position: str = "top-center"
+    height_percent: float = 0.15
+    opacity: float = 1.0
+    margin: int = 20
+
+
+@dataclass
 class PortraitConfig:
     """Configuration for portrait video conversion.
 
@@ -52,6 +77,7 @@ class PortraitConfig:
         audio_codec: Output audio codec
         audio_bitrate: Audio bitrate
         faststart: Enable fast start for web playback
+        logo: Logo overlay configuration
     """
 
     target_ratio: AspectRatio = AspectRatio.PORTRAIT_9_16
@@ -64,6 +90,7 @@ class PortraitConfig:
     audio_codec: str = "aac"
     audio_bitrate: str = "192k"
     faststart: bool = True
+    logo: LogoOverlayConfig = field(default_factory=LogoOverlayConfig)
 
     @property
     def target_height(self) -> int:
@@ -123,6 +150,73 @@ def calculate_crop_region(
     return (crop_width, crop_height, x_pos, y_pos)
 
 
+def build_logo_overlay_filter(
+    logo_config: LogoOverlayConfig,
+    video_width: int,
+    video_height: int,
+) -> str | None:
+    """Build FFmpeg filter for logo overlay.
+
+    Args:
+        logo_config: Logo overlay configuration
+        video_width: Output video width
+        video_height: Output video height
+
+    Returns:
+        FFmpeg overlay filter string, or None if logo disabled
+    """
+    if not logo_config.enabled or not logo_config.logo_path:
+        return None
+
+    logo_path = logo_config.logo_path
+    if not logo_path.exists():
+        return None
+
+    # Calculate logo height in pixels
+    logo_height = int(video_height * logo_config.height_percent)
+    margin = logo_config.margin
+
+    # Calculate position based on config
+    position = logo_config.position.lower()
+
+    # Vertical position
+    if position.startswith("top"):
+        y_pos = margin
+    elif position.startswith("bottom"):
+        y_pos = f"H-h-{margin}"
+    else:
+        y_pos = "(H-h)/2"
+
+    # Horizontal position
+    if position.endswith("left"):
+        x_pos = margin
+    elif position.endswith("right"):
+        x_pos = f"W-w-{margin}"
+    else:  # center
+        x_pos = "(W-w)/2"
+
+    # Escape path for FFmpeg (Windows paths need special handling)
+    escaped_path = str(logo_path).replace("\\", "/").replace(":", "\\:")
+
+    # Build the filter
+    # Scale logo to desired height while maintaining aspect ratio
+    # Then overlay at calculated position
+    if logo_config.opacity < 1.0:
+        # Apply alpha for transparency
+        alpha_filter = f"format=rgba,colorchannelmixer=aa={logo_config.opacity}"
+        filter_str = (
+            f"[1:v]scale=-1:{logo_height},{alpha_filter}[logo];"
+            f"[0:v][logo]overlay={x_pos}:{y_pos}"
+        )
+    else:
+        filter_str = (
+            f"[1:v]scale=-1:{logo_height}[logo];"
+            f"[0:v][logo]overlay={x_pos}:{y_pos}"
+        )
+
+    return filter_str
+
+
 class PortraitConverter:
     """Converts landscape videos to portrait format.
 
@@ -180,24 +274,84 @@ class PortraitConverter:
             y_offset=config.crop_y_offset,
         )
 
-        # Build filter string
+        # Build filter string for crop and scale
         target_w, target_h = config.dimensions
-        filter_str = (
+        crop_scale_filter = (
             f"crop={crop_w}:{crop_h}:{crop_x}:{crop_y},"
             f"scale={target_w}:{target_h}:flags=lanczos"
         )
 
-        # Build FFmpeg command
-        cmd = [
-            self.ffmpeg_path,
-            "-i", str(input_path),
-            "-vf", filter_str,
-            "-c:v", config.video_codec,
-            "-crf", str(config.video_crf),
-            "-preset", config.video_preset,
-            "-c:a", config.audio_codec,
-            "-b:a", config.audio_bitrate,
-        ]
+        # Check if we need logo overlay
+        logo_config = config.logo
+        use_logo = (
+            logo_config.enabled
+            and logo_config.logo_path
+            and logo_config.logo_path.exists()
+        )
+
+        if use_logo:
+            # Complex filter with logo overlay
+            # Calculate logo dimensions
+            logo_height = int(target_h * logo_config.height_percent)
+            margin = logo_config.margin
+            position = logo_config.position.lower()
+
+            # Vertical position
+            if position.startswith("top"):
+                y_pos = margin
+            elif position.startswith("bottom"):
+                y_pos = f"H-h-{margin}"
+            else:
+                y_pos = "(H-h)/2"
+
+            # Horizontal position
+            if position.endswith("left"):
+                x_pos = margin
+            elif position.endswith("right"):
+                x_pos = f"W-w-{margin}"
+            else:  # center
+                x_pos = "(W-w)/2"
+
+            # Build filter complex
+            if logo_config.opacity < 1.0:
+                alpha_filter = f"format=rgba,colorchannelmixer=aa={logo_config.opacity}"
+                filter_complex = (
+                    f"[0:v]{crop_scale_filter}[cropped];"
+                    f"[1:v]scale=-1:{logo_height},{alpha_filter}[logo];"
+                    f"[cropped][logo]overlay={x_pos}:{y_pos}[out]"
+                )
+            else:
+                filter_complex = (
+                    f"[0:v]{crop_scale_filter}[cropped];"
+                    f"[1:v]scale=-1:{logo_height}[logo];"
+                    f"[cropped][logo]overlay={x_pos}:{y_pos}[out]"
+                )
+
+            cmd = [
+                self.ffmpeg_path,
+                "-i", str(input_path),
+                "-i", str(logo_config.logo_path),
+                "-filter_complex", filter_complex,
+                "-map", "[out]",
+                "-map", "0:a",
+                "-c:v", config.video_codec,
+                "-crf", str(config.video_crf),
+                "-preset", config.video_preset,
+                "-c:a", config.audio_codec,
+                "-b:a", config.audio_bitrate,
+            ]
+        else:
+            # Simple filter without logo
+            cmd = [
+                self.ffmpeg_path,
+                "-i", str(input_path),
+                "-vf", crop_scale_filter,
+                "-c:v", config.video_codec,
+                "-crf", str(config.video_crf),
+                "-preset", config.video_preset,
+                "-c:a", config.audio_codec,
+                "-b:a", config.audio_bitrate,
+            ]
 
         if config.faststart:
             cmd.extend(["-movflags", "+faststart"])
@@ -219,7 +373,7 @@ class PortraitConverter:
         config: PortraitConfig | None = None,
         caption_style: "CaptionStyle" | None = None,
     ) -> Path:
-        """Convert to portrait with burned-in captions.
+        """Convert to portrait with burned-in captions and optional logo.
 
         Args:
             input_path: Input video path
@@ -253,7 +407,7 @@ class PortraitConverter:
             y_offset=config.crop_y_offset,
         )
 
-        # Build filter parts
+        # Build filter parts for crop, scale, and captions
         target_w, target_h = config.dimensions
         filter_parts = [
             f"crop={crop_w}:{crop_h}:{crop_x}:{crop_y}",
@@ -278,19 +432,82 @@ class PortraitConverter:
                 f"drawtext=text='{text}':{param_str}:enable='{enable}'"
             )
 
-        filter_str = ",".join(filter_parts)
+        # Check if we need logo overlay
+        logo_config = config.logo
+        use_logo = (
+            logo_config.enabled
+            and logo_config.logo_path
+            and logo_config.logo_path.exists()
+        )
 
-        # Build FFmpeg command
-        cmd = [
-            self.ffmpeg_path,
-            "-i", str(input_path),
-            "-vf", filter_str,
-            "-c:v", config.video_codec,
-            "-crf", str(config.video_crf),
-            "-preset", config.video_preset,
-            "-c:a", config.audio_codec,
-            "-b:a", config.audio_bitrate,
-        ]
+        if use_logo:
+            # Build complex filter with logo overlay
+            # First apply crop, scale, and captions to video stream
+            video_filter = ",".join(filter_parts)
+
+            # Calculate logo dimensions
+            logo_height = int(target_h * logo_config.height_percent)
+            margin = logo_config.margin
+            position = logo_config.position.lower()
+
+            # Vertical position
+            if position.startswith("top"):
+                y_pos = margin
+            elif position.startswith("bottom"):
+                y_pos = f"H-h-{margin}"
+            else:
+                y_pos = "(H-h)/2"
+
+            # Horizontal position
+            if position.endswith("left"):
+                x_pos = margin
+            elif position.endswith("right"):
+                x_pos = f"W-w-{margin}"
+            else:  # center
+                x_pos = "(W-w)/2"
+
+            # Build complex filter
+            if logo_config.opacity < 1.0:
+                alpha_filter = f"format=rgba,colorchannelmixer=aa={logo_config.opacity}"
+                filter_complex = (
+                    f"[0:v]{video_filter}[captioned];"
+                    f"[1:v]scale=-1:{logo_height},{alpha_filter}[logo];"
+                    f"[captioned][logo]overlay={x_pos}:{y_pos}[out]"
+                )
+            else:
+                filter_complex = (
+                    f"[0:v]{video_filter}[captioned];"
+                    f"[1:v]scale=-1:{logo_height}[logo];"
+                    f"[captioned][logo]overlay={x_pos}:{y_pos}[out]"
+                )
+
+            cmd = [
+                self.ffmpeg_path,
+                "-i", str(input_path),
+                "-i", str(logo_config.logo_path),
+                "-filter_complex", filter_complex,
+                "-map", "[out]",
+                "-map", "0:a",
+                "-c:v", config.video_codec,
+                "-crf", str(config.video_crf),
+                "-preset", config.video_preset,
+                "-c:a", config.audio_codec,
+                "-b:a", config.audio_bitrate,
+            ]
+        else:
+            # Simple filter without logo
+            filter_str = ",".join(filter_parts)
+
+            cmd = [
+                self.ffmpeg_path,
+                "-i", str(input_path),
+                "-vf", filter_str,
+                "-c:v", config.video_codec,
+                "-crf", str(config.video_crf),
+                "-preset", config.video_preset,
+                "-c:a", config.audio_codec,
+                "-b:a", config.audio_bitrate,
+            ]
 
         if config.faststart:
             cmd.extend(["-movflags", "+faststart"])
@@ -334,6 +551,7 @@ class PortraitConverter:
 YOUTUBE_SHORTS_CONFIG = PortraitConfig(
     target_ratio=AspectRatio.PORTRAIT_9_16,
     target_width=1080,
+    crop_x_offset=0.5,  # Center crop by default - override via brand config
     video_crf=20,
     video_preset="slow",
 )

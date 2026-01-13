@@ -17,6 +17,8 @@ from clip_video.llm.base import (
     LLMProviderType,
     HighlightAnalysis,
     HighlightSegment,
+    ClipValidationRequest,
+    ClipValidationResponse,
 )
 from clip_video.llm.prompts import HighlightPromptBuilder, CONFERENCE_PROMPT
 
@@ -231,6 +233,161 @@ class OpenAILLM(LLMProvider):
         )
 
         return cost
+
+    def validate_clip(
+        self,
+        request: ClipValidationRequest,
+    ) -> ClipValidationResponse:
+        """Validate a clip segment against quality criteria.
+
+        Args:
+            request: ClipValidationRequest with segment details
+
+        Returns:
+            ClipValidationResponse with pass/fail for each criterion
+        """
+        client = self._get_client()
+
+        system_prompt = self.prompt_builder.build_validation_system_prompt()
+        validation_prompt = self.prompt_builder.build_validation_prompt(
+            transcript_segment=request.transcript_segment,
+            start_time=request.start_time,
+            end_time=request.end_time,
+            clip_summary=request.clip_summary,
+            brand_context=request.brand_context if request.brand_context else None,
+            full_transcript=request.full_transcript_context,
+        )
+
+        # Make API call with retry for rate limits
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = client.chat.completions.create(
+                    model=self.config.model,
+                    max_tokens=1024,  # Validation responses are small
+                    temperature=0.1,  # Low temperature for consistent validation
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": validation_prompt},
+                    ],
+                    response_format={"type": "json_object"},
+                )
+                break
+            except Exception as e:
+                if "rate_limit" in str(e).lower() and attempt < max_retries - 1:
+                    wait_time = (attempt + 1) * 5
+                    time.sleep(wait_time)
+                    continue
+                raise OpenAIAPIError(f"OpenAI API error during validation: {e}") from e
+
+        # Parse response
+        response_text = response.choices[0].message.content
+
+        try:
+            data = json.loads(response_text)
+        except json.JSONDecodeError as e:
+            raise OpenAIAPIError(f"Failed to parse validation response as JSON: {e}")
+
+        # Calculate token usage
+        tokens_used = response.usage.total_tokens
+
+        return ClipValidationResponse(
+            clip_id=request.clip_id,
+            is_valid=data.get("is_valid", False),
+            sentence_boundaries_ok=data.get("sentence_boundaries_ok", True),
+            topic_complete=data.get("topic_complete", True),
+            has_hook=data.get("has_hook", False),
+            standalone_valid=data.get("standalone_valid", True),
+            brand_relevant=data.get("brand_relevant", True),
+            transcript_aligned=data.get("transcript_aligned", True),
+            issues=data.get("issues", []),
+            suggestions=data.get("suggestions", []),
+            confidence=data.get("confidence", 0.8),
+            tokens_used=tokens_used,
+        )
+
+    def find_replacement_clips(
+        self,
+        rejected_clips: list[ClipValidationResponse],
+        transcript_text: str,
+        used_segments: list[tuple[float, float]],
+        target_count: int = 1,
+    ) -> list[HighlightSegment]:
+        """Find replacement clips for rejected segments.
+
+        Args:
+            rejected_clips: List of clips that failed validation
+            transcript_text: Full transcript
+            used_segments: Time ranges to avoid
+            target_count: Number of replacements needed
+
+        Returns:
+            List of new HighlightSegment suggestions
+        """
+        client = self._get_client()
+
+        # Convert rejected clips to dict format for prompt
+        rejected_dicts = [
+            {
+                "start_time": 0.0,
+                "end_time": 0.0,
+                "issues": clip.issues,
+            }
+            for clip in rejected_clips
+        ]
+
+        system_prompt = self.prompt_builder.build_replacement_system_prompt()
+        replacement_prompt = self.prompt_builder.build_replacement_prompt(
+            transcript_text=transcript_text,
+            rejected_clips=rejected_dicts,
+            used_segments=used_segments,
+            target_count=target_count,
+        )
+
+        # Make API call with retry
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = client.chat.completions.create(
+                    model=self.config.model,
+                    max_tokens=self.config.max_tokens,
+                    temperature=self.config.temperature,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": replacement_prompt},
+                    ],
+                    response_format={"type": "json_object"},
+                )
+                break
+            except Exception as e:
+                if "rate_limit" in str(e).lower() and attempt < max_retries - 1:
+                    wait_time = (attempt + 1) * 5
+                    time.sleep(wait_time)
+                    continue
+                raise OpenAIAPIError(f"OpenAI API error finding replacements: {e}") from e
+
+        # Parse response
+        response_text = response.choices[0].message.content
+
+        try:
+            data = json.loads(response_text)
+        except json.JSONDecodeError as e:
+            raise OpenAIAPIError(f"Failed to parse replacement response as JSON: {e}")
+
+        # Build HighlightSegment list
+        segments = []
+        for seg_data in data.get("segments", []):
+            segments.append(HighlightSegment(
+                start_time=float(seg_data["start_time"]),
+                end_time=float(seg_data["end_time"]),
+                summary=seg_data.get("summary", ""),
+                hook_text=seg_data.get("hook_text", ""),
+                reason=seg_data.get("reason", ""),
+                topics=seg_data.get("topics", []),
+                quality_score=float(seg_data.get("quality_score", 0.8)),
+            ))
+
+        return segments
 
 
 def get_llm_provider(config: LLMConfig | None = None) -> LLMProvider:

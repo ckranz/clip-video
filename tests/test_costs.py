@@ -239,8 +239,9 @@ class TestCostTracker:
 
         report = tracker.get_full_report()
 
-        assert "total_cost" in report
-        assert report["total_cost"] == 0.52
+        assert "total_cost_usd" in report
+        assert report["total_cost_usd"] == 0.52
+        assert "total_cost_gbp" in report
         assert "by_category" in report
         assert "by_service" in report
         assert "entries" in report
@@ -285,6 +286,128 @@ class TestCostTracker:
 
         assert len(loaded.entries) == 2
         assert loaded.get_total() == 0.52
+
+
+class TestCostTrackerGBP:
+    """Tests for GBP conversion and ceiling functionality."""
+
+    def test_get_total_gbp(self):
+        """Test GBP conversion."""
+        tracker = CostTracker()
+        tracker.add_llm_cost("claude", 1.00, 1000)  # $1.00
+
+        gbp = tracker.get_total_gbp()
+
+        # $1.00 * 0.79 = £0.79
+        assert gbp == pytest.approx(0.79, rel=0.01)
+
+    def test_ceiling_gbp_init(self):
+        """Test ceiling initialization."""
+        tracker = CostTracker(ceiling_gbp=5.0)
+
+        assert tracker.ceiling_gbp == 5.0
+        assert tracker.remaining_gbp == 5.0
+        assert tracker.ceiling_reached is False
+
+    def test_ceiling_gbp_not_set(self):
+        """Test behavior when no ceiling is set."""
+        tracker = CostTracker()
+
+        assert tracker.ceiling_gbp is None
+        assert tracker.remaining_gbp == float("inf")
+        assert tracker.ceiling_reached is False
+
+    def test_ceiling_reached(self):
+        """Test ceiling detection."""
+        tracker = CostTracker(ceiling_gbp=1.0)  # £1.00 ceiling
+
+        # $1.00 USD = ~£0.79 GBP (below ceiling)
+        tracker.add_llm_cost("claude", 1.00, 1000)
+        assert tracker.ceiling_reached is False
+
+        # $1.00 more = total ~£1.58 GBP (above ceiling)
+        tracker.add_llm_cost("claude", 1.00, 1000)
+        assert tracker.ceiling_reached is True
+
+    def test_remaining_gbp(self):
+        """Test remaining budget calculation."""
+        tracker = CostTracker(ceiling_gbp=5.0)
+
+        # Add $1.00 = ~£0.79
+        tracker.add_llm_cost("claude", 1.00, 1000)
+
+        remaining = tracker.remaining_gbp
+        assert remaining == pytest.approx(5.0 - 0.79, rel=0.01)
+
+    def test_remaining_gbp_zero_floor(self):
+        """Test remaining never goes negative."""
+        tracker = CostTracker(ceiling_gbp=0.50)  # £0.50 ceiling
+
+        # Add $10.00 = ~£7.90 (way over ceiling)
+        tracker.add_llm_cost("claude", 10.00, 10000)
+
+        assert tracker.remaining_gbp == 0.0
+
+    def test_can_afford_true(self):
+        """Test can_afford returns True when under budget."""
+        tracker = CostTracker(ceiling_gbp=5.0)
+
+        # Can afford $1.00 (~£0.79)
+        assert tracker.can_afford(1.00) is True
+
+    def test_can_afford_false(self):
+        """Test can_afford returns False when would exceed budget."""
+        tracker = CostTracker(ceiling_gbp=1.0)
+
+        # Add $1.00 first
+        tracker.add_llm_cost("claude", 1.00, 1000)
+
+        # Can't afford another $1.00
+        assert tracker.can_afford(1.00) is False
+
+    def test_can_afford_no_ceiling(self):
+        """Test can_afford always True when no ceiling."""
+        tracker = CostTracker()  # No ceiling
+
+        assert tracker.can_afford(1000.00) is True
+
+    def test_ceiling_in_report(self):
+        """Test ceiling info included in report."""
+        tracker = CostTracker(ceiling_gbp=5.0)
+        tracker.add_llm_cost("claude", 1.00, 1000)
+
+        report = tracker.get_full_report()
+
+        assert "ceiling_gbp" in report
+        assert report["ceiling_gbp"] == 5.0
+        assert "remaining_gbp" in report
+        assert "ceiling_reached" in report
+        assert report["ceiling_reached"] is False
+
+    def test_ceiling_serialization(self, tmp_path):
+        """Test ceiling persists through save/load."""
+        tracker = CostTracker(ceiling_gbp=5.0)
+        tracker.add_llm_cost("claude", 1.00, 1000)
+
+        file_path = tmp_path / "costs.json"
+        tracker.save(file_path)
+
+        loaded = CostTracker.load(file_path)
+
+        assert loaded.ceiling_gbp == 5.0
+        assert loaded.remaining_gbp == pytest.approx(tracker.remaining_gbp, rel=0.01)
+
+    def test_ceiling_setter(self):
+        """Test ceiling can be changed after init."""
+        tracker = CostTracker()
+
+        assert tracker.ceiling_gbp is None
+
+        tracker.ceiling_gbp = 10.0
+        assert tracker.ceiling_gbp == 10.0
+
+        tracker.ceiling_gbp = None
+        assert tracker.ceiling_gbp is None
 
 
 class TestCostEstimate:
@@ -486,7 +609,7 @@ class TestIntegration:
 
         # Generate and check report
         report = tracker.get_full_report()
-        assert report["total_cost"] == 0.31
+        assert report["total_cost_usd"] == 0.31
         assert report["entry_count"] == 4
 
         # Save and reload

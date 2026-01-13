@@ -123,9 +123,10 @@ class CostTracker:
     - Category and service breakdowns
     - Cost estimation
     - Persistence
+    - Cost ceiling enforcement (for agentic workflows)
 
     Example:
-        tracker = CostTracker()
+        tracker = CostTracker(ceiling_gbp=5.0)
         tracker.add_transcription_cost(
             service="whisper",
             amount=0.50,
@@ -137,21 +138,28 @@ class CostTracker:
             tokens_used=1500,
         )
         print(tracker.get_total())
+        print(tracker.ceiling_reached)  # Check if limit hit
     """
+
+    # GBP to USD exchange rate (configurable)
+    USD_TO_GBP = 0.79
 
     def __init__(
         self,
         cost_callback: Callable[[float, str], None] | None = None,
+        ceiling_gbp: float | None = None,
     ):
         """Initialize the tracker.
 
         Args:
             cost_callback: Optional callback when costs are added
                 Signature: (amount, description)
+            ceiling_gbp: Optional cost ceiling in GBP for agentic workflows
         """
         self.entries: list[CostEntry] = []
         self.cost_callback = cost_callback
         self._started_at = datetime.now().isoformat()
+        self._ceiling_gbp = ceiling_gbp
 
     def add_cost(self, entry: CostEntry) -> None:
         """Add a cost entry.
@@ -284,6 +292,68 @@ class CostTracker:
         """
         return sum(e.amount for e in self.entries if e.service == service)
 
+    def get_total_gbp(self) -> float:
+        """Get total cost in GBP.
+
+        Returns:
+            Total cost in GBP
+        """
+        return self.get_total() * self.USD_TO_GBP
+
+    @property
+    def ceiling_gbp(self) -> float | None:
+        """Get the cost ceiling in GBP.
+
+        Returns:
+            Cost ceiling in GBP, or None if no ceiling set
+        """
+        return self._ceiling_gbp
+
+    @ceiling_gbp.setter
+    def ceiling_gbp(self, value: float | None) -> None:
+        """Set the cost ceiling in GBP.
+
+        Args:
+            value: Cost ceiling in GBP, or None to disable
+        """
+        self._ceiling_gbp = value
+
+    @property
+    def remaining_gbp(self) -> float:
+        """Get remaining budget in GBP.
+
+        Returns:
+            Remaining budget, or infinity if no ceiling set
+        """
+        if self._ceiling_gbp is None:
+            return float("inf")
+        return max(0, self._ceiling_gbp - self.get_total_gbp())
+
+    @property
+    def ceiling_reached(self) -> bool:
+        """Check if cost ceiling has been reached.
+
+        Returns:
+            True if ceiling reached or exceeded, False otherwise
+        """
+        if self._ceiling_gbp is None:
+            return False
+        return self.get_total_gbp() >= self._ceiling_gbp
+
+    def can_afford(self, estimated_cost_usd: float) -> bool:
+        """Check if an estimated cost can be afforded.
+
+        Args:
+            estimated_cost_usd: Estimated cost of next operation in USD
+
+        Returns:
+            True if cost is within remaining budget
+        """
+        if self._ceiling_gbp is None:
+            return True
+        estimated_gbp = estimated_cost_usd * self.USD_TO_GBP
+        return (self.get_total_gbp() + estimated_gbp) <= self._ceiling_gbp
+
     def get_summary_by_category(self) -> dict[str, CostSummary]:
         """Get cost summaries grouped by category.
 
@@ -337,8 +407,9 @@ class CostTracker:
         by_category = self.get_summary_by_category()
         by_service = self.get_summary_by_service()
 
-        return {
-            "total_cost": round(self.get_total(), 6),
+        report = {
+            "total_cost_usd": round(self.get_total(), 6),
+            "total_cost_gbp": round(self.get_total_gbp(), 6),
             "entry_count": len(self.entries),
             "started_at": self._started_at,
             "generated_at": datetime.now().isoformat(),
@@ -347,17 +418,29 @@ class CostTracker:
             "entries": [e.to_dict() for e in self.entries],
         }
 
+        # Add ceiling info if set
+        if self._ceiling_gbp is not None:
+            report["ceiling_gbp"] = self._ceiling_gbp
+            report["remaining_gbp"] = round(self.remaining_gbp, 6)
+            report["ceiling_reached"] = self.ceiling_reached
+
+        return report
+
     def to_dict(self) -> dict:
         """Convert tracker state to dictionary."""
-        return {
+        data = {
             "entries": [e.to_dict() for e in self.entries],
             "started_at": self._started_at,
         }
+        if self._ceiling_gbp is not None:
+            data["ceiling_gbp"] = self._ceiling_gbp
+        return data
 
     @classmethod
     def from_dict(cls, data: dict) -> "CostTracker":
         """Create tracker from dictionary."""
-        tracker = cls()
+        ceiling_gbp = data.get("ceiling_gbp")
+        tracker = cls(ceiling_gbp=ceiling_gbp)
         tracker._started_at = data.get("started_at", tracker._started_at)
         tracker.entries = [
             CostEntry.from_dict(e)

@@ -13,13 +13,14 @@ Implements the complete highlights workflow:
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
 from clip_video.captions.enhancements import BrandEnhancements, EnhancedCaptionRenderer
-from clip_video.captions.renderer import Caption, CaptionTrack, CaptionRenderer
+from clip_video.captions.renderer import Caption, CaptionTrack, CaptionRenderer, slice_text_into_phrases
 from clip_video.captions.styles import CaptionStyle, YOUTUBE_SHORTS_STYLE
 from clip_video.ffmpeg import FFmpegWrapper, ExtractionConfig, ClipPadding
 from clip_video.llm.base import (
@@ -30,6 +31,7 @@ from clip_video.llm.base import (
 )
 from clip_video.llm.claude import ClaudeLLM
 from clip_video.llm.openai import OpenAILLM
+from clip_video.validation.orchestrator import AgenticValidator, RunSummary
 from clip_video.progress import ProgressTracker
 from clip_video.state import ProcessingState, IdempotentProcessor
 from clip_video.storage import atomic_write_json, read_json
@@ -38,9 +40,17 @@ from clip_video.video.portrait import (
     PortraitConfig,
     PortraitConverter,
     AspectRatio,
+    LogoOverlayConfig,
     YOUTUBE_SHORTS_CONFIG,
     TIKTOK_CONFIG,
     INSTAGRAM_REELS_CONFIG,
+)
+from clip_video.config import BrandConfig, load_brand_config, get_brand_path, SocialCopyStyle
+from clip_video.llm.social_copy import (
+    SocialCopy,
+    build_social_copy_prompt,
+    parse_social_copy_response,
+    save_social_copy,
 )
 
 
@@ -159,19 +169,29 @@ class HighlightsConfig:
 
     Attributes:
         target_clips: Number of highlight clips to generate
-        min_duration: Minimum clip duration in seconds
-        max_duration: Maximum clip duration in seconds
+        min_acceptable_clips: Minimum clips for a successful run
+        min_duration: Minimum clip duration in seconds (YouTube Shorts: 30-120s)
+        max_duration: Maximum clip duration in seconds (YouTube Shorts: 30-120s)
+        max_replacement_attempts: Max attempts to replace a rejected clip
+        cost_ceiling_gbp: Maximum LLM cost per video run in GBP
+        enable_validation_pass: Enable multi-pass validation workflow
         output_format: Output video format
         portrait_config: Portrait conversion settings
         caption_style: Caption styling
         enhancements: Brand-specific enhancements
         platforms: Target platforms for output
         llm_config: LLM configuration for analysis
+        clip_padding: Padding for clip extraction
+        brand_config: Brand configuration for portrait/logo settings
     """
 
     target_clips: int = 5
-    min_duration: float = 15.0
-    max_duration: float = 60.0
+    min_acceptable_clips: int = 3
+    min_duration: float = 30.0  # YouTube Shorts compatible (was 15.0)
+    max_duration: float = 120.0  # YouTube Shorts compatible (was 60.0)
+    max_replacement_attempts: int = 3
+    cost_ceiling_gbp: float = 5.0
+    enable_validation_pass: bool = True
     output_format: str = "mp4"
     portrait_config: PortraitConfig = field(default_factory=lambda: YOUTUBE_SHORTS_CONFIG)
     caption_style: CaptionStyle = field(default_factory=lambda: YOUTUBE_SHORTS_STYLE)
@@ -179,15 +199,79 @@ class HighlightsConfig:
     platforms: list[str] = field(default_factory=lambda: [Platform.YOUTUBE_SHORTS])
     llm_config: LLMConfig = field(default_factory=LLMConfig)
     clip_padding: ClipPadding = field(default_factory=ClipPadding)
+    brand_config: BrandConfig | None = None
 
-    def get_platform_config(self, platform: str) -> PortraitConfig:
-        """Get portrait config for a specific platform."""
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        if self.min_duration > self.max_duration:
+            raise ValueError(
+                f"min_duration ({self.min_duration}) cannot be greater than "
+                f"max_duration ({self.max_duration})"
+            )
+        if self.min_acceptable_clips > self.target_clips:
+            raise ValueError(
+                f"min_acceptable_clips ({self.min_acceptable_clips}) cannot be greater than "
+                f"target_clips ({self.target_clips})"
+            )
+
+    def get_platform_config(
+        self,
+        platform: str,
+        source_width: int | None = None,
+    ) -> PortraitConfig:
+        """Get portrait config for a specific platform with brand overrides.
+
+        Args:
+            platform: Target platform (youtube_shorts, tiktok, etc.)
+            source_width: Source video width for crop offset calculation
+
+        Returns:
+            PortraitConfig with brand-specific overrides applied
+        """
+        # Get base platform config
         configs = {
             Platform.YOUTUBE_SHORTS: YOUTUBE_SHORTS_CONFIG,
             Platform.TIKTOK: TIKTOK_CONFIG,
             Platform.INSTAGRAM_REELS: INSTAGRAM_REELS_CONFIG,
         }
-        return configs.get(platform, self.portrait_config)
+        base_config = configs.get(platform, self.portrait_config)
+
+        # If no brand config, return base config
+        if not self.brand_config:
+            return base_config
+
+        # Apply brand-specific overrides
+        crop_x_offset = base_config.crop_x_offset
+        if source_width:
+            crop_x_offset = self.brand_config.get_crop_x_offset(source_width)
+        elif self.brand_config.portrait.crop_x_offset != 0.5:
+            crop_x_offset = self.brand_config.portrait.crop_x_offset
+
+        # Build logo config from brand settings
+        logo_settings = self.brand_config.logo
+        logo_config = LogoOverlayConfig(
+            enabled=logo_settings.enabled,
+            logo_path=get_brand_path(self.brand_config.name) / logo_settings.image_path if logo_settings.enabled else None,
+            position=logo_settings.position,
+            height_percent=logo_settings.height_percent,
+            opacity=logo_settings.opacity,
+            margin=logo_settings.margin,
+        )
+
+        # Create new config with overrides
+        return PortraitConfig(
+            target_ratio=base_config.target_ratio,
+            target_width=base_config.target_width,
+            crop_x_offset=crop_x_offset,
+            crop_y_offset=base_config.crop_y_offset,
+            video_codec=base_config.video_codec,
+            video_crf=base_config.video_crf,
+            video_preset=base_config.video_preset,
+            audio_codec=base_config.audio_codec,
+            audio_bitrate=base_config.audio_bitrate,
+            faststart=base_config.faststart,
+            logo=logo_config,
+        )
 
 
 @dataclass
@@ -510,6 +594,75 @@ class HighlightsProcessor:
         self._report_progress("analysis", 1.0)
         return analysis
 
+    def validate_and_refine(
+        self,
+        project: HighlightsProject,
+        brand_context: dict | None = None,
+    ) -> tuple[list[HighlightSegment], RunSummary]:
+        """Run multi-pass validation on analyzed segments.
+
+        Uses the AgenticValidator to:
+        1. Validate each segment against quality criteria
+        2. Reject failing segments to review queue
+        3. Find replacement candidates for rejected segments
+        4. Repeat until target reached or resources exhausted
+
+        Args:
+            project: Project with analysis to validate
+            brand_context: Optional brand context for validation
+
+        Returns:
+            Tuple of (approved_segments, run_summary)
+        """
+        self._report_progress("validation", 0.0)
+
+        if not project.analysis:
+            raise ValueError("Project has no analysis. Call analyze() first.")
+
+        if not self.config.enable_validation_pass:
+            # Skip validation, return all segments as-is
+            return project.analysis.segments, RunSummary(
+                approved_count=len(project.analysis.segments),
+                rejected_count=0,
+                target_clips=self.config.target_clips,
+                min_acceptable=self.config.min_acceptable_clips,
+                target_met=len(project.analysis.segments) >= self.config.target_clips,
+                minimum_met=len(project.analysis.segments) >= self.config.min_acceptable_clips,
+                iterations=0,
+                total_cost_usd=0.0,
+                total_cost_gbp=0.0,
+                cost_ceiling_gbp=self.config.cost_ceiling_gbp,
+                cost_ceiling_hit=False,
+                transcript_exhausted=False,
+                termination_reason="Validation pass disabled",
+            )
+
+        self._report_progress("validation", 0.1)
+
+        # Create validator
+        validator = AgenticValidator(
+            config=self.config,
+            llm=self.llm,
+            transcript_text=project.transcript_text,
+            brand_context=brand_context or {},
+            project_root=project.project_root,
+            video_path=str(project.video_path),
+        )
+
+        self._report_progress("validation", 0.2)
+
+        # Run validation
+        approved_segments, summary = validator.validate_and_refine(
+            initial_segments=project.analysis.segments,
+        )
+
+        # Update analysis with approved segments only
+        project.analysis.segments = approved_segments
+        project.save()
+
+        self._report_progress("validation", 1.0)
+        return approved_segments, summary
+
     def extract_clips(self, project: HighlightsProject) -> list[HighlightClip]:
         """Extract raw clips from source video.
 
@@ -552,6 +705,8 @@ class HighlightsProcessor:
             self.ffmpeg.extract_clip(
                 input_path=project.video_path,
                 output_path=output_path,
+                start_time=segment.start_time,
+                end_time=segment.end_time,
                 config=extraction_config,
             )
 
@@ -588,7 +743,6 @@ class HighlightsProcessor:
         if not project.clips:
             raise ValueError("Project has no clips. Call extract_clips() first.")
 
-        portrait_config = self.config.get_platform_config(platform)
         total_clips = len(project.clips)
 
         for i, clip in enumerate(project.clips):
@@ -598,6 +752,12 @@ class HighlightsProcessor:
             if clip.portrait_clip_path and clip.portrait_clip_path.exists():
                 self._report_progress("portrait_conversion", (i + 1) / total_clips)
                 continue
+
+            # Get source video width for crop offset calculation
+            video_info = self.ffmpeg.get_video_info(clip.raw_clip_path)
+            portrait_config = self.config.get_platform_config(
+                platform, source_width=video_info.width
+            )
 
             output_path = project.portrait_clips_dir / f"{clip.clip_id}_portrait.{self.config.output_format}"
 
@@ -617,15 +777,20 @@ class HighlightsProcessor:
         self,
         clip: HighlightClip,
         transcript_segments: list[TranscriptionSegment],
+        max_words_per_phrase: int = 4,
     ) -> CaptionTrack:
         """Build caption track for a clip from transcript segments.
+
+        Slices long transcript segments into short phrases for
+        single-line centered captions (TikTok/Shorts style).
 
         Args:
             clip: The clip to build captions for
             transcript_segments: Full transcript segments
+            max_words_per_phrase: Maximum words per caption phrase (default 4)
 
         Returns:
-            CaptionTrack with captions for this clip's time range
+            CaptionTrack with phrase-sliced captions for this clip's time range
         """
         track = CaptionTrack(default_style=self.config.caption_style)
 
@@ -642,11 +807,20 @@ class HighlightsProcessor:
             relative_start = max(0, seg.start - clip_start)
             relative_end = min(clip_end - clip_start, seg.end - clip_start)
 
-            track.add_caption(
-                text=seg.text,
-                start_time=relative_start,
-                end_time=relative_end,
+            # Slice into short phrases for single-line display
+            phrases = slice_text_into_phrases(
+                seg.text,
+                relative_start,
+                relative_end,
+                max_words_per_phrase,
             )
+
+            for phrase_text, phrase_start, phrase_end in phrases:
+                track.add_caption(
+                    text=phrase_text,
+                    start_time=phrase_start,
+                    end_time=phrase_end,
+                )
 
         return track
 
@@ -722,6 +896,119 @@ class HighlightsProcessor:
 
         project.save()
         return project.clips
+
+    def generate_social_copy(
+        self,
+        project: HighlightsProject,
+        transcript_segments: list[TranscriptionSegment] | None = None,
+    ) -> list[SocialCopy]:
+        """Generate voice-styled social media copy for each clip.
+
+        Creates a markdown file alongside each final clip with hook,
+        description, and hashtags styled according to brand settings.
+
+        Args:
+            project: Project with clips
+            transcript_segments: Optional transcript for clip text
+
+        Returns:
+            List of SocialCopy objects
+        """
+        self._report_progress("social_copy", 0.0)
+
+        if not project.clips:
+            return []
+
+        # Check if social copy is enabled
+        if not self.config.brand_config or not self.config.brand_config.social_copy.enabled:
+            return []
+
+        style = self.config.brand_config.social_copy
+        social_copies = []
+        total_clips = len(project.clips)
+
+        # Extract speaker name and talk title from project name
+        # Format is typically "Speaker Name - Talk Title_YYYYMMDD_HHMMSS"
+        speaker_name = ""
+        talk_title = ""
+        if " - " in project.name:
+            parts = project.name.split(" - ", 1)
+            speaker_name = parts[0].strip()
+            # Remove timestamp suffix from talk title (_YYYYMMDD_HHMMSS)
+            talk_part = parts[1] if len(parts) > 1 else ""
+            # Look for _YYYYMMDD_HHMMSS pattern and remove it
+            timestamp_match = re.search(r"_\d{8}_\d{6}$", talk_part)
+            if timestamp_match:
+                talk_title = talk_part[:timestamp_match.start()].strip()
+            elif "_" in talk_part:
+                talk_title = talk_part.rsplit("_", 1)[0].strip()
+            else:
+                talk_title = talk_part.strip()
+
+        for i, clip in enumerate(project.clips):
+            segment = clip.segment
+
+            # Get clip transcript text
+            clip_transcript = ""
+            if transcript_segments:
+                # Find segments that overlap with this clip
+                clip_segs = [
+                    seg for seg in transcript_segments
+                    if seg.end > segment.start_time and seg.start < segment.end_time
+                ]
+                clip_transcript = " ".join(seg.text for seg in clip_segs)
+
+            # Build prompts
+            system_prompt, user_prompt = build_social_copy_prompt(
+                style=style,
+                clip_summary=segment.summary,
+                clip_transcript=clip_transcript or segment.summary,
+                speaker_name=speaker_name,
+                talk_title=talk_title,
+                topics=segment.topics,
+            )
+
+            # Generate with LLM
+            try:
+                client = self.llm._get_client()
+                response = client.messages.create(
+                    model=self.config.llm_config.model,
+                    max_tokens=500,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
+                response_text = response.content[0].text
+            except Exception as e:
+                # Fallback to existing hook_text and summary
+                response_text = json.dumps({
+                    "hook": segment.hook_text or segment.summary[:100],
+                    "description": segment.summary,
+                    "hashtags": [t.replace(" ", "") for t in segment.topics[:5]],
+                })
+
+            # Parse response
+            social_copy = parse_social_copy_response(
+                response_text=response_text,
+                style=style,
+                speaker_name=speaker_name,
+                talk_title=talk_title,
+                topics=segment.topics,
+            )
+            social_copies.append(social_copy)
+
+            # Save markdown file alongside final clip
+            if clip.captioned_clip_path:
+                md_path = clip.captioned_clip_path.with_suffix(".md")
+                video_filename = clip.captioned_clip_path.name
+            else:
+                md_path = project.final_clips_dir / f"{clip.clip_id}_final.md"
+                video_filename = f"{clip.clip_id}_final.{self.config.output_format}"
+
+            save_social_copy(social_copy, md_path, video_filename)
+
+            self._report_progress("social_copy", (i + 1) / total_clips)
+
+        return social_copies
 
     def generate_metadata(self, project: HighlightsProject) -> list[dict]:
         """Generate metadata files for each clip.
@@ -818,16 +1105,20 @@ class HighlightsProcessor:
         project: HighlightsProject,
         transcript_segments: list[TranscriptionSegment] | None = None,
         skip_captions: bool = False,
-    ) -> HighlightsProject:
+        brand_context: dict | None = None,
+        skip_validation: bool = False,
+    ) -> tuple[HighlightsProject, RunSummary | None]:
         """Run the full highlights workflow.
 
         Args:
             project: Project to process
             transcript_segments: Optional transcript segments
             skip_captions: Skip caption burning step
+            brand_context: Optional brand context for validation
+            skip_validation: Skip the validation pass
 
         Returns:
-            Updated project with all clips generated
+            Tuple of (updated project, validation summary or None)
         """
         # Step 1: Ensure we have a transcript
         self.transcribe(project, transcript_segments)
@@ -835,20 +1126,25 @@ class HighlightsProcessor:
         # Step 2: Analyze for highlights
         self.analyze(project)
 
-        # Step 3: Extract clips
+        # Step 3: Optional validation pass
+        validation_summary = None
+        if self.config.enable_validation_pass and not skip_validation:
+            _, validation_summary = self.validate_and_refine(project, brand_context)
+
+        # Step 4: Extract clips (from approved segments)
         self.extract_clips(project)
 
-        # Step 4: Convert to portrait
+        # Step 5: Convert to portrait
         self.convert_to_portrait(project)
 
-        # Step 5: Burn captions (unless skipped)
+        # Step 6: Burn captions (unless skipped)
         if not skip_captions:
             self.burn_captions(project, transcript_segments)
 
-        # Step 6: Generate metadata
+        # Step 7: Generate metadata
         self.generate_metadata(project)
 
-        return project
+        return project, validation_summary
 
     def get_cost_estimate(self, transcript_text: str) -> float:
         """Estimate the cost of processing a transcript.

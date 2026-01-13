@@ -1,0 +1,114 @@
+{
+  "name": "example",
+  "description": "Example brand configuration - copy and customize for your own brand",
+  "portrait": {
+    "crop_x_offset": 0.5,
+    "crop_x_pixels": null,
+    "crop_source_width": null
+  },
+  "logo": {
+    "enabled": false,
+    "image_path": "logo/logo.png",
+    "position": "top-center",
+    "height_percent": 0.15,
+    "opacity": 1.0,
+    "margin": 20
+  },
+  "social_copy": {
+    "enabled": true,
+    "locale": "american",
+    "tone": "informative",
+    "voice_description": "",
+    "avoid_phrases": [
+      "game-changer",
+      "crushing it",
+      "let that sink in",
+      "here's the thing",
+      "but here's the kicker",
+      "I'll be honest",
+      "hot take",
+      "unpopular opinion",
+      "this is huge",
+      "mind = blown"
+    ],
+    "preferred_phrases": [],
+    "include_hashtags": true,
+    "default_hashtags": [],
+    "max_hook_length": 100,
+    "max_description_length": 280,
+    "custom_prompt": ""
+  },
+  "caption_font": "Arial",
+  "caption_size": 48,
+  "caption_color": "#FFFFFF",
+  "caption_bg_color": "#000000",
+  "caption_bg_opacity": 0.7,
+  "emoji_triggers": {},
+  "logo_triggers": {},
+  "vocabulary": {
+    "kubernetes": [
+      "cooper netties",
+      "kuber nettis",
+      "kuber netties",
+      "cooper nettis"
+    ],
+    "argocd": [
+      "argo cd",
+      "argo seedy",
+      "argo c d",
+      "argo cede"
+    ],
+    "istio": [
+      "is theo",
+      "east io",
+      "isto",
+      "is tio"
+    ],
+    "etcd": [
+      "et cetera d",
+      "e t c d",
+      "et cd",
+      "etcetera d"
+    ],
+    "prometheus": [
+      "pro metheus"
+    ],
+    "grafana": [
+      "graffana",
+      "graph ana"
+    ],
+    "helm": [
+      "hellm"
+    ],
+    "containerd": [
+      "container d",
+      "container dee"
+    ],
+    "envoy": [
+      "en voy"
+    ],
+    "jaeger": [
+      "jager",
+      "yaeger",
+      "yager"
+    ],
+    "fluentd": [
+      "fluent d",
+      "fluent dee"
+    ],
+    "falco": [
+      "fallco"
+    ],
+    "linkerd": [
+      "linker d",
+      "linker dee"
+    ],
+    "cncf": [
+      "c n c f",
+      "cnc f",
+      "see ncf"
+    ]
+  },
+  "transcription_provider": "whisper_api",
+  "llm_provider": "claude"
+}

@@ -9,6 +9,8 @@ from clip_video.llm.base import (
     LLMConfig,
     HighlightSegment,
     HighlightAnalysis,
+    ClipValidationRequest,
+    ClipValidationResponse,
 )
 from clip_video.llm.claude import ClaudeLLM
 from clip_video.llm.openai import OpenAILLM
@@ -19,6 +21,8 @@ __all__ = [
     "LLMConfig",
     "HighlightSegment",
     "HighlightAnalysis",
+    "ClipValidationRequest",
+    "ClipValidationResponse",
     "ClaudeLLM",
     "OpenAILLM",
     "HighlightPromptBuilder",

@@ -79,3 +79,62 @@ nul
 # Logs
 *.log
 logs/
+
+# =============================================================================
+# Brands directory - user data
+# =============================================================================
+# The brands/ directory contains user-specific data that should not be committed.
+# When you clone this repo, create your own brands/<brand-name>/ directory.
+#
+# Structure for reference:
+#   brands/
+#     <brand-name>/
+#       brand.yaml           # Brand configuration (keep example)
+#       dictionary.txt       # Generated word dictionary
+#       videos/              # Source video files
+#       transcripts/         # Generated transcripts
+#       highlights/          # Highlight extraction projects
+#       projects/            # Lyric match projects
+#       outputs/             # Final output files
+#       batch_jobs/          # Batch processing jobs
+#       search_results/      # Search result caches
+#       logo/                # Brand logo files
+
+# Exclude all brand data directories (except example structure)
+brands/*/videos/*
+brands/*/transcripts/*
+brands/*/highlights/
+brands/*/projects/
+brands/*/outputs/
+brands/*/batch_jobs/
+brands/*/search_results/
+brands/*/logo/*
+
+# Exclude generated files in brand root
+brands/*/dictionary.txt
+brands/*/transcript_index.json
+
+# Exclude brand configs (except example)
+brands/*/config.json
+!brands/example/config.json
+
+# Include example brand .gitkeep files for structure
+!brands/example/videos/.gitkeep
+!brands/example/transcripts/.gitkeep
+!brands/example/logo/.gitkeep
+
+# Transcript JSON files (large)
+*.transcript.json
+
+# =============================================================================
+# Claude Code settings
+# =============================================================================
+.claude/
+
+# =============================================================================
+# Temporary/working files
+# =============================================================================
+# One-off scripts
+reprocess_clips.py
+# Numbered temp directories
+[0-9]/

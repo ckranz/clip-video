@@ -117,14 +117,24 @@ class CaptionStyle:
         Returns:
             Dict of drawtext filter parameters
         """
-        y_pos = self.get_y_position(video_height)
         max_width = int(video_width * self.max_width_percent)
+
+        # Use FFmpeg expressions for dynamic vertical positioning
+        if self.position == CaptionPosition.CENTER:
+            y_expr = "(h-text_h)/2"  # Center vertically on screen
+        elif self.position == CaptionPosition.LOWER_THIRD:
+            # Center text within the lower third (between 66% and 100% of height)
+            # Lower third starts at 2h/3, ends at h. Center point is at 5h/6.
+            # Center text around that point: 5h/6 - text_h/2
+            y_expr = "(5*h/6)-(text_h/2)"
+        else:
+            y_expr = str(self.get_y_position(video_height))
 
         params = {
             "fontsize": self.font_size,
             "fontcolor": self.get_ffmpeg_color(self.font_color, self.font_opacity),
             "x": "(w-text_w)/2",  # Center horizontally
-            "y": y_pos,
+            "y": y_expr,
             "borderw": self.border_width,
             "bordercolor": self.get_ffmpeg_color(self.border_color, 1.0),
         }
@@ -151,20 +161,21 @@ DEFAULT_STYLE = CaptionStyle()
 
 YOUTUBE_SHORTS_STYLE = CaptionStyle(
     font_family="Arial",
-    font_size=56,
+    font_size=72,  # Larger for single-line centered captions
     font_color="FFFFFF",
     background_color="000000",
-    background_opacity=0.6,
-    border_width=2,
+    background_opacity=0.0,  # No background box for cleaner look
+    border_width=3,  # Thicker border for visibility
     border_color="000000",
-    position=CaptionPosition.LOWER_THIRD,
-    margin_y=100,
+    shadow_offset=(3, 3),  # Add shadow for depth
+    position=CaptionPosition.LOWER_THIRD,  # Centered in lower third
+    uppercase=True,  # All caps for impact
     bold=True,
 )
 
 TIKTOK_STYLE = CaptionStyle(
     font_family="Arial",
-    font_size=64,
+    font_size=72,
     font_color="FFFFFF",
     background_color="000000",
     background_opacity=0.0,  # No background box

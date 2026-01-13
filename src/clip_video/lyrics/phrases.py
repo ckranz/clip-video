@@ -242,10 +242,11 @@ class PhraseExtractor:
         extract_words: bool = True,
         extract_phrases: bool = True,
         deduplicate: bool = True,
-        use_stop_words: bool = True,
+        use_stop_words: bool = False,  # Default False for lyric matching
         stop_words: set[str] | None = None,
-        min_word_length: int = 2,
-        max_phrase_words: int = 6,
+        min_word_length: int = 1,  # Default 1 to capture all words
+        min_phrase_words: int = 2,
+        max_phrase_words: int = 5,  # 2-5 word phrases work best
     ):
         """Initialize the extractor.
 
@@ -256,6 +257,7 @@ class PhraseExtractor:
             use_stop_words: Whether to filter out stop words
             stop_words: Custom stop words set (defaults to DEFAULT_STOP_WORDS)
             min_word_length: Minimum word length to extract
+            min_phrase_words: Minimum words in a phrase to extract
             max_phrase_words: Maximum words in a phrase to extract
         """
         self.extract_words = extract_words
@@ -264,6 +266,7 @@ class PhraseExtractor:
         self.use_stop_words = use_stop_words
         self.stop_words = stop_words or self.DEFAULT_STOP_WORDS
         self.min_word_length = min_word_length
+        self.min_phrase_words = min_phrase_words
         self.max_phrase_words = max_phrase_words
 
     def extract(self, lyrics: ParsedLyrics) -> ExtractionList:
@@ -360,7 +363,9 @@ class PhraseExtractor:
         """
         words = phrase.split()
 
-        # Check word count
+        # Check word count bounds
+        if len(words) < self.min_phrase_words:
+            return False
         if len(words) > self.max_phrase_words:
             return False
 

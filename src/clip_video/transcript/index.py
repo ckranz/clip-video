@@ -141,14 +141,18 @@ class TranscriptIndex:
     def tokenize(text: str) -> list[str]:
         """Tokenize text into words.
 
+        Preserves contractions (e.g., "I'm", "don't") as single tokens
+        since Whisper transcribes them as single words.
+
         Args:
             text: Text to tokenize
 
         Returns:
             List of normalized words
         """
-        # Split on whitespace and punctuation
-        tokens = re.split(r"[\s.,!?;:\"'()\[\]{}/\-]+", text)
+        # Split on whitespace and punctuation, but NOT apostrophes
+        # (contractions like "I'm", "don't", "we've" should stay as single tokens)
+        tokens = re.split(r"[\s.,!?;:\"()\[\]{}/\-]+", text)
         # Normalize and filter empty
         return [
             TranscriptIndex.normalize_word(t)

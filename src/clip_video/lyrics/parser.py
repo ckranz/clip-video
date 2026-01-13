@@ -199,15 +199,21 @@ class LyricsParser:
         self,
         auto_phrase_lines: bool = True,
         min_phrase_words: int = 2,
+        max_phrase_words: int = 5,
+        generate_subphrases: bool = True,
     ):
         """Initialize the parser.
 
         Args:
             auto_phrase_lines: If True, treat each line as a phrase even without markers
             min_phrase_words: Minimum words for auto-generated phrases
+            max_phrase_words: Maximum words for auto-generated phrases
+            generate_subphrases: If True, generate sliding window subphrases within lines
         """
         self.auto_phrase_lines = auto_phrase_lines
         self.min_phrase_words = min_phrase_words
+        self.max_phrase_words = max_phrase_words
+        self.generate_subphrases = generate_subphrases
 
     def parse_file(self, path: Path | str) -> ParsedLyrics:
         """Parse a lyrics file.
@@ -365,13 +371,37 @@ class LyricsParser:
         clean_text = self.PHRASE_END_PATTERN.sub("", clean_text)
         clean_text = clean_text.strip()
 
-        # Auto-generate phrase from line if enabled
+        # Auto-generate phrases from line if enabled
         if self.auto_phrase_lines:
-            words = LyricsLine._tokenize(clean_text)
-            if len(words) >= self.min_phrase_words:
-                line_phrase = " ".join(words)
-                if line_phrase not in phrases:
-                    phrases.append(line_phrase)
+            # Split line into segments at pause punctuation (commas, periods, semicolons, colons)
+            # These represent natural pauses in lyric delivery - phrases shouldn't span them
+            segments = re.split(r"[,.:;]+", clean_text)
+
+            if self.generate_subphrases:
+                # Generate sliding window subphrases within each segment
+                for segment in segments:
+                    segment = segment.strip()
+                    if not segment:
+                        continue
+
+                    words = LyricsLine._tokenize(segment)
+                    if not words:
+                        continue
+
+                    for phrase_len in range(self.min_phrase_words, self.max_phrase_words + 1):
+                        if phrase_len > len(words):
+                            break
+                        for start in range(len(words) - phrase_len + 1):
+                            subphrase = " ".join(words[start:start + phrase_len])
+                            if subphrase not in phrases:
+                                phrases.append(subphrase)
+            else:
+                # Original behavior: just use full line as phrase
+                words = LyricsLine._tokenize(clean_text)
+                if len(words) >= self.min_phrase_words:
+                    line_phrase = " ".join(words)
+                    if line_phrase not in phrases:
+                        phrases.append(line_phrase)
 
         return LyricsLine(
             line_number=line_number,

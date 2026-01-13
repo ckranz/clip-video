@@ -42,6 +42,7 @@ from clip_video.ffmpeg_binary import (
     install_custom_ffmpeg,
     verify_ffmpeg,
 )
+from clip_video.review.queue import ReviewQueue, RejectedClip
 
 # Create the main Typer app
 app = typer.Typer(
@@ -59,6 +60,33 @@ def version_callback(value: bool) -> None:
     if value:
         console.print(f"clip-video version {__version__}")
         raise typer.Exit()
+
+
+def check_llm_api_key(brand_name: str) -> None:
+    """Check that the required LLM API key is configured.
+
+    Loads brand config and verifies the API key for the configured
+    LLM provider is available.
+
+    Args:
+        brand_name: Name of the brand to check config for
+
+    Raises:
+        typer.Exit: If API key is not configured
+    """
+    config = load_brand_config(brand_name)
+    llm_provider = config.llm_provider
+
+    if llm_provider == "claude":
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            console.print("[red]Error:[/red] ANTHROPIC_API_KEY not configured.")
+            console.print("Set the ANTHROPIC_API_KEY environment variable or add it to .env file.")
+            raise typer.Exit(1)
+    elif llm_provider == "openai":
+        if not os.environ.get("OPENAI_API_KEY"):
+            console.print("[red]Error:[/red] OPENAI_API_KEY not configured for LLM provider.")
+            console.print("Set the OPENAI_API_KEY environment variable or add it to .env file.")
+            raise typer.Exit(1)
 
 
 @app.callback()
@@ -117,16 +145,70 @@ def init_brand(
         brand_path / "projects",
         brand_path / "outputs",
         brand_path / "search_results",
+        brand_path / "logo",  # For brand logo files
     ]
 
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
 
-    # Create default configuration
+    # Import settings classes
+    from clip_video.config import PortraitSettings, LogoSettings, SocialCopyStyle
+
+    # Create comprehensive default configuration with placeholders
     config = BrandConfig(
         name=brand_name,
         description=description,
-        # Include starter CNCF vocabulary
+        # Portrait conversion settings
+        portrait=PortraitSettings(
+            crop_x_offset=0.5,  # 0.0=left, 0.5=center, 1.0=right
+            crop_x_pixels=None,  # Or set exact pixel offset for specific source resolution
+            crop_source_width=None,  # Reference width when using pixel offset (e.g., 1920)
+        ),
+        # Logo overlay settings
+        logo=LogoSettings(
+            enabled=False,  # Set to true and add logo file to enable
+            image_path="logo/logo.png",  # Path relative to brand folder
+            position="top-center",  # top-left, top-center, top-right, bottom-left, bottom-center, bottom-right
+            height_percent=0.15,  # Logo height as percentage of video height
+            opacity=1.0,
+            margin=20,
+        ),
+        # Social media copy style
+        social_copy=SocialCopyStyle(
+            enabled=True,
+            locale="american",  # "american" or "british"
+            tone="informative",  # informative, casual, enthusiastic, professional
+            voice_description="",  # Describe your brand voice, e.g., "Professional but approachable tech educator"
+            avoid_phrases=[
+                "game-changer",
+                "crushing it",
+                "let that sink in",
+                "here's the thing",
+                "but here's the kicker",
+                "I'll be honest",
+                "hot take",
+                "unpopular opinion",
+                "this is huge",
+                "mind = blown",
+            ],
+            preferred_phrases=[],  # Add phrases you want to encourage
+            include_hashtags=True,
+            default_hashtags=[],  # e.g., ["#YourBrand", "#TechConf2024"]
+            max_hook_length=100,
+            max_description_length=280,
+            custom_prompt="",  # Additional instructions for copy generation
+        ),
+        # Caption styling
+        caption_font="Arial",
+        caption_size=48,
+        caption_color="#FFFFFF",
+        caption_bg_color="#000000",
+        caption_bg_opacity=0.7,
+        # Triggers (word -> emoji or logo path)
+        emoji_triggers={},  # e.g., {"kubernetes": "☸️", "docker": "🐳"}
+        logo_triggers={},  # e.g., {"aws": "logos/aws.png"}
+        # Vocabulary: maps correct word to common Whisper mistranscriptions
+        # The tool will search for both the correct word AND all alternatives
         vocabulary={
             "kubernetes": ["cooper netties", "kuber nettis", "kuber netties", "cooper nettis"],
             "argocd": ["argo cd", "argo seedy", "argo c d", "argo cede"],
@@ -143,6 +225,9 @@ def init_brand(
             "linkerd": ["linker d", "linker dee"],
             "cncf": ["c n c f", "cnc f", "see ncf"],
         },
+        # API providers
+        transcription_provider="whisper_api",  # or "whisper_local"
+        llm_provider="claude",  # or "openai"
     )
 
     config_path = save_brand_config(brand_name, config)
@@ -154,16 +239,18 @@ def init_brand(
             f"Location: {brand_path}\n\n"
             "Directory structure:\n"
             f"  {brand_path}/\n"
-            "    videos/        - Place source videos here\n"
-            "    transcripts/   - Generated transcripts\n"
-            "    projects/      - Project configurations\n"
-            "    outputs/       - Generated clips\n"
+            "    videos/         - Place source videos here\n"
+            "    transcripts/    - Generated transcripts\n"
+            "    projects/       - Lyric match projects\n"
+            "    highlights/     - Highlight extraction projects\n"
+            "    outputs/        - Generated clips\n"
             "    search_results/ - Search result clips\n"
-            f"    config.json    - Brand configuration\n\n"
+            "    logo/           - Brand logo files\n"
+            f"    config.json     - Brand configuration (edit to customize)\n\n"
             "Next steps:\n"
             "  1. Copy video files to the videos/ directory\n"
             "  2. Run: clip-video transcribe " + brand_name + "\n"
-            "  3. Edit config.json to customize settings",
+            "  3. Edit config.json to customize voice, vocabulary, logo, etc.",
             title="Brand Initialized",
         )
     )
@@ -502,11 +589,423 @@ def search(
         console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
         raise typer.Exit(1)
 
-    # TODO: Implement search logic in task 10
-    console.print(f"[yellow]Search not yet implemented.[/yellow]")
-    console.print(f"Brand: {brand_name}")
-    console.print(f"Phrase: '{phrase}'")
-    console.print(f"Limit: {limit}")
+    from clip_video.search import BrandSearcher
+    from clip_video.ffmpeg import FFmpegWrapper, ExtractionConfig
+
+    brand_path = get_brand_path(brand_name)
+
+    # Check for transcripts
+    transcripts_dir = brand_path / "transcripts"
+    transcript_count = len(list(transcripts_dir.glob("*.json"))) if transcripts_dir.exists() else 0
+
+    if transcript_count == 0:
+        console.print(f"[red]Error:[/red] No transcripts found for brand '{brand_name}'.")
+        console.print(f"Run: clip-video transcribe {brand_name}")
+        raise typer.Exit(1)
+
+    console.print(f"[cyan]Searching {transcript_count} transcripts for:[/cyan] '{phrase}'")
+
+    # Initialize searcher
+    searcher = BrandSearcher(brand_name)
+
+    # Perform search
+    results = searcher.search(phrase, max_results=limit)
+
+    if not results.results:
+        console.print(f"\n[yellow]No matches found for '{phrase}'[/yellow]")
+        return
+
+    # Display results
+    table = Table(title=f"Search Results for '{phrase}' ({len(results.results)} matches)")
+    table.add_column("#", style="dim", width=3)
+    table.add_column("Video", style="cyan", max_width=30)
+    table.add_column("Time", style="white")
+    table.add_column("Context", style="dim", max_width=50)
+    table.add_column("Score", style="green", justify="right")
+
+    for i, result in enumerate(results.results[:limit], 1):
+        video_name = Path(result.video_id).stem[:28]
+        time_range = f"{result.start:.1f}s - {result.end:.1f}s"
+        context = f"...{result.context_before[-20:]} [{result.phrase}] {result.context_after[:20]}..."
+        score = f"{result.confidence:.0%}"
+        table.add_row(str(i), video_name, time_range, context, score)
+
+    console.print()
+    console.print(table)
+
+    # Export clips if requested
+    if export:
+        console.print(f"\n[cyan]Exporting clips...[/cyan]")
+        output_dir = brand_path / "search_results" / phrase.replace(" ", "_")
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        ffmpeg = FFmpegWrapper()
+        videos_dir = brand_path / "videos"
+        exported = 0
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            console=console,
+        ) as progress_bar:
+            task = progress_bar.add_task("Exporting...", total=min(limit, len(results.results)))
+
+            for i, result in enumerate(results.results[:limit], 1):
+                # Find video file
+                video_path = videos_dir / f"{result.video_id}.mp4"
+                if not video_path.exists():
+                    # Try other extensions
+                    for ext in [".mkv", ".mov", ".avi", ".webm"]:
+                        alt_path = videos_dir / f"{result.video_id}{ext}"
+                        if alt_path.exists():
+                            video_path = alt_path
+                            break
+
+                if not video_path.exists():
+                    progress_bar.advance(task)
+                    continue
+
+                # Extract clip
+                output_path = output_dir / f"{phrase.replace(' ', '_')}_{i:02d}.mp4"
+                try:
+                    ffmpeg.extract_clip(
+                        input_path=video_path,
+                        output_path=output_path,
+                        start_time=result.start,
+                        end_time=result.end,
+                    )
+                    exported += 1
+                except Exception as e:
+                    console.print(f"\n[yellow]Warning:[/yellow] Failed to export clip {i}: {e}")
+
+                progress_bar.advance(task)
+
+        console.print(f"\n[green]Exported {exported} clips to:[/green] {output_dir}")
+
+
+@app.command()
+def index_transcripts(
+    brand_name: Annotated[str, typer.Argument(help="Name of the brand to index")],
+    rebuild: Annotated[
+        bool,
+        typer.Option("--rebuild", "-r", help="Rebuild index from scratch"),
+    ] = False,
+) -> None:
+    """Build or rebuild the transcript search index for a brand.
+
+    Creates an inverted index of all words in the brand's transcripts,
+    enabling fast word/phrase search across the video library.
+
+    This must be run before using the search or lyric-match commands.
+    """
+    if not brand_exists(brand_name):
+        console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+        raise typer.Exit(1)
+
+    from clip_video.transcription import TranscriptionResult
+    from clip_video.transcript.index import TranscriptIndex, TranscriptIndexManager
+    from clip_video.models.transcript import Transcript, TranscriptSegment, TranscriptWord
+
+    brand_path = get_brand_path(brand_name)
+    transcripts_dir = brand_path / "transcripts"
+
+    # Find all transcript files
+    transcript_files = list(transcripts_dir.glob("*.json")) if transcripts_dir.exists() else []
+    # Exclude progress file
+    transcript_files = [f for f in transcript_files if not f.name.startswith(".")]
+
+    if not transcript_files:
+        console.print(f"[red]Error:[/red] No transcripts found for brand '{brand_name}'.")
+        console.print(f"Run: clip-video transcribe {brand_name}")
+        raise typer.Exit(1)
+
+    # Check if index exists
+    index_manager = TranscriptIndexManager(brand_path.parent)
+    index_path = brand_path / "transcript_index.json"
+
+    if index_path.exists() and not rebuild:
+        console.print(f"[yellow]Index already exists.[/yellow] Use --rebuild to recreate.")
+        # Show index stats
+        index = index_manager.get(brand_name)
+        stats = index.get_statistics()
+        console.print(f"\n[cyan]Current index:[/cyan]")
+        console.print(f"  • Transcripts indexed: {stats['indexed_transcripts']}")
+        console.print(f"  • Unique words: {stats['unique_words']:,}")
+        console.print(f"  • Total word occurrences: {stats['total_occurrences']:,}")
+        return
+
+    console.print(f"[cyan]Building transcript index for {brand_name}...[/cyan]")
+    console.print(f"Found {len(transcript_files)} transcript files\n")
+
+    # Create new index
+    index = TranscriptIndex(brand_name=brand_name)
+    total_words = 0
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        console=console,
+    ) as progress_bar:
+        task = progress_bar.add_task("Indexing...", total=len(transcript_files))
+
+        for transcript_file in transcript_files:
+            video_id = transcript_file.stem
+
+            try:
+                # Load the transcript in the old format
+                old_transcript = TranscriptionResult.load(transcript_file)
+
+                # Convert to the new Transcript model format
+                segments = []
+                for seg_idx, seg in enumerate(old_transcript.segments):
+                    words = [
+                        TranscriptWord(
+                            word=w.word,
+                            start=w.start,
+                            end=w.end,
+                            confidence=w.confidence,
+                        )
+                        for w in seg.words
+                    ]
+                    segment = TranscriptSegment(
+                        id=seg_idx,
+                        text=seg.text,
+                        start=seg.start,
+                        end=seg.end,
+                        words=words,
+                    )
+                    segments.append(segment)
+
+                transcript = Transcript(
+                    video_path=old_transcript.video_path,
+                    language=old_transcript.language,
+                    provider=old_transcript.provider,
+                    model=old_transcript.model,
+                    duration=old_transcript.duration,
+                    segments=segments,
+                    full_text=old_transcript.text,
+                )
+
+                # Add to index (use brand_name as project_name for legacy transcripts)
+                word_count = index.add_transcript(brand_name, video_id, transcript)
+                total_words += word_count
+
+            except Exception as e:
+                console.print(f"\n[yellow]Warning:[/yellow] Failed to index {video_id}: {e}")
+
+            progress_bar.advance(task)
+
+    # Save the index
+    index.save(index_path)
+
+    # Show stats
+    stats = index.get_statistics()
+    console.print(f"\n[green]Index built successfully![/green]")
+    console.print(f"\n[cyan]Index statistics:[/cyan]")
+    console.print(f"  • Transcripts indexed: {stats['indexed_transcripts']}")
+    console.print(f"  • Unique words: {stats['unique_words']:,}")
+    console.print(f"  • Total word occurrences: {stats['total_occurrences']:,}")
+    console.print(f"\n[dim]Index saved to: {index_path}[/dim]")
+
+
+@app.command()
+def export_dictionary(
+    brand_name: Annotated[str, typer.Argument(help="Name of the brand")],
+    output: Annotated[
+        Path | None,
+        typer.Option("--output", "-o", help="Output file path (default: brands/{brand}/dictionary.txt)"),
+    ] = None,
+    min_occurrences: Annotated[
+        int,
+        typer.Option("--min", "-m", help="Minimum occurrences to include a word"),
+    ] = 1,
+    sort_by: Annotated[
+        str,
+        typer.Option("--sort", "-s", help="Sort by: 'alpha' (alphabetical) or 'count' (frequency)"),
+    ] = "alpha",
+    include_counts: Annotated[
+        bool,
+        typer.Option("--counts", "-c", help="Include occurrence counts in output"),
+    ] = False,
+    include_numbers: Annotated[
+        bool,
+        typer.Option("--numbers", "-n", help="Include purely numeric words (default: exclude)"),
+    ] = False,
+):
+    """Export a dictionary of all unique words found across a brand's transcripts.
+
+    This is useful for adapting song lyrics to match available words in your video library.
+    """
+    from clip_video.search import TranscriptIndex
+
+    brands_root = Path("brands")
+    brand_dir = brands_root / brand_name
+
+    if not brand_dir.exists():
+        console.print(f"[red]Error:[/red] Brand '{brand_name}' not found")
+        raise typer.Exit(1)
+
+    # Load the transcript index
+    index_path = brand_dir / "transcript_index.json"
+    if not index_path.exists():
+        console.print(f"[yellow]No transcript index found.[/yellow]")
+        console.print(f"Run [cyan]clip-video index-transcripts {brand_name}[/cyan] first.")
+        raise typer.Exit(1)
+
+    index = TranscriptIndex.load(index_path)
+    stats = index.get_statistics()
+
+    if stats["unique_words"] == 0:
+        console.print("[yellow]No words found in the index.[/yellow]")
+        raise typer.Exit(1)
+
+    # Get all words with their counts
+    word_counts: dict[str, int] = {}
+    for word, occurrences in index.words.items():
+        # Skip purely numeric words unless explicitly requested
+        if not include_numbers and word.isdigit():
+            continue
+        count = len(occurrences)
+        if count >= min_occurrences:
+            word_counts[word] = count
+
+    # Sort
+    if sort_by == "count":
+        sorted_words = sorted(word_counts.items(), key=lambda x: (-x[1], x[0]))
+    else:  # alpha
+        sorted_words = sorted(word_counts.items(), key=lambda x: x[0])
+
+    # Determine output path
+    if output is None:
+        output = brand_dir / "dictionary.txt"
+
+    # Write dictionary
+    with open(output, "w", encoding="utf-8") as f:
+        if include_counts:
+            for word, count in sorted_words:
+                f.write(f"{word}\t{count}\n")
+        else:
+            for word, _ in sorted_words:
+                f.write(f"{word}\n")
+
+    # Show summary
+    console.print(f"\n[green]Dictionary exported successfully![/green]")
+    console.print(f"\n[cyan]Summary:[/cyan]")
+    console.print(f"  • Words exported: {len(sorted_words):,}")
+    console.print(f"  • Min occurrences filter: {min_occurrences}")
+    console.print(f"  • Sorted by: {sort_by}")
+    console.print(f"\n[dim]Saved to: {output}[/dim]")
+
+    # Show sample
+    console.print(f"\n[cyan]Sample words:[/cyan]")
+    sample = sorted_words[:20]
+    if include_counts:
+        for word, count in sample:
+            console.print(f"  {word} ({count})")
+    else:
+        for word, _ in sample:
+            console.print(f"  {word}")
+    if len(sorted_words) > 20:
+        console.print(f"  ... and {len(sorted_words) - 20:,} more")
+
+
+@app.command()
+def check_lyrics(
+    brand_name: Annotated[str, typer.Argument(help="Name of the brand")],
+    lyrics_file: Annotated[Path, typer.Argument(help="Path to lyrics text file")],
+    show_found: Annotated[
+        bool,
+        typer.Option("--found", "-f", help="Also show words that were found"),
+    ] = False,
+    by_line: Annotated[
+        bool,
+        typer.Option("--by-line", "-l", help="Show missing words organized by line"),
+    ] = False,
+):
+    """Check which words from a lyrics file are available in the brand's transcripts.
+
+    Quickly identifies missing words so you can adapt lyrics to match available clips.
+    """
+    from clip_video.search import TranscriptIndex
+    from clip_video.lyrics.parser import LyricsParser
+
+    brands_root = Path("brands")
+    brand_dir = brands_root / brand_name
+
+    if not brand_dir.exists():
+        console.print(f"[red]Error:[/red] Brand '{brand_name}' not found")
+        raise typer.Exit(1)
+
+    if not lyrics_file.exists():
+        console.print(f"[red]Error:[/red] Lyrics file not found: {lyrics_file}")
+        raise typer.Exit(1)
+
+    # Load the transcript index
+    index_path = brand_dir / "transcript_index.json"
+    if not index_path.exists():
+        console.print(f"[yellow]No transcript index found.[/yellow]")
+        console.print(f"Run [cyan]clip-video index-transcripts {brand_name}[/cyan] first.")
+        raise typer.Exit(1)
+
+    index = TranscriptIndex.load(index_path)
+    available_words = set(index.words.keys())
+
+    # Parse lyrics
+    parser = LyricsParser()
+    lyrics = parser.parse_file(lyrics_file)
+
+    # Analyze each line
+    all_found: set[str] = set()
+    all_missing: set[str] = set()
+    lines_with_missing: list[tuple[int, str, list[str]]] = []
+
+    for line in lyrics.content_lines:
+        line_missing = []
+        for word in line.words:
+            if word in available_words:
+                all_found.add(word)
+            else:
+                all_missing.add(word)
+                line_missing.append(word)
+        if line_missing:
+            lines_with_missing.append((line.line_number, line.raw_text.strip(), line_missing))
+
+    # Calculate coverage
+    total_unique = len(all_found | all_missing)
+    coverage = (len(all_found) / total_unique * 100) if total_unique > 0 else 100
+
+    # Display results
+    console.print(f"\n[cyan]Lyrics Analysis: {lyrics_file.name}[/cyan]")
+    console.print(f"[dim]Brand: {brand_name}[/dim]\n")
+
+    # Summary
+    console.print(f"[bold]Coverage:[/bold] {coverage:.1f}%")
+    console.print(f"  • Words found: [green]{len(all_found)}[/green]")
+    console.print(f"  • Words missing: [red]{len(all_missing)}[/red]")
+
+    # Missing words
+    if all_missing:
+        console.print(f"\n[red]Missing words ({len(all_missing)}):[/red]")
+        if by_line:
+            for line_num, line_text, missing in lines_with_missing:
+                console.print(f"\n  [dim]Line {line_num}:[/dim] {line_text}")
+                for word in missing:
+                    console.print(f"    [red]x[/red] {word}")
+        else:
+            for word in sorted(all_missing):
+                console.print(f"  [red]x[/red] {word}")
+    else:
+        console.print(f"\n[green]All words found![/green]")
+
+    # Found words (optional)
+    if show_found and all_found:
+        console.print(f"\n[green]Found words ({len(all_found)}):[/green]")
+        for word in sorted(all_found):
+            console.print(f"  [green]>[/green] {word}")
 
 
 # =============================================================================
@@ -521,27 +1020,239 @@ def lyric_match(
     lyrics_file: Annotated[Path, typer.Argument(help="Path to lyrics text file")],
     resume: Annotated[
         bool,
-        typer.Option("--resume", "-r", help="Resume existing project"),
+        typer.Option("--resume", "-r", help="Resume existing project (uses old lyrics)"),
+    ] = False,
+    update: Annotated[
+        bool,
+        typer.Option("--update", "-u", help="Update project with new lyrics (keeps existing clips)"),
+    ] = False,
+    max_candidates: Annotated[
+        int,
+        typer.Option("--candidates", "-c", help="Max candidate clips per word/phrase"),
+    ] = 5,
+    no_words: Annotated[
+        bool,
+        typer.Option("--no-words", help="Don't extract individual words"),
+    ] = False,
+    no_phrases: Annotated[
+        bool,
+        typer.Option("--no-phrases", help="Don't extract phrases"),
+    ] = False,
+    search_only: Annotated[
+        bool,
+        typer.Option("--search-only", help="Only search, don't extract clips"),
+    ] = False,
+    yes: Annotated[
+        bool,
+        typer.Option("--yes", "-y", help="Skip confirmation prompts"),
     ] = False,
 ) -> None:
     """Start a lyric match project.
 
     Parses the lyrics file and extracts candidate clips for each word/phrase
     from the brand's video library.
+
+    The lyrics file can include:
+    - Section markers: [Verse 1], [Chorus], etc.
+    - Phrase markers: [phrase]multi word phrase[/phrase]
+    - Repeat markers: (x2), (x3)
+    - Metadata: Title: Song Name, Artist: Artist Name
     """
     if not brand_exists(brand_name):
         console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
         raise typer.Exit(1)
 
-    if not lyrics_file.exists():
+    if resume and update:
+        console.print(f"[red]Error:[/red] Cannot use both --resume and --update.")
+        raise typer.Exit(1)
+
+    if not resume and not lyrics_file.exists():
         console.print(f"[red]Error:[/red] Lyrics file not found: {lyrics_file}")
         raise typer.Exit(1)
 
-    # TODO: Implement lyric match logic in task 11
-    console.print(f"[yellow]Lyric match mode not yet implemented.[/yellow]")
-    console.print(f"Brand: {brand_name}")
-    console.print(f"Project: {project_name}")
-    console.print(f"Lyrics: {lyrics_file}")
+    from clip_video.modes.lyric_match import (
+        LyricMatchProcessor,
+        LyricMatchConfig,
+        LyricMatchProject,
+    )
+
+    brand_path = get_brand_path(brand_name)
+
+    # Check for transcripts
+    transcripts_dir = brand_path / "transcripts"
+    transcript_count = len(list(transcripts_dir.glob("*.json"))) if transcripts_dir.exists() else 0
+
+    if transcript_count == 0:
+        console.print(f"[red]Error:[/red] No transcripts found for brand '{brand_name}'.")
+        console.print(f"Run: clip-video transcribe {brand_name}")
+        raise typer.Exit(1)
+
+    # Create config
+    config = LyricMatchConfig(
+        max_candidates_per_target=max_candidates,
+        extract_words=not no_words,
+        extract_phrases=not no_phrases,
+    )
+
+    # Initialize processor
+    processor = LyricMatchProcessor(brand_name, config=config)
+
+    # Load or create project
+    new_targets = []
+    removed_targets = []
+
+    if resume:
+        project = processor.load_project(project_name)
+        if not project:
+            console.print(f"[red]Error:[/red] Project '{project_name}' not found.")
+            console.print(f"Create a new project by removing --resume flag.")
+            raise typer.Exit(1)
+        console.print(f"[cyan]Resuming project:[/cyan] {project_name}")
+    elif update:
+        project = processor.load_project(project_name)
+        if not project:
+            console.print(f"[red]Error:[/red] Project '{project_name}' not found.")
+            console.print(f"Create a new project by removing --update flag.")
+            raise typer.Exit(1)
+        console.print(f"[cyan]Updating project:[/cyan] {project_name}")
+        new_targets, removed_targets = processor.update_project(project, lyrics_file)
+
+        if new_targets or removed_targets:
+            console.print(f"  [green]+{len(new_targets)}[/green] new targets")
+            console.print(f"  [red]-{len(removed_targets)}[/red] removed targets")
+            if new_targets:
+                console.print(f"  New: {', '.join(t.text for t in new_targets[:10])}" +
+                              (f" (+{len(new_targets)-10} more)" if len(new_targets) > 10 else ""))
+        else:
+            console.print(f"  [yellow]No changes detected in lyrics[/yellow]")
+    else:
+        # Check if project exists
+        existing = processor.load_project(project_name)
+        if existing:
+            if not yes:
+                if not typer.confirm(f"Project '{project_name}' already exists. Overwrite?"):
+                    console.print("[yellow]Cancelled.[/yellow]")
+                    raise typer.Exit(0)
+
+        console.print(f"[cyan]Creating project:[/cyan] {project_name}")
+        project = processor.create_project(project_name, lyrics_file)
+
+    # Show project summary
+    summary = project.get_summary()
+    console.print(Panel(
+        f"[bold]Lyric Match Project[/bold]\n\n"
+        f"Lyrics: {project.lyrics_file.name}\n"
+        f"Lines: {summary['total_lines']}\n"
+        f"Words: {len(project.extraction_list.unique_words) if project.extraction_list else 0}\n"
+        f"Phrases: {len(project.extraction_list.unique_phrases) if project.extraction_list else 0}\n"
+        f"Total targets: {summary['total_targets']}\n"
+        f"Transcripts to search: {transcript_count}",
+        title="Project Summary",
+    ))
+
+    if not yes:
+        if not typer.confirm("Proceed with search?"):
+            console.print("[yellow]Cancelled.[/yellow]")
+            raise typer.Exit(0)
+
+    # Search phase
+    console.print()
+    console.print("[bold]Phase 1: Searching transcripts...[/bold]")
+
+    search_results = {}
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        console=console,
+    ) as progress_bar:
+        total_targets = summary["total_targets"]
+        task = progress_bar.add_task("Searching...", total=total_targets)
+
+        def search_progress(target: str, current: int, total: int):
+            progress_bar.update(task, completed=current, description=f"Searching: {target[:30]}...")
+
+        search_results = processor.search_all(project, progress_callback=search_progress)
+
+    # Count found targets
+    found_targets = sum(1 for r in search_results.values() if r.results)
+    console.print(f"\n[green]Found matches for {found_targets}/{summary['total_targets']} targets[/green]")
+
+    if search_only:
+        # Save report and exit
+        report_path = processor.save_report(project)
+        console.print(f"\n[cyan]Report saved to:[/cyan] {report_path}")
+        return
+
+    # Extraction phase
+    console.print()
+    console.print("[bold]Phase 2: Extracting clips...[/bold]")
+
+    # Get video paths
+    video_paths = processor.get_video_paths(project)
+    if not video_paths:
+        console.print("[yellow]Warning:[/yellow] No video files found in brand directory.")
+        console.print("Add video files to: " + str(brand_path / "videos"))
+        report_path = processor.save_report(project)
+        console.print(f"\n[cyan]Report saved to:[/cyan] {report_path}")
+        return
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        console=console,
+    ) as progress_bar:
+        task = progress_bar.add_task("Extracting...", total=summary["total_targets"])
+
+        def extract_progress(target: str, current: int, total: int):
+            progress_bar.update(task, completed=current, description=f"Extracting: {target[:30]}...")
+
+        total_clips = processor.extract_candidates(
+            project,
+            search_results,
+            video_paths,
+            progress_callback=extract_progress,
+        )
+
+    # Generate report
+    report_path = processor.save_report(project)
+
+    # Get word and phrase coverage
+    words_found, total_words, missing_words = project.get_word_coverage()
+    phrases_found, total_phrases = project.get_phrase_coverage()
+
+    word_coverage_pct = (words_found / total_words * 100) if total_words > 0 else 100.0
+
+    # Show final summary with word coverage as primary metric
+    console.print()
+
+    # Word coverage is the critical metric
+    if words_found == total_words:
+        word_status = f"[bold green]✓ Word coverage: {words_found}/{total_words} (100%)[/bold green]"
+    else:
+        word_status = f"[bold red]✗ Word coverage: {words_found}/{total_words} ({word_coverage_pct:.0f}%)[/bold red]"
+
+    console.print(Panel(
+        f"[bold green]Lyric Match Complete![/bold green]\n\n"
+        f"{word_status}\n"
+        f"Phrase coverage: {phrases_found}/{total_phrases}\n"
+        f"Total clips extracted: {total_clips}\n\n"
+        f"Output folder: {project.clips_dir}\n"
+        f"Report: {report_path}",
+        title="Results",
+    ))
+
+    # Show missing words prominently (this is actionable)
+    if missing_words:
+        console.print(f"\n[bold red]Missing words ({len(missing_words)}):[/bold red]")
+        # Show all missing words since these are critical
+        for word in missing_words:
+            console.print(f"  • \"{word}\"")
+        console.print()
+        console.print("[dim]Missing words need lyrics changes, more source material, or manual recording.[/dim]")
 
 
 # =============================================================================
@@ -588,6 +1299,9 @@ def highlights(
 
     brand_path = get_brand_path(brand_name)
     config = load_brand_config(brand_name)
+
+    # Check LLM API key availability
+    check_llm_api_key(brand_name)
 
     # Check for existing transcript
     transcript_path = brand_path / "transcripts" / f"{video.stem}.json"
@@ -753,6 +1467,9 @@ def highlights_batch(
         console.print(f"[red]Error:[/red] Video list file not found: {video_list}")
         raise typer.Exit(1)
 
+    # Check LLM API key availability
+    check_llm_api_key(brand_name)
+
     from clip_video.batch import BatchConfig, BatchProcessor, BatchJob
     from clip_video.modes.highlights import HighlightsConfig
     from clip_video.transcription import TranscriptionResult
@@ -767,7 +1484,18 @@ def highlights_batch(
         video_paths = [f for f in video_list.iterdir() if f.suffix.lower() in video_extensions]
     else:
         # Read video list file - each line is a filename
-        lines = video_list.read_text(encoding="utf-8").strip().splitlines()
+        # Try different encodings (Windows often saves as UTF-16)
+        content = None
+        for encoding in ["utf-8", "utf-16", "utf-16-le", "latin-1"]:
+            try:
+                content = video_list.read_text(encoding=encoding)
+                break
+            except (UnicodeDecodeError, UnicodeError):
+                continue
+        if content is None:
+            console.print(f"[red]Error:[/red] Could not read video list file: {video_list}")
+            raise typer.Exit(1)
+        lines = content.strip().splitlines()
         video_paths = []
         for line in lines:
             line = line.strip()
@@ -1139,6 +1867,356 @@ def info(
     except Exception as e:
         console.print(f"[red]Error loading brand:[/red] {e}")
         raise typer.Exit(1)
+
+
+# =============================================================================
+# Review Queue Commands
+# =============================================================================
+
+# Create review subcommand group
+review_app = typer.Typer(
+    name="review",
+    help="Manage the review queue for rejected clips.",
+)
+app.add_typer(review_app, name="review")
+
+
+@review_app.command("list")
+def review_list(
+    brand_name: Annotated[
+        Optional[str],
+        typer.Argument(help="Filter by brand name"),
+    ] = None,
+    video: Annotated[
+        Optional[str],
+        typer.Option("--video", "-v", help="Filter by video name"),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option("--limit", "-n", help="Maximum number of clips to show"),
+    ] = 20,
+) -> None:
+    """List all clips in the review queue.
+
+    Shows rejected clips that need human review, with their rejection
+    reasons and preview commands.
+    """
+    # Determine review directory
+    if brand_name:
+        if not brand_exists(brand_name):
+            console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+            raise typer.Exit(1)
+        review_dir = get_brand_path(brand_name) / "review"
+    else:
+        # Use current working directory
+        review_dir = Path.cwd() / "review"
+
+    if not review_dir.exists():
+        console.print("[yellow]No review queue found.[/yellow]")
+        console.print(f"Expected location: {review_dir}")
+        return
+
+    queue = ReviewQueue(review_dir)
+    clips = queue.list_all()
+
+    # Filter by video if specified
+    if video:
+        clips = [c for c in clips if video.lower() in c.video_path.lower()]
+
+    if not clips:
+        console.print("[green]Review queue is empty.[/green]")
+        return
+
+    # Limit results
+    clips = clips[:limit]
+
+    # Display table
+    table = Table(title=f"Review Queue ({queue.count()} clips)")
+    table.add_column("Clip ID", style="cyan", max_width=25)
+    table.add_column("Time", style="white")
+    table.add_column("Duration", style="green")
+    table.add_column("Rejection Reasons", style="yellow", max_width=40)
+    table.add_column("Video", style="dim", max_width=30)
+
+    for clip in clips:
+        time_range = f"{clip.start_time:.1f}s - {clip.end_time:.1f}s"
+        duration = f"{clip.duration:.1f}s"
+        reasons = "\n".join(clip.rejection_reasons[:3])
+        if len(clip.rejection_reasons) > 3:
+            reasons += f"\n... +{len(clip.rejection_reasons) - 3} more"
+        video_name = Path(clip.video_path).name[:30]
+
+        table.add_row(clip.clip_id, time_range, duration, reasons, video_name)
+
+    console.print(table)
+
+    # Show summary
+    summary = queue.get_summary()
+    console.print(f"\n[dim]Total duration: {summary['total_duration']:.1f}s[/dim]")
+
+    if len(clips) < queue.count():
+        console.print(f"[dim]Showing {len(clips)} of {queue.count()} clips. Use --limit to show more.[/dim]")
+
+
+@review_app.command("show")
+def review_show(
+    clip_id: Annotated[str, typer.Argument(help="Clip ID to show details for")],
+    brand_name: Annotated[
+        Optional[str],
+        typer.Option("--brand", "-b", help="Brand name"),
+    ] = None,
+) -> None:
+    """Show detailed information about a rejected clip.
+
+    Displays full rejection reasons, validation details, transcript
+    segment, and preview commands.
+    """
+    # Determine review directory
+    if brand_name:
+        if not brand_exists(brand_name):
+            console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+            raise typer.Exit(1)
+        review_dir = get_brand_path(brand_name) / "review"
+    else:
+        review_dir = Path.cwd() / "review"
+
+    if not review_dir.exists():
+        console.print("[red]Error:[/red] No review queue found.")
+        raise typer.Exit(1)
+
+    queue = ReviewQueue(review_dir)
+    clip = queue.get(clip_id)
+
+    if not clip:
+        console.print(f"[red]Error:[/red] Clip '{clip_id}' not found in review queue.")
+        raise typer.Exit(1)
+
+    # Display detailed information
+    console.print(Panel(
+        f"[bold]Clip ID:[/bold] {clip.clip_id}\n"
+        f"[bold]Video:[/bold] {clip.video_path}\n"
+        f"[bold]Time Range:[/bold] {clip.start_time:.1f}s - {clip.end_time:.1f}s "
+        f"({clip.duration:.1f}s duration)\n"
+        f"[bold]Rejected At:[/bold] {clip.rejected_at}\n"
+        f"[bold]Replacement Attempts:[/bold] {clip.replacement_attempts}",
+        title="Clip Details",
+    ))
+
+    # Rejection reasons
+    console.print("\n[bold yellow]Rejection Reasons:[/bold yellow]")
+    for reason in clip.rejection_reasons:
+        console.print(f"  • {reason}")
+
+    # Validation details
+    if clip.validation_details:
+        console.print("\n[bold]Validation Details:[/bold]")
+        criteria = clip.validation_details.get("criteria", [])
+        for c in criteria:
+            status = "[green]PASS[/green]" if c.get("result") == "pass" else "[red]FAIL[/red]"
+            console.print(f"  {c.get('criterion')}: {status} - {c.get('reason', '')}")
+
+    # Transcript segment
+    console.print("\n[bold]Transcript Segment:[/bold]")
+    console.print(Panel(clip.transcript_segment, border_style="dim"))
+
+    # Preview commands
+    console.print("\n[bold]Preview Commands:[/bold]")
+    console.print(f"  [cyan]clip-video:[/cyan] {clip.preview_command}")
+    console.print(f"  [cyan]ffplay:[/cyan] {clip.ffplay_command}")
+
+
+@review_app.command("approve")
+def review_approve(
+    clip_id: Annotated[str, typer.Argument(help="Clip ID to approve")],
+    brand_name: Annotated[
+        Optional[str],
+        typer.Option("--brand", "-b", help="Brand name"),
+    ] = None,
+    extract: Annotated[
+        bool,
+        typer.Option("--extract", "-e", help="Extract the clip after approval"),
+    ] = False,
+) -> None:
+    """Approve a rejected clip for manual inclusion.
+
+    Removes the clip from the review queue. Optionally extracts the
+    clip using --extract flag.
+    """
+    # Determine review directory
+    if brand_name:
+        if not brand_exists(brand_name):
+            console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+            raise typer.Exit(1)
+        review_dir = get_brand_path(brand_name) / "review"
+    else:
+        review_dir = Path.cwd() / "review"
+
+    if not review_dir.exists():
+        console.print("[red]Error:[/red] No review queue found.")
+        raise typer.Exit(1)
+
+    queue = ReviewQueue(review_dir)
+    clip = queue.get(clip_id)
+
+    if not clip:
+        console.print(f"[red]Error:[/red] Clip '{clip_id}' not found in review queue.")
+        raise typer.Exit(1)
+
+    # Remove from queue
+    queue.remove(clip_id)
+    console.print(f"[green]Approved:[/green] Clip '{clip_id}' removed from review queue.")
+
+    if extract:
+        console.print("\n[cyan]Extracting clip...[/cyan]")
+        # TODO: Integrate with extraction pipeline
+        console.print(f"[yellow]Manual extraction:[/yellow]")
+        console.print(f"  {clip.ffplay_command.replace('ffplay', 'ffmpeg').replace('-autoexit', '')} output.mp4")
+
+
+@review_app.command("reject")
+def review_reject(
+    clip_id: Annotated[str, typer.Argument(help="Clip ID to permanently reject")],
+    brand_name: Annotated[
+        Optional[str],
+        typer.Option("--brand", "-b", help="Brand name"),
+    ] = None,
+) -> None:
+    """Permanently reject a clip.
+
+    Removes the clip from the review queue without extracting it.
+    This indicates the clip should not be used.
+    """
+    # Determine review directory
+    if brand_name:
+        if not brand_exists(brand_name):
+            console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+            raise typer.Exit(1)
+        review_dir = get_brand_path(brand_name) / "review"
+    else:
+        review_dir = Path.cwd() / "review"
+
+    if not review_dir.exists():
+        console.print("[red]Error:[/red] No review queue found.")
+        raise typer.Exit(1)
+
+    queue = ReviewQueue(review_dir)
+    clip = queue.get(clip_id)
+
+    if not clip:
+        console.print(f"[red]Error:[/red] Clip '{clip_id}' not found in review queue.")
+        raise typer.Exit(1)
+
+    # Remove from queue
+    queue.remove(clip_id)
+    console.print(f"[red]Rejected:[/red] Clip '{clip_id}' permanently removed from review queue.")
+
+
+@review_app.command("clear")
+def review_clear(
+    brand_name: Annotated[
+        Optional[str],
+        typer.Option("--brand", "-b", help="Brand name"),
+    ] = None,
+    yes: Annotated[
+        bool,
+        typer.Option("--yes", "-y", help="Skip confirmation"),
+    ] = False,
+) -> None:
+    """Clear all clips from the review queue.
+
+    Permanently removes all rejected clips from the queue.
+    This cannot be undone.
+    """
+    # Determine review directory
+    if brand_name:
+        if not brand_exists(brand_name):
+            console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+            raise typer.Exit(1)
+        review_dir = get_brand_path(brand_name) / "review"
+    else:
+        review_dir = Path.cwd() / "review"
+
+    if not review_dir.exists():
+        console.print("[yellow]No review queue found.[/yellow]")
+        return
+
+    queue = ReviewQueue(review_dir)
+    count = queue.count()
+
+    if count == 0:
+        console.print("[green]Review queue is already empty.[/green]")
+        return
+
+    if not yes:
+        if not typer.confirm(f"Clear {count} clips from review queue?"):
+            console.print("[yellow]Cancelled.[/yellow]")
+            return
+
+    removed = queue.clear()
+    console.print(f"[green]Cleared {removed} clips from review queue.[/green]")
+
+
+@review_app.command("summary")
+def review_summary(
+    brand_name: Annotated[
+        Optional[str],
+        typer.Option("--brand", "-b", help="Brand name"),
+    ] = None,
+) -> None:
+    """Show summary statistics for the review queue.
+
+    Displays counts by rejection reason and by video source.
+    """
+    # Determine review directory
+    if brand_name:
+        if not brand_exists(brand_name):
+            console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+            raise typer.Exit(1)
+        review_dir = get_brand_path(brand_name) / "review"
+    else:
+        review_dir = Path.cwd() / "review"
+
+    if not review_dir.exists():
+        console.print("[yellow]No review queue found.[/yellow]")
+        return
+
+    queue = ReviewQueue(review_dir)
+    summary = queue.get_summary()
+
+    if summary["total_clips"] == 0:
+        console.print("[green]Review queue is empty.[/green]")
+        return
+
+    console.print(Panel(
+        f"[bold]Total Clips:[/bold] {summary['total_clips']}\n"
+        f"[bold]Total Duration:[/bold] {summary['total_duration']:.1f}s "
+        f"({summary['total_duration'] / 60:.1f} minutes)",
+        title="Review Queue Summary",
+    ))
+
+    # By rejection reason
+    if summary["by_reason"]:
+        console.print("\n[bold]By Rejection Reason:[/bold]")
+        reason_table = Table(show_header=True, header_style="bold")
+        reason_table.add_column("Reason", style="yellow")
+        reason_table.add_column("Count", style="cyan", justify="right")
+
+        for reason, count in sorted(summary["by_reason"].items(), key=lambda x: -x[1]):
+            reason_table.add_row(reason, str(count))
+
+        console.print(reason_table)
+
+    # By video
+    if summary["by_video"]:
+        console.print("\n[bold]By Source Video:[/bold]")
+        video_table = Table(show_header=True, header_style="bold")
+        video_table.add_column("Video", style="dim")
+        video_table.add_column("Count", style="cyan", justify="right")
+
+        for video, count in sorted(summary["by_video"].items(), key=lambda x: -x[1]):
+            video_table.add_row(video[:50], str(count))
+
+        console.print(video_table)
 
 
 if __name__ == "__main__":

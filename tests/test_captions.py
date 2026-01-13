@@ -87,7 +87,7 @@ class TestCaptionStyle:
 
     def test_pre_built_styles(self):
         """Test pre-built style configurations."""
-        assert YOUTUBE_SHORTS_STYLE.font_size == 56
+        assert YOUTUBE_SHORTS_STYLE.font_size == 72
         assert TIKTOK_STYLE.uppercase is True
         assert TIKTOK_STYLE.position == CaptionPosition.CENTER
 

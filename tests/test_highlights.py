@@ -139,14 +139,53 @@ class TestHighlightsConfig:
     """Tests for HighlightsConfig dataclass."""
 
     def test_defaults(self):
-        """Test default configuration."""
+        """Test default configuration with YouTube Shorts compatible durations."""
         config = HighlightsConfig()
 
+        # Core settings
         assert config.target_clips == 5
-        assert config.min_duration == 15.0
-        assert config.max_duration == 60.0
         assert config.output_format == "mp4"
         assert Platform.YOUTUBE_SHORTS in config.platforms
+
+        # YouTube Shorts duration constraints (30-120s)
+        assert config.min_duration == 30.0
+        assert config.max_duration == 120.0
+
+        # New agentic workflow settings
+        assert config.min_acceptable_clips == 3
+        assert config.max_replacement_attempts == 3
+        assert config.cost_ceiling_gbp == 5.0
+        assert config.enable_validation_pass is True
+
+    def test_config_duration_validation(self):
+        """Test that min_duration cannot exceed max_duration."""
+        with pytest.raises(ValueError, match="min_duration.*cannot be greater than.*max_duration"):
+            HighlightsConfig(min_duration=60.0, max_duration=30.0)
+
+    def test_config_min_acceptable_less_than_target(self):
+        """Test that min_acceptable_clips cannot exceed target_clips."""
+        with pytest.raises(ValueError, match="min_acceptable_clips.*cannot be greater than.*target_clips"):
+            HighlightsConfig(target_clips=3, min_acceptable_clips=5)
+
+    def test_config_valid_custom_values(self):
+        """Test valid custom configuration values."""
+        config = HighlightsConfig(
+            target_clips=10,
+            min_acceptable_clips=5,
+            min_duration=45.0,
+            max_duration=90.0,
+            max_replacement_attempts=5,
+            cost_ceiling_gbp=10.0,
+            enable_validation_pass=False,
+        )
+
+        assert config.target_clips == 10
+        assert config.min_acceptable_clips == 5
+        assert config.min_duration == 45.0
+        assert config.max_duration == 90.0
+        assert config.max_replacement_attempts == 5
+        assert config.cost_ceiling_gbp == 10.0
+        assert config.enable_validation_pass is False
 
     def test_get_platform_config(self):
         """Test platform-specific config retrieval."""
@@ -376,28 +415,28 @@ class TestHighlightsProcessor:
             assert analysis.segments[0].summary == "Great segment"
 
     def test_analyze_filters_by_duration(self, tmp_path):
-        """Test that analysis filters segments by duration."""
+        """Test that analysis filters segments by duration (30-120s for YouTube Shorts)."""
         mock_llm = Mock()
         mock_analysis = HighlightAnalysis(
             video_id="test",
             segments=[
                 HighlightSegment(
                     start_time=0.0,
-                    end_time=10.0,  # Too short (10s < 15s min)
+                    end_time=20.0,  # Too short (20s < 30s min)
                     summary="Short",
                     hook_text="",
                     reason="",
                 ),
                 HighlightSegment(
                     start_time=0.0,
-                    end_time=30.0,  # Valid (30s)
+                    end_time=60.0,  # Valid (60s within 30-120s)
                     summary="Valid",
                     hook_text="",
                     reason="",
                 ),
                 HighlightSegment(
                     start_time=0.0,
-                    end_time=120.0,  # Too long (120s > 60s max)
+                    end_time=150.0,  # Too long (150s > 120s max)
                     summary="Long",
                     hook_text="",
                     reason="",
@@ -471,9 +510,23 @@ class TestHighlightsProcessor:
         raw_clip = tmp_path / "raw.mp4"
         raw_clip.touch()
 
+        # Mock ffmpeg to return valid video info
+        from clip_video.ffmpeg import VideoInfo
+        mock_ffmpeg = Mock()
+        mock_ffmpeg.get_video_info.return_value = VideoInfo(
+            width=1920,
+            height=1080,
+            duration=30.0,
+            fps=30.0,
+            video_codec="h264",
+            audio_codec="aac",
+            has_audio=True,
+        )
+
         with patch("clip_video.modes.highlights.ClaudeLLM"):
             processor = HighlightsProcessor()
             processor.portrait_converter = mock_converter
+            processor.ffmpeg = mock_ffmpeg
 
             project = HighlightsProject(
                 name="test",
