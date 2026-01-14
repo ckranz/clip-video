@@ -1,0 +1,47 @@
+{
+  "domains": {
+    "users": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "functionality": {
+      "status": "complete",
+      "score": 0.9,
+      "discoveries": ["D001", "D002", "D003", "D004", "D005", "D006", "D007", "D008", "D009", "D010", "D011", "D012", "D013"],
+      "blockers": []
+    },
+    "use_cases": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "data": {
+      "status": "complete",
+      "score": 0.8,
+      "discoveries": ["D022", "D023"],
+      "blockers": []
+    },
+    "integration": {
+      "status": "complete",
+      "score": 0.8,
+      "discoveries": ["D014", "D015", "D016", "D017"],
+      "blockers": []
+    },
+    "security": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "error_handling": {
+      "status": "complete",
+      "score": 0.9,
+      "discoveries": ["D018", "D019", "D020", "D021"],
+      "blockers": []
+    },
+    "testing": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "observability": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "performance": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "reusability": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "dependencies": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "deployment": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] },
+    "documentation": { "status": "pending", "score": 0.0, "discoveries": [], "blockers": [] }
+  },
+  "edges": [
+    {"from": "functionality", "to": "data", "relationship": "requires", "note": "Validation rules need transcript data structure"},
+    {"from": "functionality", "to": "integration", "relationship": "requires", "note": "Multi-pass workflow needs LLM integration"},
+    {"from": "functionality", "to": "error_handling", "relationship": "requires", "note": "Validation failures need proper error handling"},
+    {"from": "integration", "to": "data", "relationship": "requires", "note": "Human review queue needs data storage"},
+    {"from": "integration", "to": "error_handling", "relationship": "requires", "note": "Rejection workflow needs error handling"},
+    {"from": "error_handling", "to": "observability", "relationship": "requires", "note": "Cost tracking and reporting"}
+  ],
+  "cross_domain_issues": []
+}

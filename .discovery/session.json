@@ -1,0 +1,37 @@
+{
+  "id": "highlights-agentic-workflow-20260110",
+  "story": "Multi-pass agentic highlights workflow: AI analyzes transcripts, validates selections, creates clips with professional captions (white text, black stroke, lower thirds centered)",
+  "started_at": "2026-01-10T10:00:00.000Z",
+  "exported_at": "2026-01-10T11:00:00.000Z",
+  "status": "exported",
+  "scan_mode": "targeted",
+  "current_domain": "complete",
+  "exchange_count": 4,
+  "total_discoveries": 23,
+  "export_path": "SPEC-agentic-highlights.md",
+  "codebase_context": {
+    "is_greenfield": false,
+    "existing_modules": [
+      "clip_video/modes/highlights.py",
+      "clip_video/batch.py",
+      "clip_video/llm/claude.py",
+      "clip_video/llm/openai.py",
+      "clip_video/captions/renderer.py",
+      "clip_video/captions/styles.py",
+      "clip_video/video/portrait.py"
+    ],
+    "identified_gaps": [
+      "Single-pass workflow needs multi-pass validation",
+      "Duration constraints need update (30-120s)",
+      "No sentence boundary detection",
+      "No overlap detection between clips",
+      "No human review queue for rejected clips",
+      "No cost tracking/ceiling enforcement"
+    ]
+  },
+  "domains_complete": ["functionality", "integration", "error_handling", "data"],
+  "triggered_knowledge": [],
+  "surfaced_triggers": [],
+  "quality_history": [],
+  "acknowledged_gaps": []
+}

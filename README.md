@@ -19,6 +19,18 @@ pip install -e .
   - `OPENAI_API_KEY` - For Whisper transcription (required)
   - `ANTHROPIC_API_KEY` - For Claude-based highlight detection (recommended)
 
+#### Linux User Note
+
+Linux users may need to install a font library to support the auto-captioning:
+
+# For caption fonts (Ubuntu/Debian)
+
+sudo apt install fonts-liberation # or fonts-dejavu
+
+# For audio processing (usually pre-installed)
+
+sudo apt install libsndfile1
+
 ---
 
 ## Quick Start: Highlights Mode

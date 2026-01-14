@@ -1,0 +1,385 @@
+{
+  "discoveries": [
+    {
+      "id": "D001",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Clip Duration Constraints",
+      "description": "Clips must be between 30 seconds and 2 minutes in length to be compatible with YouTube Shorts format",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip duration >= 30 seconds",
+        "Clip duration <= 120 seconds",
+        "System rejects or flags clips outside this range"
+      ]
+    },
+    {
+      "id": "D002",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Complete Sentence Boundaries",
+      "description": "Clips must not start or end mid-sentence. The AI must detect sentence boundaries and ensure clean cuts",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip starts at beginning of a sentence",
+        "Clip ends at end of a sentence",
+        "Validation pass checks sentence completeness"
+      ]
+    },
+    {
+      "id": "D003",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Topic Coverage",
+      "description": "Each clip must cover a complete topic or idea, not be cut off mid-explanation",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "AI validates topic completeness",
+        "Clip conveys a coherent message"
+      ]
+    },
+    {
+      "id": "D004",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Optional Hooks",
+      "description": "Hooks (attention-grabbing openings) are desired but not mandatory. System should identify hook opportunities without forcing them",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System identifies potential hooks",
+        "Clips without hooks are still valid",
+        "Hook presence is tracked but not required"
+      ]
+    },
+    {
+      "id": "D005",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Standalone Clip Validity",
+      "description": "Each clip must make sense as a standalone piece of content without requiring context from the full video",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip is self-contained",
+        "No unresolved references to earlier/later content",
+        "Viewer can understand without watching full video"
+      ]
+    },
+    {
+      "id": "D006",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Brand Relevance",
+      "description": "Clips must be relevant to the brand context. For KCD (Kubernetes Community Days), content should relate to CNCF and Cloud Native topics",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Brand context is loaded from brand configuration",
+        "AI validates content relevance to brand keywords/topics",
+        "Irrelevant clips are flagged or excluded"
+      ]
+    },
+    {
+      "id": "D007",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Transcript Validation",
+      "description": "All clip selections must be validated against the original transcript to ensure accuracy",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Clip timestamps map to actual transcript segments",
+        "Text content matches transcript",
+        "Validation pass confirms transcript alignment"
+      ]
+    },
+    {
+      "id": "D008",
+      "domain": "functionality",
+      "type": "requirement",
+      "title": "Non-Overlapping Clips",
+      "description": "Each clip must be independent - no reusing the same sentences or sentence parts across different clips",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "No timestamp overlap between clips",
+        "No shared sentences between clips",
+        "System tracks used segments"
+      ]
+    },
+    {
+      "id": "D009",
+      "domain": "functionality",
+      "type": "existing_capability",
+      "title": "Caption System Already Supports Required Styling",
+      "description": "The existing CaptionStyle class in captions/styles.py already supports white text (font_color='FFFFFF'), black stroke (border_color='000000'), and lower-third positioning (CaptionPosition.LOWER_THIRD). YOUTUBE_SHORTS_STYLE is pre-configured with these settings.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "YOUTUBE_SHORTS_STYLE uses white font color",
+        "YOUTUBE_SHORTS_STYLE uses black border",
+        "YOUTUBE_SHORTS_STYLE uses lower_third position"
+      ],
+      "related_files": ["clip_video/captions/styles.py:152-163"]
+    },
+    {
+      "id": "D010",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "Current Workflow is Single-Pass, Not Multi-Pass",
+      "description": "The current HighlightsProcessor.process() runs a single LLM analysis pass. There is no validation pass where a second LLM call reviews and validates the clip selections against quality criteria.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "Add validation pass after initial analysis",
+        "Validation checks all 8 quality criteria (D001-D008)",
+        "Failed clips can be revised or rejected"
+      ],
+      "related_files": ["clip_video/modes/highlights.py:816-851"]
+    },
+    {
+      "id": "D011",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "Duration Constraints Need Adjustment",
+      "description": "Current HighlightsConfig has min_duration=15.0 and max_duration=60.0. User requirements specify 30-120 seconds for YouTube Shorts compatibility.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "min_duration changed to 30.0",
+        "max_duration changed to 120.0"
+      ],
+      "related_files": ["clip_video/modes/highlights.py:173-174"]
+    },
+    {
+      "id": "D012",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "No Sentence Boundary Detection",
+      "description": "Current LLM analysis does not explicitly validate that clips start/end at sentence boundaries. This needs to be added to the prompt and/or a validation pass.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "LLM prompt includes sentence boundary requirement",
+        "Validation pass checks sentence completeness"
+      ]
+    },
+    {
+      "id": "D013",
+      "domain": "functionality",
+      "type": "gap",
+      "title": "No Overlap Detection Between Clips",
+      "description": "Current implementation does not check for overlapping timestamps between selected clips. Clips could potentially share segments.",
+      "confidence": "high",
+      "source": "codebase",
+      "testable": true,
+      "acceptance_criteria": [
+        "System checks for timestamp overlap",
+        "Overlapping clips are rejected or adjusted"
+      ]
+    },
+    {
+      "id": "D014",
+      "domain": "integration",
+      "type": "decision",
+      "title": "Validation Uses Same LLM with Reframed Prompt",
+      "description": "The validation pass will use the same LLM provider as the analysis pass, but with a different prompt focused on quality validation. This keeps the architecture simpler and cost tracking consistent.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Validation pass uses same LLM instance",
+        "Validation prompt is distinct from analysis prompt",
+        "Validation focuses on quality criteria checking"
+      ]
+    },
+    {
+      "id": "D015",
+      "domain": "integration",
+      "type": "decision",
+      "title": "Rejected Clips Are Replaced with New Selections",
+      "description": "When a clip fails validation, it is rejected entirely and the system attempts to find a replacement selection from the transcript. The replacement must also pass the same quality gates.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Failed clips trigger replacement selection",
+        "Replacement clips go through same validation",
+        "Process can iterate until target count reached or no more candidates"
+      ]
+    },
+    {
+      "id": "D016",
+      "domain": "integration",
+      "type": "decision",
+      "title": "Human Review Queue for Rejected Clips",
+      "description": "Rejected clips should be stored in a human review queue rather than silently discarded. This allows manual override for edge cases and provides transparency into what was rejected and why.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Rejected clips saved to review queue with rejection reason",
+        "Review queue is accessible for human inspection",
+        "Human can override rejection and force-include clip"
+      ]
+    },
+    {
+      "id": "D017",
+      "domain": "integration",
+      "type": "decision",
+      "title": "Replacement Clips Must Not Overlap with Approved Clips",
+      "description": "When finding replacement selections for rejected clips, the system must exclude segments already used by clips that passed validation. This ensures non-overlapping requirement is maintained.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System tracks approved segment ranges",
+        "Replacement search excludes approved ranges",
+        "New selections validated for overlap before approval"
+      ]
+    },
+    {
+      "id": "D018",
+      "domain": "error_handling",
+      "type": "decision",
+      "title": "Maximum 3 Replacement Attempts Per Rejected Clip",
+      "description": "When a clip is rejected, the system will attempt up to 3 replacement candidates before moving on. If all 3 fail, the slot is left unfilled and processing continues with remaining clips.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System attempts max 3 replacements per rejected clip",
+        "After 3 failures, slot remains unfilled",
+        "Processing continues regardless of replacement success"
+      ]
+    },
+    {
+      "id": "D019",
+      "domain": "error_handling",
+      "type": "decision",
+      "title": "Target 5 Clips, Minimum 3 Acceptable",
+      "description": "Default target is 5 clips per video. A video is considered successfully processed if at least 3 clips pass validation. Videos with fewer than 3 clips may need manual review but are not failures.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Default target_clips = 5",
+        "Minimum acceptable clips = 3",
+        "Videos with 3+ clips marked as success",
+        "Videos with <3 clips flagged for attention but not failed"
+      ]
+    },
+    {
+      "id": "D020",
+      "domain": "error_handling",
+      "type": "decision",
+      "title": "Early Stop When Transcript Exhausted",
+      "description": "For shorter videos like 5-minute lightning talks, the system should stop early if all viable transcript segments have been used. Report actual clips found (e.g., 'found 3 of 5 requested clips').",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System detects when no more viable segments remain",
+        "Processing stops gracefully when exhausted",
+        "Final report shows actual vs requested clip count"
+      ]
+    },
+    {
+      "id": "D021",
+      "domain": "error_handling",
+      "type": "decision",
+      "title": "Cost Ceiling of £5 Per Video Run",
+      "description": "Total LLM cost for processing a single video should not exceed £5 GBP. If cost ceiling is approached, system should stop iterations and finalize with clips found so far.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "System tracks cumulative LLM cost per video",
+        "Cost ceiling set to £5 GBP (configurable)",
+        "Processing halts gracefully when ceiling approached",
+        "Final report includes total cost"
+      ]
+    },
+    {
+      "id": "D022",
+      "domain": "data",
+      "type": "decision",
+      "title": "File-Based Review Queue Storage",
+      "description": "KISS approach: rejected clips stored as individual JSON files in a dedicated review/ folder within the project directory. Simple, portable, works with existing file-based architecture.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Review folder created at project_root/review/",
+        "Each rejected clip saved as separate JSON file",
+        "File naming includes clip ID and rejection timestamp"
+      ]
+    },
+    {
+      "id": "D023",
+      "domain": "data",
+      "type": "decision",
+      "title": "Review Queue Contents",
+      "description": "Each review queue entry includes: rejected clip info with rejection reason, full transcript segment for context, and a preview command to easily regenerate/test the clip.",
+      "confidence": "high",
+      "source": "user",
+      "testable": true,
+      "acceptance_criteria": [
+        "Rejection reason captured and stored",
+        "Full transcript segment text included",
+        "Timestamp range for the segment included",
+        "CLI command to preview/regenerate clip included"
+      ]
+    }
+  ],
+  "exchanges": [
+    {
+      "id": "E001",
+      "timestamp": "2026-01-10T10:05:00.000Z",
+      "question": "What does 'validates the transcript' mean specifically? What validation criteria should be applied to determine if a clip selection is good?",
+      "answer": "Clips must meet multiple quality criteria: 30-120 seconds duration (YouTube Shorts compatible), complete sentences (no mid-sentence cuts), topic coverage, optional hooks (desired but not forced), standalone validity (makes sense without full video context), brand relevance (KCD = Kubernetes Community Days, CNCF/Cloud Native), validated against transcript, and non-overlapping (each clip independent, no reused sentences).",
+      "discoveries_extracted": ["D001", "D002", "D003", "D004", "D005", "D006", "D007", "D008"],
+      "domain": "functionality"
+    },
+    {
+      "id": "E002",
+      "timestamp": "2026-01-10T10:15:00.000Z",
+      "question": "For the multi-pass validation: Should validation use the same LLM, a different LLM, or a hybrid approach? And for clips that fail validation, should they be rejected, adjusted, or flagged for human review?",
+      "answer": "Use the same LLM as analysis but with a reframed validation prompt. Rejected clips should be replaced with new selections that pass the same quality gates. Rejected clips go into a human review queue rather than being silently discarded. Replacement selections must not overlap with already-approved clips.",
+      "discoveries_extracted": ["D014", "D015", "D016", "D017"],
+      "domain": "integration"
+    },
+    {
+      "id": "E003",
+      "timestamp": "2026-01-10T10:25:00.000Z",
+      "question": "For the iterative replacement workflow, what are the termination conditions? Maximum iterations per clip, minimum acceptable clip count, handling transcript exhaustion, and cost ceiling?",
+      "answer": "Maximum 3 replacement attempts per rejected clip, then continue. Target is 5 clips but minimum 3 is acceptable. Fine to stop early when transcript is exhausted (common with 5-minute lightning talks). Cost ceiling of £5 total per video run.",
+      "discoveries_extracted": ["D018", "D019", "D020", "D021"],
+      "domain": "error_handling"
+    },
+    {
+      "id": "E004",
+      "timestamp": "2026-01-10T10:35:00.000Z",
+      "question": "For the human review queue, what format/storage would work best? File-based, centralized JSON, or part of project state? And what should be included in each review entry?",
+      "answer": "KISS - simple file-based review with clips stored in a specific review folder. Include all suggested content: rejected clip info with rejection reason, full transcript segment for context, and a preview command to easily regenerate/test the clip.",
+      "discoveries_extracted": ["D022", "D023"],
+      "domain": "data"
+    }
+  ]
+}
