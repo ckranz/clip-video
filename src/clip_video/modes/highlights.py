@@ -31,6 +31,7 @@ from clip_video.llm.base import (
 )
 from clip_video.llm.claude import ClaudeLLM
 from clip_video.llm.openai import OpenAILLM
+from clip_video.llm.ollama import OllamaLLM
 from clip_video.validation.orchestrator import AgenticValidator, RunSummary
 from clip_video.progress import ProgressTracker
 from clip_video.state import ProcessingState, IdempotentProcessor
@@ -450,8 +451,13 @@ class HighlightsProcessor:
         # Initialize LLM provider
         if self.config.llm_config.provider == LLMProviderType.CLAUDE:
             self.llm = ClaudeLLM(self.config.llm_config)
-        else:
+        elif self.config.llm_config.provider == LLMProviderType.OPENAI:
             self.llm = OpenAILLM(self.config.llm_config)
+        elif self.config.llm_config.provider == LLMProviderType.OLLAMA:
+            self.llm = OllamaLLM(self.config.llm_config)
+        else:
+            # Default to Claude
+            self.llm = ClaudeLLM(self.config.llm_config)
 
     def _report_progress(self, stage: str, progress: float) -> None:
         """Report progress to callback if set."""

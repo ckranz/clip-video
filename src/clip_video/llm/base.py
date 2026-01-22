@@ -17,6 +17,7 @@ class LLMProviderType(str, Enum):
 
     CLAUDE = "claude"
     OPENAI = "openai"
+    OLLAMA = "ollama"
 
 
 @dataclass
@@ -46,6 +47,8 @@ class LLMConfig:
                 self.model = "claude-sonnet-4-5-20250929"
             elif self.provider == LLMProviderType.OPENAI:
                 self.model = "gpt-4.1"
+            elif self.provider == LLMProviderType.OLLAMA:
+                self.model = "llama3.2"
 
 
 @dataclass

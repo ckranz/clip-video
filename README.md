@@ -15,9 +15,17 @@ pip install -e .
 
 - **Python 3.10+**
 - **FFmpeg** - Required for video processing (auto-downloaded on first run, or install manually)
-- **API Keys** (set as environment variables or in `.env` file):
-  - `OPENAI_API_KEY` - For Whisper transcription (required)
-  - `ANTHROPIC_API_KEY` - For Claude-based highlight detection (recommended)
+- **faster-whisper** - For local transcription (recommended, free):
+  ```bash
+  pip install faster-whisper
+  ```
+- **Ollama** - For free local AI analysis (optional but recommended):
+  - Install from https://ollama.ai
+  - Run: `ollama serve`
+  - Pull a model: `ollama pull llama3.2`
+- **API Keys** (optional, set as environment variables or in `.env` file):
+  - `OPENAI_API_KEY` - For Whisper API transcription or OpenAI LLM
+  - `ANTHROPIC_API_KEY` - For Claude-based highlight detection
 
 #### Linux Users
 
@@ -204,9 +212,19 @@ Key settings:
   "vocabulary": {
     "kubernetes": ["cooper netties", "kuber nettis"],
     "istio": ["is theo", "east io"]
-  }
+  },
+
+  "transcription_provider": "whisper_local",
+  "whisper_model": "medium",
+  "llm_provider": "claude",
+  "llm_model": null
 }
 ```
+
+**LLM Provider Options**:
+- `claude` - Anthropic Claude (default, requires ANTHROPIC_API_KEY)
+- `openai` - OpenAI GPT (requires OPENAI_API_KEY)
+- `ollama` - Local Ollama (free, requires Ollama running)
 
 **Vocabulary**: Maps correct spellings to common Whisper mistranscriptions. The tool searches for both the correct word and its alternatives.
 
@@ -217,10 +235,13 @@ Key settings:
 
 ### API Keys
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (only needed for highlights mode or API transcription):
 
 ```bash
+# Optional: Only needed if using whisper_api provider instead of local
 OPENAI_API_KEY=sk-your-openai-key
+
+# Required for highlights mode (Claude-based analysis)
 ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 ```
 
@@ -238,20 +259,24 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 
 ### Transcription
 
-| Command                         | Description                      |
-| ------------------------------- | -------------------------------- |
-| `transcribe BRAND`              | Transcribe all videos in a brand |
-| `transcribe BRAND --video FILE` | Transcribe specific video        |
-| `transcribe BRAND --force`      | Re-transcribe even if exists     |
-| `index-transcripts BRAND`       | Rebuild search index             |
+| Command                            | Description                                      |
+| ---------------------------------- | ------------------------------------------------ |
+| `transcribe BRAND`                 | Transcribe all videos (uses local Whisper)       |
+| `transcribe BRAND --video FILE`    | Transcribe specific video                        |
+| `transcribe BRAND --model large`   | Use a specific model (tiny/base/small/medium/large/large-v2/large-v3) |
+| `transcribe BRAND --provider whisper_api` | Use OpenAI API instead of local        |
+| `transcribe BRAND --force`         | Re-transcribe even if exists                     |
+| `index-transcripts BRAND`          | Rebuild search index                             |
 
 ### Highlights Mode
 
-| Command                        | Description                    |
-| ------------------------------ | ------------------------------ |
-| `highlights BRAND VIDEO`       | Generate highlights from video |
-| `highlights BRAND VIDEO -n 10` | Generate 10 highlights         |
-| `highlights-batch BRAND LIST`  | Batch process video list       |
+| Command                                     | Description                                    |
+| ------------------------------------------- | ---------------------------------------------- |
+| `highlights BRAND VIDEO`                    | Generate highlights from video                 |
+| `highlights BRAND VIDEO -n 10`              | Generate 10 highlights                         |
+| `highlights BRAND VIDEO --llm-provider ollama` | Use local Ollama for analysis (free)        |
+| `highlights BRAND VIDEO --llm-model llama3.2`  | Use specific LLM model                      |
+| `highlights-batch BRAND LIST`               | Batch process video list                       |
 
 ### Lyric Match Mode
 
@@ -275,20 +300,36 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 
 ## Costs
 
-### Transcription (OpenAI Whisper API)
+### Transcription
 
+**Local Whisper (default)**: Free - runs on your machine
+- Requires `faster-whisper` package
+- Uses GPU if available, falls back to CPU
+- Model sizes: tiny (fastest) → medium (default) → large-v3 (most accurate)
+
+**OpenAI Whisper API (fallback)**:
 - ~$0.006 per minute of audio
 - 30-minute video ≈ $0.18
 
-### Highlight Detection (Claude API)
+### Highlight Detection (LLM Analysis)
 
+**Ollama (local)**: Free - runs on your machine
+- Requires Ollama installed and running
+- Recommended models: llama3.2 (default), mistral, mixtral
+
+**Claude API**:
 - ~$0.05-0.15 per video analysis
+- Depends on transcript length
+
+**OpenAI API**:
+- ~$0.03-0.10 per video analysis
 - Depends on transcript length
 
 ### Total per video (30 min)
 
-- First run: ~$0.20-0.35 (transcription + analysis)
-- Subsequent: ~$0.05-0.15 (analysis only, transcript reused)
+- Fully local (Whisper + Ollama): Free
+- Local transcription + Cloud LLM: ~$0.05-0.15
+- Full API (both Whisper + LLM): ~$0.20-0.35
 
 ---
 

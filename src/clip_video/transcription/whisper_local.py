@@ -32,7 +32,7 @@ class WhisperLocalProvider(TranscriptionProvider):
     """
 
     # Default model for faster-whisper
-    DEFAULT_MODEL = "base"
+    DEFAULT_MODEL = "medium"
 
     # Available models (ordered by size)
     AVAILABLE_MODELS = ["tiny", "base", "small", "medium", "large", "large-v2", "large-v3"]

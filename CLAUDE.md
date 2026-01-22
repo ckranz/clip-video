@@ -37,7 +37,7 @@ clip-video/
 │   ├── ffmpeg.py            # FFmpeg wrapper for video operations
 │   ├── ffmpeg_binary.py     # FFmpeg auto-download and path management
 │   ├── storage.py           # Atomic JSON read/write utilities
-│   ├── transcription.py     # Whisper API transcription
+│   ├── transcription/       # Whisper transcription (local & API providers)
 │   │
 │   ├── modes/
 │   │   ├── highlights.py    # Highlights mode processor
@@ -86,7 +86,7 @@ clip-video/
 
 **Highlights Mode:**
 ```
-Video → Transcribe (Whisper) → Analyze (Claude) → Extract clips → Crop to portrait → Burn captions
+Video → Transcribe (Whisper local/API) → Analyze (Claude) → Extract clips → Crop to portrait → Burn captions
 ```
 
 **Lyric Match Mode:**
@@ -186,10 +186,42 @@ The CLI output prioritizes word coverage with red/green status indicators.
 
 ## Environment Variables
 
-- `OPENAI_API_KEY`: Required for Whisper transcription
-- `ANTHROPIC_API_KEY`: Required for Claude highlight detection (can fall back to OpenAI)
+- `OPENAI_API_KEY`: Optional - for Whisper API transcription or OpenAI LLM
+- `ANTHROPIC_API_KEY`: Optional - for Claude LLM (highlight detection)
 
 Can be set in `.env` file in project root.
+
+Note: Both transcription and LLM analysis can run fully locally with no API keys required.
+
+## Transcription
+
+By default, transcription uses local Whisper via `faster-whisper` (free, no API costs).
+Install with: `pip install faster-whisper`
+
+Configuration options in brand config:
+- `transcription_provider`: `"whisper_local"` (default) or `"whisper_api"`
+- `whisper_model`: `"tiny"`, `"base"`, `"small"`, `"medium"` (default), `"large"`, `"large-v2"`, `"large-v3"`
+
+CLI overrides: `--provider` and `--model` flags on the `transcribe` command.
+
+## LLM Analysis (Highlights Mode)
+
+LLM providers for highlight detection and analysis:
+- `claude` - Anthropic Claude (default, requires ANTHROPIC_API_KEY)
+- `openai` - OpenAI GPT (requires OPENAI_API_KEY)
+- `ollama` - Local Ollama (free, requires Ollama running)
+
+Configuration options in brand config:
+- `llm_provider`: `"claude"` (default), `"openai"`, or `"ollama"`
+- `llm_model`: Model to use (null = provider default)
+
+CLI overrides: `--llm-provider` and `--llm-model` flags on the `highlights` command.
+
+To use Ollama (free local inference):
+1. Install Ollama: https://ollama.ai
+2. Start server: `ollama serve`
+3. Pull a model: `ollama pull llama3.2`
+4. Run highlights: `clip-video highlights BRAND VIDEO --llm-provider ollama`
 
 ## Common Issues
 

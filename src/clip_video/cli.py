@@ -62,31 +62,103 @@ def version_callback(value: bool) -> None:
         raise typer.Exit()
 
 
-def check_llm_api_key(brand_name: str) -> None:
-    """Check that the required LLM API key is configured.
+def get_llm_provider_with_fallback(
+    brand_name: str,
+    provider_override: str | None = None,
+    model_override: str | None = None,
+) -> tuple[str, str | None]:
+    """Get the LLM provider to use, with fallback logic.
 
-    Loads brand config and verifies the API key for the configured
-    LLM provider is available.
+    Checks provider availability and falls back to alternatives if needed.
 
     Args:
         brand_name: Name of the brand to check config for
+        provider_override: CLI override for provider
+        model_override: CLI override for model
+
+    Returns:
+        Tuple of (provider_name, model_name)
 
     Raises:
-        typer.Exit: If API key is not configured
+        typer.Exit: If no LLM provider is available
     """
-    config = load_brand_config(brand_name)
-    llm_provider = config.llm_provider
+    from clip_video.llm import ClaudeLLM, OpenAILLM, OllamaLLM, LLMConfig, LLMProviderType
 
-    if llm_provider == "claude":
-        if not os.environ.get("ANTHROPIC_API_KEY"):
-            console.print("[red]Error:[/red] ANTHROPIC_API_KEY not configured.")
-            console.print("Set the ANTHROPIC_API_KEY environment variable or add it to .env file.")
+    config = load_brand_config(brand_name)
+    provider_name = provider_override or config.llm_provider
+    model_name = model_override or config.llm_model
+
+    # Check availability of each provider
+    claude_available = os.environ.get("ANTHROPIC_API_KEY") is not None
+    openai_available = os.environ.get("OPENAI_API_KEY") is not None
+    ollama_available = OllamaLLM().is_available()
+
+    if provider_name == "claude":
+        if claude_available:
+            return "claude", model_name
+        elif ollama_available:
+            console.print("[yellow]Warning:[/yellow] ANTHROPIC_API_KEY not set, falling back to Ollama (local).")
+            return "ollama", model_name if model_name else "llama3.2"
+        elif openai_available:
+            console.print("[yellow]Warning:[/yellow] ANTHROPIC_API_KEY not set, falling back to OpenAI.")
+            return "openai", model_name
+        else:
+            console.print("[red]Error:[/red] No LLM provider available.")
+            console.print("Options:")
+            console.print("  - Set ANTHROPIC_API_KEY for Claude")
+            console.print("  - Set OPENAI_API_KEY for OpenAI")
+            console.print("  - Install and run Ollama for free local inference: https://ollama.ai")
             raise typer.Exit(1)
-    elif llm_provider == "openai":
-        if not os.environ.get("OPENAI_API_KEY"):
-            console.print("[red]Error:[/red] OPENAI_API_KEY not configured for LLM provider.")
-            console.print("Set the OPENAI_API_KEY environment variable or add it to .env file.")
+
+    elif provider_name == "openai":
+        if openai_available:
+            return "openai", model_name
+        elif ollama_available:
+            console.print("[yellow]Warning:[/yellow] OPENAI_API_KEY not set, falling back to Ollama (local).")
+            return "ollama", model_name if model_name else "llama3.2"
+        elif claude_available:
+            console.print("[yellow]Warning:[/yellow] OPENAI_API_KEY not set, falling back to Claude.")
+            return "claude", model_name
+        else:
+            console.print("[red]Error:[/red] No LLM provider available.")
+            console.print("Options:")
+            console.print("  - Set OPENAI_API_KEY for OpenAI")
+            console.print("  - Set ANTHROPIC_API_KEY for Claude")
+            console.print("  - Install and run Ollama for free local inference: https://ollama.ai")
             raise typer.Exit(1)
+
+    elif provider_name == "ollama":
+        if ollama_available:
+            return "ollama", model_name
+        elif claude_available:
+            console.print("[yellow]Warning:[/yellow] Ollama not running, falling back to Claude API.")
+            console.print("[dim]Start Ollama with: ollama serve[/dim]")
+            return "claude", model_name
+        elif openai_available:
+            console.print("[yellow]Warning:[/yellow] Ollama not running, falling back to OpenAI API.")
+            console.print("[dim]Start Ollama with: ollama serve[/dim]")
+            return "openai", model_name
+        else:
+            console.print("[red]Error:[/red] No LLM provider available.")
+            console.print("Options:")
+            console.print("  - Start Ollama: ollama serve")
+            console.print("  - Set ANTHROPIC_API_KEY for Claude")
+            console.print("  - Set OPENAI_API_KEY for OpenAI")
+            raise typer.Exit(1)
+
+    else:
+        console.print(f"[red]Error:[/red] Unknown LLM provider '{provider_name}'.")
+        console.print("Use 'claude', 'openai', or 'ollama'.")
+        raise typer.Exit(1)
+
+
+def check_llm_api_key(brand_name: str) -> None:
+    """Check that the required LLM API key is configured.
+
+    DEPRECATED: Use get_llm_provider_with_fallback instead.
+    Kept for backwards compatibility.
+    """
+    get_llm_provider_with_fallback(brand_name)
 
 
 @app.callback()
@@ -126,17 +198,91 @@ def init_brand(
     description: Annotated[
         str, typer.Option("--description", "-d", help="Description of the brand")
     ] = "",
+    non_interactive: Annotated[
+        bool, typer.Option("--yes", "-y", help="Use defaults without prompting")
+    ] = False,
 ) -> None:
     """Initialize a new brand with folder structure.
 
     Creates the brand directory with subdirectories for videos, transcripts,
     projects, and outputs. Also creates a default configuration file.
+
+    Prompts for key settings (transcription and LLM providers) unless --yes is used.
     """
     if brand_exists(brand_name):
         console.print(f"[red]Error:[/red] Brand '{brand_name}' already exists.")
         raise typer.Exit(1)
 
     brand_path = get_brand_path(brand_name)
+
+    # Check what providers are available
+    from clip_video.llm.ollama import OllamaLLM
+
+    ollama_available = OllamaLLM().is_available()
+    anthropic_key_set = os.environ.get("ANTHROPIC_API_KEY") is not None
+    openai_key_set = os.environ.get("OPENAI_API_KEY") is not None
+
+    # Determine smart defaults based on availability
+    default_llm = "claude" if anthropic_key_set else ("ollama" if ollama_available else "claude")
+
+    # Provider settings (will be set by prompts or defaults)
+    transcription_provider = "whisper_local"
+    whisper_model = "medium"
+    llm_provider = default_llm
+    llm_model = None
+
+    if not non_interactive:
+        console.print("\n[bold]Provider Configuration[/bold]")
+        console.print("[dim]Press Enter to accept defaults shown in brackets.[/dim]\n")
+
+        # Show availability status
+        console.print("[bold]Available providers:[/bold]")
+        console.print(f"  Transcription:")
+        console.print(f"    - whisper_local (faster-whisper) [dim]- Free, runs locally[/dim]")
+        console.print(f"    - whisper_api (OpenAI) [dim]- {'[green]API key set[/green]' if openai_key_set else '[yellow]Requires OPENAI_API_KEY[/yellow]'}[/dim]")
+        console.print(f"  LLM Analysis:")
+        console.print(f"    - ollama [dim]- {'[green]Running[/green]' if ollama_available else '[yellow]Not running[/yellow]'} (free, local)[/dim]")
+        console.print(f"    - claude [dim]- {'[green]API key set[/green]' if anthropic_key_set else '[yellow]Requires ANTHROPIC_API_KEY[/yellow]'}[/dim]")
+        console.print(f"    - openai [dim]- {'[green]API key set[/green]' if openai_key_set else '[yellow]Requires OPENAI_API_KEY[/yellow]'}[/dim]")
+        console.print()
+
+        # Prompt for transcription provider
+        transcription_provider = typer.prompt(
+            "Transcription provider (whisper_local/whisper_api)",
+            default="whisper_local",
+        ).strip().lower()
+        if transcription_provider not in ("whisper_local", "whisper_api"):
+            console.print(f"[yellow]Unknown provider '{transcription_provider}', using whisper_local[/yellow]")
+            transcription_provider = "whisper_local"
+
+        # Prompt for whisper model
+        whisper_model = typer.prompt(
+            "Whisper model (tiny/base/small/medium/large/large-v2/large-v3)",
+            default="medium",
+        ).strip().lower()
+        valid_models = ["tiny", "base", "small", "medium", "large", "large-v2", "large-v3"]
+        if whisper_model not in valid_models:
+            console.print(f"[yellow]Unknown model '{whisper_model}', using medium[/yellow]")
+            whisper_model = "medium"
+
+        # Prompt for LLM provider
+        llm_provider = typer.prompt(
+            "LLM provider for highlights (claude/openai/ollama)",
+            default=default_llm,
+        ).strip().lower()
+        if llm_provider not in ("claude", "openai", "ollama"):
+            console.print(f"[yellow]Unknown provider '{llm_provider}', using {default_llm}[/yellow]")
+            llm_provider = default_llm
+
+        # Show warning if selected provider might not work
+        if llm_provider == "claude" and not anthropic_key_set:
+            console.print("[yellow]Note: ANTHROPIC_API_KEY not set. Set it before running highlights.[/yellow]")
+        elif llm_provider == "openai" and not openai_key_set:
+            console.print("[yellow]Note: OPENAI_API_KEY not set. Set it before running highlights.[/yellow]")
+        elif llm_provider == "ollama" and not ollama_available:
+            console.print("[yellow]Note: Ollama not running. Start it with 'ollama serve' before running highlights.[/yellow]")
+
+        console.print()
 
     # Create directory structure
     directories = [
@@ -225,18 +371,24 @@ def init_brand(
             "linkerd": ["linker d", "linker dee"],
             "cncf": ["c n c f", "cnc f", "see ncf"],
         },
-        # API providers
-        transcription_provider="whisper_api",  # or "whisper_local"
-        llm_provider="claude",  # or "openai"
+        # API providers (configured during init)
+        transcription_provider=transcription_provider,
+        whisper_model=whisper_model,
+        llm_provider=llm_provider,
+        llm_model=llm_model,
     )
 
     config_path = save_brand_config(brand_name, config)
 
     # Display success message
+    llm_display = llm_provider.capitalize() if llm_provider != "ollama" else "Ollama (local)"
     console.print(
         Panel(
             f"[green]Brand '{brand_name}' created successfully![/green]\n\n"
             f"Location: {brand_path}\n\n"
+            f"[bold]Configured providers:[/bold]\n"
+            f"  Transcription: {transcription_provider} (model: {whisper_model})\n"
+            f"  LLM Analysis:  {llm_display}\n\n"
             "Directory structure:\n"
             f"  {brand_path}/\n"
             "    videos/         - Place source videos here\n"
@@ -299,6 +451,10 @@ def transcribe(
         Optional[str],
         typer.Option("--provider", "-p", help="Transcription provider (whisper_api, whisper_local)"),
     ] = None,
+    model: Annotated[
+        Optional[str],
+        typer.Option("--model", "-m", help="Whisper model size (tiny, base, small, medium, large, large-v2, large-v3)"),
+    ] = None,
     force: Annotated[
         bool,
         typer.Option("--force", help="Re-transcribe even if transcript exists"),
@@ -329,23 +485,43 @@ def transcribe(
     config = load_brand_config(brand_name)
     brand_path = get_brand_path(brand_name)
 
-    # Determine provider
+    # Determine provider and model
     provider_name = provider or config.transcription_provider
+    model_name = model or getattr(config, 'whisper_model', 'medium')
 
-    # Initialize provider
+    # Initialize provider with fallback logic
+    local_provider = WhisperLocalProvider(model=model_name)
+    api_provider = WhisperAPIProvider()
+
     if provider_name == "whisper_local":
-        transcription_provider = WhisperLocalProvider()
-        if not transcription_provider.is_available():
-            console.print("[red]Error:[/red] Local Whisper not available.")
-            console.print("Install faster-whisper: pip install faster-whisper")
+        if local_provider.is_available():
+            transcription_provider = local_provider
+        elif api_provider.is_available():
+            console.print("[yellow]Warning:[/yellow] Local Whisper not available, falling back to API.")
+            console.print("[dim]Install faster-whisper for free local transcription: pip install faster-whisper[/dim]")
+            transcription_provider = api_provider
+            provider_name = "whisper_api"
+        else:
+            console.print("[red]Error:[/red] No transcription provider available.")
+            console.print("Install faster-whisper for local transcription: pip install faster-whisper")
+            console.print("Or set OPENAI_API_KEY for API transcription.")
+            raise typer.Exit(1)
+    elif provider_name == "whisper_api":
+        if api_provider.is_available():
+            transcription_provider = api_provider
+        elif local_provider.is_available():
+            console.print("[yellow]Warning:[/yellow] OpenAI API not configured, falling back to local Whisper.")
+            transcription_provider = local_provider
+            provider_name = "whisper_local"
+        else:
+            console.print("[red]Error:[/red] No transcription provider available.")
+            console.print("Set OPENAI_API_KEY for API transcription.")
+            console.print("Or install faster-whisper for local transcription: pip install faster-whisper")
             raise typer.Exit(1)
     else:
-        # Default to API
-        transcription_provider = WhisperAPIProvider()
-        if not transcription_provider.is_available():
-            console.print("[red]Error:[/red] OpenAI API not configured.")
-            console.print("Set OPENAI_API_KEY environment variable.")
-            raise typer.Exit(1)
+        console.print(f"[red]Error:[/red] Unknown provider '{provider_name}'.")
+        console.print("Use 'whisper_local' or 'whisper_api'.")
+        raise typer.Exit(1)
 
     # Load vocabulary for corrections
     vocabulary = VocabularyTerms(config.vocabulary) if config.vocabulary else VocabularyTerms()
@@ -1272,6 +1448,14 @@ def highlights(
         int,
         typer.Option("--count", "-n", help="Number of highlights to generate"),
     ] = 5,
+    llm_provider: Annotated[
+        Optional[str],
+        typer.Option("--llm-provider", "-l", help="LLM provider (claude, openai, ollama)"),
+    ] = None,
+    llm_model: Annotated[
+        Optional[str],
+        typer.Option("--llm-model", "-m", help="LLM model (e.g., claude-sonnet-4-5, gpt-4.1, llama3.2)"),
+    ] = None,
     yes: Annotated[
         bool,
         typer.Option("--yes", "-y", help="Skip confirmation prompts"),
@@ -1296,12 +1480,15 @@ def highlights(
         HighlightsProject,
     )
     from clip_video.transcription import TranscriptionResult
+    from clip_video.llm import LLMConfig, LLMProviderType
 
     brand_path = get_brand_path(brand_name)
     config = load_brand_config(brand_name)
 
-    # Check LLM API key availability
-    check_llm_api_key(brand_name)
+    # Get LLM provider with fallback logic
+    actual_provider, actual_model = get_llm_provider_with_fallback(
+        brand_name, llm_provider, llm_model
+    )
 
     # Check for existing transcript
     transcript_path = brand_path / "transcripts" / f"{video.stem}.json"
@@ -1313,8 +1500,12 @@ def highlights(
     # Load transcript
     transcript_result = TranscriptionResult.load(transcript_path)
 
+    # Create LLM config with selected provider
+    provider_type = LLMProviderType(actual_provider)
+    llm_config = LLMConfig(provider=provider_type, model=actual_model)
+
     # Create highlights config
-    highlights_config = HighlightsConfig(target_clips=count)
+    highlights_config = HighlightsConfig(target_clips=count, llm_config=llm_config)
 
     # Create processor with progress callback
     def progress_callback(stage: str, progress: float) -> None:
@@ -1329,12 +1520,19 @@ def highlights(
     )
     estimated_cost = processor.get_cost_estimate(transcript_text)
 
+    # Show provider info
+    provider_display = actual_provider.capitalize()
+    if actual_provider == "ollama":
+        provider_display = "Ollama (Local)"
+    model_display = actual_model or "(default)"
+
     console.print(Panel(
         f"[bold]Highlights Generation[/bold]\n\n"
         f"Video: {video.name}\n"
         f"Target clips: {count}\n"
-        f"LLM Provider: {config.llm_provider}\n"
-        f"Estimated LLM cost: ${estimated_cost:.3f} USD",
+        f"LLM Provider: {provider_display}\n"
+        f"LLM Model: {model_display}\n"
+        + (f"Estimated LLM cost: ${estimated_cost:.3f} USD" if estimated_cost > 0 else "Estimated LLM cost: Free (local)"),
         title="Highlights Plan",
     ))
 
