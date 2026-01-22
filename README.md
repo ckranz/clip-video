@@ -15,9 +15,10 @@ pip install -e .
 
 - **Python 3.10+**
 - **FFmpeg** - Required for video processing (auto-downloaded on first run, or install manually)
-- **faster-whisper** - For local transcription (recommended, free):
+- **Local Whisper** - For free local transcription (one of):
   ```bash
-  pip install faster-whisper
+  pip install openai-whisper  # Uses standard model cache (recommended if you have models)
+  pip install faster-whisper  # Faster, but uses separate model cache
   ```
 - **Ollama** - For free local AI analysis (optional but recommended):
   - Install from https://ollama.ai
@@ -215,10 +216,16 @@ Key settings:
   },
 
   "transcription_provider": "whisper_local",
+  "whisper_backend": "auto",
   "whisper_model": "medium",
   "llm_provider": "claude",
   "llm_model": null
 }
+
+**Whisper Backend Options** (for local transcription):
+- `auto` - Automatically select based on what's installed (prefers openai-whisper)
+- `openai-whisper` - Original Whisper (uses standard ~/.cache/whisper model cache)
+- `faster-whisper` - CTranslate2-based (faster, but downloads separate models)
 ```
 
 **LLM Provider Options**:
@@ -259,14 +266,15 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 
 ### Transcription
 
-| Command                            | Description                                      |
-| ---------------------------------- | ------------------------------------------------ |
-| `transcribe BRAND`                 | Transcribe all videos (uses local Whisper)       |
-| `transcribe BRAND --video FILE`    | Transcribe specific video                        |
-| `transcribe BRAND --model large`   | Use a specific model (tiny/base/small/medium/large/large-v2/large-v3) |
-| `transcribe BRAND --provider whisper_api` | Use OpenAI API instead of local        |
-| `transcribe BRAND --force`         | Re-transcribe even if exists                     |
-| `index-transcripts BRAND`          | Rebuild search index                             |
+| Command                                      | Description                                      |
+| -------------------------------------------- | ------------------------------------------------ |
+| `transcribe BRAND`                           | Transcribe all videos (uses local Whisper)       |
+| `transcribe BRAND --video FILE`              | Transcribe specific video                        |
+| `transcribe BRAND --backend openai-whisper`  | Use specific backend (openai-whisper/faster-whisper) |
+| `transcribe BRAND --model large`             | Use a specific model (tiny/base/small/medium/large/large-v2/large-v3) |
+| `transcribe BRAND --provider whisper_api`    | Use OpenAI API instead of local                  |
+| `transcribe BRAND --force`                   | Re-transcribe even if exists                     |
+| `index-transcripts BRAND`                    | Rebuild search index                             |
 
 ### Highlights Mode
 
@@ -303,7 +311,7 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 ### Transcription
 
 **Local Whisper (default)**: Free - runs on your machine
-- Requires `faster-whisper` package
+- Backends: `openai-whisper` (standard cache) or `faster-whisper` (separate cache, faster)
 - Uses GPU if available, falls back to CPU
 - Model sizes: tiny (fastest) → medium (default) → large-v3 (most accurate)
 

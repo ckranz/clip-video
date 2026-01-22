@@ -217,16 +217,25 @@ def init_brand(
 
     # Check what providers are available
     from clip_video.llm.ollama import OllamaLLM
+    from clip_video.transcription import WhisperLocalProvider
 
     ollama_available = OllamaLLM().is_available()
     anthropic_key_set = os.environ.get("ANTHROPIC_API_KEY") is not None
     openai_key_set = os.environ.get("OPENAI_API_KEY") is not None
 
+    # Check whisper backends
+    whisper_check = WhisperLocalProvider()
+    openai_whisper_available = whisper_check._check_openai_whisper()
+    faster_whisper_available = whisper_check._check_faster_whisper()
+
     # Determine smart defaults based on availability
     default_llm = "claude" if anthropic_key_set else ("ollama" if ollama_available else "claude")
+    # Prefer openai-whisper if available (reuses cached models), otherwise auto
+    default_backend = "openai-whisper" if openai_whisper_available else ("faster-whisper" if faster_whisper_available else "auto")
 
     # Provider settings (will be set by prompts or defaults)
     transcription_provider = "whisper_local"
+    whisper_backend = default_backend
     whisper_model = "medium"
     llm_provider = default_llm
     llm_model = None
@@ -237,10 +246,13 @@ def init_brand(
 
         # Show availability status
         console.print("[bold]Available providers:[/bold]")
-        console.print(f"  Transcription:")
-        console.print(f"    - whisper_local (faster-whisper) [dim]- Free, runs locally[/dim]")
+        console.print("  Transcription:")
+        console.print(f"    - whisper_local [dim]- Free, runs locally[/dim]")
+        console.print(f"      Backends:")
+        console.print(f"        - openai-whisper [dim]- {'[green]Installed[/green]' if openai_whisper_available else '[yellow]Not installed[/yellow]'} (uses standard model cache)[/dim]")
+        console.print(f"        - faster-whisper [dim]- {'[green]Installed[/green]' if faster_whisper_available else '[yellow]Not installed[/yellow]'} (faster, separate cache)[/dim]")
         console.print(f"    - whisper_api (OpenAI) [dim]- {'[green]API key set[/green]' if openai_key_set else '[yellow]Requires OPENAI_API_KEY[/yellow]'}[/dim]")
-        console.print(f"  LLM Analysis:")
+        console.print("  LLM Analysis:")
         console.print(f"    - ollama [dim]- {'[green]Running[/green]' if ollama_available else '[yellow]Not running[/yellow]'} (free, local)[/dim]")
         console.print(f"    - claude [dim]- {'[green]API key set[/green]' if anthropic_key_set else '[yellow]Requires ANTHROPIC_API_KEY[/yellow]'}[/dim]")
         console.print(f"    - openai [dim]- {'[green]API key set[/green]' if openai_key_set else '[yellow]Requires OPENAI_API_KEY[/yellow]'}[/dim]")
@@ -254,6 +266,16 @@ def init_brand(
         if transcription_provider not in ("whisper_local", "whisper_api"):
             console.print(f"[yellow]Unknown provider '{transcription_provider}', using whisper_local[/yellow]")
             transcription_provider = "whisper_local"
+
+        # Prompt for whisper backend (only if using local)
+        if transcription_provider == "whisper_local":
+            whisper_backend = typer.prompt(
+                "Whisper backend (auto/openai-whisper/faster-whisper)",
+                default=default_backend,
+            ).strip().lower()
+            if whisper_backend not in ("auto", "openai-whisper", "faster-whisper"):
+                console.print(f"[yellow]Unknown backend '{whisper_backend}', using auto[/yellow]")
+                whisper_backend = "auto"
 
         # Prompt for whisper model
         whisper_model = typer.prompt(
@@ -373,6 +395,7 @@ def init_brand(
         },
         # API providers (configured during init)
         transcription_provider=transcription_provider,
+        whisper_backend=whisper_backend,
         whisper_model=whisper_model,
         llm_provider=llm_provider,
         llm_model=llm_model,
@@ -382,12 +405,13 @@ def init_brand(
 
     # Display success message
     llm_display = llm_provider.capitalize() if llm_provider != "ollama" else "Ollama (local)"
+    backend_display = whisper_backend if transcription_provider == "whisper_local" else "N/A"
     console.print(
         Panel(
             f"[green]Brand '{brand_name}' created successfully![/green]\n\n"
             f"Location: {brand_path}\n\n"
             f"[bold]Configured providers:[/bold]\n"
-            f"  Transcription: {transcription_provider} (model: {whisper_model})\n"
+            f"  Transcription: {transcription_provider} (backend: {backend_display}, model: {whisper_model})\n"
             f"  LLM Analysis:  {llm_display}\n\n"
             "Directory structure:\n"
             f"  {brand_path}/\n"
@@ -451,6 +475,10 @@ def transcribe(
         Optional[str],
         typer.Option("--provider", "-p", help="Transcription provider (whisper_api, whisper_local)"),
     ] = None,
+    backend: Annotated[
+        Optional[str],
+        typer.Option("--backend", "-b", help="Whisper backend (auto, openai-whisper, faster-whisper)"),
+    ] = None,
     model: Annotated[
         Optional[str],
         typer.Option("--model", "-m", help="Whisper model size (tiny, base, small, medium, large, large-v2, large-v3)"),
@@ -485,25 +513,33 @@ def transcribe(
     config = load_brand_config(brand_name)
     brand_path = get_brand_path(brand_name)
 
-    # Determine provider and model
+    # Determine provider, backend, and model
     provider_name = provider or config.transcription_provider
+    backend_name = backend or getattr(config, 'whisper_backend', 'auto')
     model_name = model or getattr(config, 'whisper_model', 'medium')
 
     # Initialize provider with fallback logic
-    local_provider = WhisperLocalProvider(model=model_name)
+    local_provider = WhisperLocalProvider(model=model_name, backend=backend_name)
     api_provider = WhisperAPIProvider()
 
     if provider_name == "whisper_local":
         if local_provider.is_available():
             transcription_provider = local_provider
+            # Show which backend will be used
+            active_backend = local_provider.get_active_backend()
+            console.print(f"[dim]Using local Whisper backend: {active_backend}[/dim]")
         elif api_provider.is_available():
             console.print("[yellow]Warning:[/yellow] Local Whisper not available, falling back to API.")
-            console.print("[dim]Install faster-whisper for free local transcription: pip install faster-whisper[/dim]")
+            console.print("[dim]Install a local backend for free transcription:[/dim]")
+            console.print("[dim]  pip install openai-whisper  (uses standard model cache)[/dim]")
+            console.print("[dim]  pip install faster-whisper  (faster, separate cache)[/dim]")
             transcription_provider = api_provider
             provider_name = "whisper_api"
         else:
             console.print("[red]Error:[/red] No transcription provider available.")
-            console.print("Install faster-whisper for local transcription: pip install faster-whisper")
+            console.print("Install a local Whisper backend:")
+            console.print("  pip install openai-whisper  (recommended if you have models cached)")
+            console.print("  pip install faster-whisper  (faster, but downloads separate models)")
             console.print("Or set OPENAI_API_KEY for API transcription.")
             raise typer.Exit(1)
     elif provider_name == "whisper_api":
@@ -516,7 +552,9 @@ def transcribe(
         else:
             console.print("[red]Error:[/red] No transcription provider available.")
             console.print("Set OPENAI_API_KEY for API transcription.")
-            console.print("Or install faster-whisper for local transcription: pip install faster-whisper")
+            console.print("Or install a local Whisper backend:")
+            console.print("  pip install openai-whisper")
+            console.print("  pip install faster-whisper")
             raise typer.Exit(1)
     else:
         console.print(f"[red]Error:[/red] Unknown provider '{provider_name}'.")

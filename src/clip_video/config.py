@@ -108,6 +108,7 @@ class BrandConfig(BaseModel):
     vocabulary: dict[str, list[str]] = Field(default_factory=dict)
     # API provider preferences
     transcription_provider: str = "whisper_local"  # or "whisper_api"
+    whisper_backend: str = "auto"  # "auto", "openai-whisper", or "faster-whisper"
     whisper_model: str = "medium"  # tiny, base, small, medium, large, large-v2, large-v3
     llm_provider: str = "claude"  # "claude", "openai", or "ollama"
     llm_model: str | None = None  # None = use provider default (e.g., claude-sonnet-4-5, gpt-4.1, llama3.2)

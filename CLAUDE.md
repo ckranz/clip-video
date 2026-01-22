@@ -195,14 +195,23 @@ Note: Both transcription and LLM analysis can run fully locally with no API keys
 
 ## Transcription
 
-By default, transcription uses local Whisper via `faster-whisper` (free, no API costs).
-Install with: `pip install faster-whisper`
+By default, transcription uses local Whisper (free, no API costs).
+
+Two local backends are supported:
+- `openai-whisper` - Original OpenAI Whisper. Uses standard model cache (~/.cache/whisper).
+  Install: `pip install openai-whisper`
+- `faster-whisper` - CTranslate2-based, ~4x faster. Uses separate model cache.
+  Install: `pip install faster-whisper`
 
 Configuration options in brand config:
 - `transcription_provider`: `"whisper_local"` (default) or `"whisper_api"`
+- `whisper_backend`: `"auto"` (default), `"openai-whisper"`, or `"faster-whisper"`
 - `whisper_model`: `"tiny"`, `"base"`, `"small"`, `"medium"` (default), `"large"`, `"large-v2"`, `"large-v3"`
 
-CLI overrides: `--provider` and `--model` flags on the `transcribe` command.
+CLI overrides: `--provider`, `--backend`, and `--model` flags on the `transcribe` command.
+
+Note: If you have Whisper models already downloaded from another project, use `openai-whisper`
+backend to reuse them and avoid re-downloading.
 
 ## LLM Analysis (Highlights Mode)
 
