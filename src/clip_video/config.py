@@ -112,6 +112,8 @@ class BrandConfig(BaseModel):
     whisper_model: str = "medium"  # tiny, base, small, medium, large, large-v2, large-v3
     llm_provider: str = "claude"  # "claude", "openai", or "ollama"
     llm_model: str | None = None  # None = use provider default (e.g., claude-sonnet-4-5, gpt-4.1, llama3.2)
+    # LLM transcript refinement (post-correction)
+    refine_transcripts: bool = False
 
     def get_crop_x_offset(self, source_width: int) -> float:
         """Calculate crop X offset, handling pixel-based config.

@@ -10,6 +10,7 @@ from clip_video.transcription.base import (
     TranscriptionSegment,
     TranscriptionWord,
 )
+from clip_video.transcription.llm_refine import RefinementContext, TranscriptRefiner
 from clip_video.transcription.progress import TranscriptionProgress
 from clip_video.transcription.whisper_api import WhisperAPIProvider
 from clip_video.transcription.whisper_local import WhisperLocalProvider
@@ -20,6 +21,8 @@ __all__ = [
     "TranscriptionSegment",
     "TranscriptionWord",
     "TranscriptionProgress",
+    "RefinementContext",
+    "TranscriptRefiner",
     "WhisperAPIProvider",
     "WhisperLocalProvider",
 ]
