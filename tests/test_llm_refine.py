@@ -362,3 +362,85 @@ class TestTranscriptRefiner:
 
         # Should be called once per segment since chunk_size=1
         assert mock_llm.call_count == 2
+
+
+class TestRefinementEndToEnd:
+    """Integration-style tests for the full refinement pipeline."""
+
+    @patch("clip_video.transcription.llm_refine.TranscriptRefiner._call_llm")
+    def test_full_pipeline_with_kubernetes_talk(self, mock_call_llm):
+        """Simulate refining a Kubernetes conference talk transcript."""
+        mock_call_llm.return_value = json.dumps([
+            {"original": "cooper netties", "corrected": "Kubernetes", "reason": "domain term"},
+            {"original": "see are dees", "corrected": "CRDs", "reason": "acronym"},
+            {"original": "argo seedy", "corrected": "ArgoCD", "reason": "domain term"},
+        ])
+
+        config = LLMConfig(provider=LLMProviderType.CLAUDE)
+        refiner = TranscriptRefiner(config)
+
+        segments = [
+            TranscriptionSegment(
+                text="Today we will talk about cooper netties and how see are dees work",
+                start=0.0,
+                end=5.0,
+                words=[
+                    TranscriptionWord(word="Today", start=0.0, end=0.3),
+                    TranscriptionWord(word="we", start=0.3, end=0.4),
+                    TranscriptionWord(word="will", start=0.4, end=0.5),
+                    TranscriptionWord(word="talk", start=0.5, end=0.7),
+                    TranscriptionWord(word="about", start=0.7, end=0.9),
+                    TranscriptionWord(word="cooper", start=0.9, end=1.2),
+                    TranscriptionWord(word="netties", start=1.2, end=1.5),
+                    TranscriptionWord(word="and", start=1.5, end=1.6),
+                    TranscriptionWord(word="how", start=1.6, end=1.8),
+                    TranscriptionWord(word="see", start=1.8, end=2.0),
+                    TranscriptionWord(word="are", start=2.0, end=2.2),
+                    TranscriptionWord(word="dees", start=2.2, end=2.5),
+                    TranscriptionWord(word="work", start=2.5, end=2.8),
+                ],
+            ),
+            TranscriptionSegment(
+                text="We deployed argo seedy for GitOps",
+                start=5.0,
+                end=8.0,
+                words=[
+                    TranscriptionWord(word="We", start=5.0, end=5.2),
+                    TranscriptionWord(word="deployed", start=5.2, end=5.6),
+                    TranscriptionWord(word="argo", start=5.6, end=5.9),
+                    TranscriptionWord(word="seedy", start=5.9, end=6.2),
+                    TranscriptionWord(word="for", start=6.2, end=6.4),
+                    TranscriptionWord(word="GitOps", start=6.4, end=6.8),
+                ],
+            ),
+        ]
+
+        ctx = RefinementContext(
+            talk_title="Scaling GitOps with ArgoCD",
+            domain="kubernetes",
+            vocabulary_terms=["Kubernetes", "ArgoCD", "CRDs"],
+        )
+
+        result, log = refiner.refine(segments, context=ctx)
+
+        # Verify text corrections
+        assert "Kubernetes" in result[0].text
+        assert "CRDs" in result[0].text
+        assert "ArgoCD" in result[1].text
+        assert "cooper netties" not in result[0].text
+
+        # Verify correction count
+        assert len(log) == 3
+
+        # Verify word-level data was updated
+        word_texts = [w.word for w in result[0].words]
+        assert "Kubernetes" in word_texts
+        assert "CRDs" in word_texts
+
+        # Verify word-level data in second segment
+        word_texts_2 = [w.word for w in result[1].words]
+        assert "ArgoCD" in word_texts_2
+
+        # Verify originals unchanged
+        assert "cooper netties" in segments[0].text
+        assert "argo seedy" in segments[1].text
