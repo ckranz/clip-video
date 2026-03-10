@@ -219,7 +219,8 @@ Key settings:
   "whisper_backend": "auto",
   "whisper_model": "medium",
   "llm_provider": "claude",
-  "llm_model": null
+  "llm_model": null,
+  "refine_transcripts": false
 }
 
 **Whisper Backend Options** (for local transcription):
@@ -274,6 +275,9 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 | `transcribe BRAND --model large`             | Use a specific model (tiny/base/small/medium/large/large-v2/large-v3) |
 | `transcribe BRAND --provider whisper_api`    | Use OpenAI API instead of local                  |
 | `transcribe BRAND --force`                   | Re-transcribe even if exists                     |
+| `transcribe BRAND --refine`                  | Enable LLM post-correction (fixes domain terms, grammar) |
+| `transcribe BRAND --refine --refine-provider ollama` | Use local Ollama for refinement (free)          |
+| `transcribe BRAND --refine --talk-title "..."` | Provide talk context for better corrections      |
 | `index-transcripts BRAND`                    | Rebuild search index                             |
 
 ### Highlights Mode
@@ -315,6 +319,14 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 - Uses GPU if available, falls back to CPU
 - Model sizes: tiny (fastest) → medium (default) → large-v3 (most accurate)
 
+### Transcript Refinement (LLM Post-Correction)
+
+Optional LLM-powered refinement fixes domain terms, acronyms, and grammar that Whisper and vocabulary correction miss.
+
+**Ollama (local)**: Free
+**Claude API**: ~$0.01-0.05 per transcript
+**OpenAI API**: ~$0.01-0.03 per transcript
+
 **OpenAI Whisper API (fallback)**:
 - ~$0.006 per minute of audio
 - 30-minute video ≈ $0.18
@@ -353,6 +365,8 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 
 5. **Resume-safe**: All batch operations can be interrupted and resumed.
 
+6. **LLM refinement for technical talks**: Use `--refine` with `--talk-title` for conference talks full of domain jargon. The LLM understands context (e.g., "cooper netties" in a Kubernetes talk = "Kubernetes").
+
 ---
 
 ## Troubleshooting
@@ -372,8 +386,10 @@ clip-video check-deps
 
 ### Transcription errors
 
-- Add terms to brand vocabulary config
-- The tool searches for both correct spellings and known alternatives
+- Add terms to brand vocabulary config for known recurring errors
+- Use `--refine` flag to enable LLM post-correction for domain-specific fixes
+- Provide `--talk-title` and `--talk-description` for best refinement results
+- Set `refine_transcripts: true` in brand config to always refine
 
 ### API rate limits
 

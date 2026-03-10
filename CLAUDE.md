@@ -38,6 +38,7 @@ clip-video/
 │   ├── ffmpeg_binary.py     # FFmpeg auto-download and path management
 │   ├── storage.py           # Atomic JSON read/write utilities
 │   ├── transcription/       # Whisper transcription (local & API providers)
+│   │   └── llm_refine.py   # LLM-powered post-correction
 │   │
 │   ├── modes/
 │   │   ├── highlights.py    # Highlights mode processor
@@ -86,7 +87,7 @@ clip-video/
 
 **Highlights Mode:**
 ```
-Video → Transcribe (Whisper local/API) → Analyze (Claude) → Extract clips → Crop to portrait → Burn captions
+Video → Transcribe (Whisper local/API) → Vocabulary Correction → LLM Refinement (optional) → Analyze (Claude) → Extract clips → Crop to portrait → Burn captions
 ```
 
 **Lyric Match Mode:**
@@ -191,7 +192,7 @@ The CLI output prioritizes word coverage with red/green status indicators.
 
 Can be set in `.env` file in project root.
 
-Note: Both transcription and LLM analysis can run fully locally with no API keys required.
+Note: Both transcription, LLM transcript refinement, and LLM analysis can run fully locally with no API keys required (using Ollama).
 
 ## Transcription
 
@@ -212,6 +213,17 @@ CLI overrides: `--provider`, `--backend`, and `--model` flags on the `transcribe
 
 Note: If you have Whisper models already downloaded from another project, use `openai-whisper`
 backend to reuse them and avoid re-downloading.
+
+## LLM Transcript Refinement
+
+Optional post-correction step using LLM to fix domain terms, acronyms, and grammar.
+
+- Runs after vocabulary correction, before saving
+- Enabled via `--refine` CLI flag or `refine_transcripts` brand config
+- Uses the same LLM provider config as highlights mode (`llm_provider`, `llm_model`)
+- Override with `--refine-provider` and `--refine-model`
+- Provide `--talk-title` and `--talk-description` for context-aware corrections
+- Implementation: `src/clip_video/transcription/llm_refine.py`
 
 ## LLM Analysis (Highlights Mode)
 
