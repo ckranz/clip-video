@@ -8,11 +8,17 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import re
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 
+from clip_video.llm.base import LLMConfig, LLMProviderType
 from clip_video.transcription.base import TranscriptionSegment, TranscriptionWord
 from clip_video.vocabulary.correction import Correction, CorrectionLog
+
+DEFAULT_CHUNK_SIZE = 15
 
 
 @dataclass
@@ -269,3 +275,197 @@ def apply_corrections(
                 ))
 
     return corrected_segments, log
+
+
+class TranscriptRefiner:
+    """Refines transcription segments using an LLM to fix domain-specific errors.
+
+    Processes segments in chunks, sends each chunk to the configured LLM provider,
+    and applies corrections. On any LLM failure, returns original segments unchanged
+    (never raises from refine()).
+
+    Args:
+        config: LLM provider configuration.
+        chunk_size: Number of segments per LLM call.
+    """
+
+    def __init__(self, config: LLMConfig, chunk_size: int = DEFAULT_CHUNK_SIZE):
+        self.config = config
+        self.chunk_size = chunk_size
+
+    def is_available(self) -> bool:
+        """Check if the configured LLM provider is available.
+
+        Returns:
+            True if the provider can be used.
+        """
+        if self.config.provider == LLMProviderType.CLAUDE:
+            return bool(self.config.api_key or os.environ.get("ANTHROPIC_API_KEY"))
+        elif self.config.provider == LLMProviderType.OPENAI:
+            return bool(self.config.api_key or os.environ.get("OPENAI_API_KEY"))
+        elif self.config.provider == LLMProviderType.OLLAMA:
+            try:
+                req = urllib.request.Request(
+                    "http://localhost:11434/api/tags",
+                    method="GET",
+                )
+                with urllib.request.urlopen(req, timeout=5):
+                    return True
+            except Exception:
+                return False
+        return False
+
+    def refine(
+        self,
+        segments: list[TranscriptionSegment],
+        context: RefinementContext | None = None,
+    ) -> tuple[list[TranscriptionSegment], CorrectionLog]:
+        """Refine transcription segments using LLM corrections.
+
+        Processes segments in chunks, collects corrections from the LLM,
+        and applies them. On LLM failure, returns originals unchanged.
+
+        Args:
+            segments: Transcription segments to refine.
+            context: Optional context to guide corrections.
+
+        Returns:
+            Tuple of (corrected_segments, correction_log).
+        """
+        all_corrections: list[dict[str, str]] = []
+
+        for i in range(0, len(segments), self.chunk_size):
+            chunk = segments[i : i + self.chunk_size]
+            user_prompt = build_refinement_prompt(chunk, context=context)
+
+            try:
+                response = self._call_llm(REFINEMENT_SYSTEM_PROMPT, user_prompt)
+                corrections = parse_llm_corrections(response)
+                all_corrections.extend(corrections)
+            except Exception:
+                # On failure: if we have no corrections yet, return deep copy
+                # of originals. If partial corrections exist, apply what we have.
+                if not all_corrections:
+                    return copy.deepcopy(segments), CorrectionLog()
+                break
+
+        if not all_corrections:
+            return copy.deepcopy(segments), CorrectionLog()
+
+        return apply_corrections(segments, all_corrections)
+
+    def _call_llm(self, system_prompt: str, user_prompt: str) -> str:
+        """Dispatch LLM call to the configured provider.
+
+        Args:
+            system_prompt: System prompt for the LLM.
+            user_prompt: User prompt with transcript data.
+
+        Returns:
+            Raw response text from the LLM.
+
+        Raises:
+            Exception: On any API or connection error.
+        """
+        if self.config.provider == LLMProviderType.CLAUDE:
+            return self._call_claude(system_prompt, user_prompt)
+        elif self.config.provider == LLMProviderType.OPENAI:
+            return self._call_openai(system_prompt, user_prompt)
+        elif self.config.provider == LLMProviderType.OLLAMA:
+            return self._call_ollama(system_prompt, user_prompt)
+        else:
+            raise ValueError(f"Unsupported LLM provider: {self.config.provider}")
+
+    def _call_claude(self, system_prompt: str, user_prompt: str) -> str:
+        """Call Claude (Anthropic) API.
+
+        Args:
+            system_prompt: System prompt.
+            user_prompt: User prompt.
+
+        Returns:
+            Response text from Claude.
+        """
+        try:
+            from anthropic import Anthropic
+        except ImportError:
+            raise ImportError(
+                "anthropic package required for Claude provider. "
+                "Install with: pip install anthropic"
+            )
+
+        api_key = self.config.api_key or os.environ.get("ANTHROPIC_API_KEY")
+        client = Anthropic(api_key=api_key)
+        response = client.messages.create(
+            model=self.config.model,
+            max_tokens=self.config.max_tokens,
+            temperature=0.1,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        return response.content[0].text
+
+    def _call_openai(self, system_prompt: str, user_prompt: str) -> str:
+        """Call OpenAI API.
+
+        Args:
+            system_prompt: System prompt.
+            user_prompt: User prompt.
+
+        Returns:
+            Response text from OpenAI.
+        """
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise ImportError(
+                "openai package required for OpenAI provider. "
+                "Install with: pip install openai"
+            )
+
+        api_key = self.config.api_key or os.environ.get("OPENAI_API_KEY")
+        client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
+            model=self.config.model,
+            max_tokens=self.config.max_tokens,
+            temperature=0.1,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
+        return response.choices[0].message.content or ""
+
+    def _call_ollama(self, system_prompt: str, user_prompt: str) -> str:
+        """Call local Ollama server.
+
+        Args:
+            system_prompt: System prompt.
+            user_prompt: User prompt.
+
+        Returns:
+            Response text from Ollama.
+        """
+        payload = {
+            "model": self.config.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "stream": False,
+            "options": {
+                "temperature": 0.1,
+            },
+        }
+
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            "http://localhost:11434/api/chat",
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+
+        with urllib.request.urlopen(req, timeout=self.config.timeout) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            return result["message"]["content"]

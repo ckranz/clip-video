@@ -1,11 +1,15 @@
 """Tests for LLM transcript refinement prompt builder."""
 
 import json
+from unittest.mock import patch
 
+from clip_video.llm.base import LLMConfig, LLMProviderType
 from clip_video.transcription.base import TranscriptionSegment, TranscriptionWord
 from clip_video.transcription.llm_refine import (
+    DEFAULT_CHUNK_SIZE,
     REFINEMENT_SYSTEM_PROMPT,
     RefinementContext,
+    TranscriptRefiner,
     apply_corrections,
     build_refinement_prompt,
     parse_llm_corrections,
@@ -233,3 +237,128 @@ class TestApplyCorrections:
         assert len(segments[0].words) == original_word_count
         assert segments[0].words[0].word == original_first_word
         assert "cooper" in segments[0].text
+
+
+class TestTranscriptRefiner:
+    def _make_segments(self) -> list[TranscriptionSegment]:
+        return [
+            TranscriptionSegment(
+                text="Welcome to the talk on cooper netties.",
+                start=0.0,
+                end=3.0,
+                words=[
+                    TranscriptionWord(word="Welcome", start=0.0, end=0.5),
+                    TranscriptionWord(word="to", start=0.5, end=0.7),
+                    TranscriptionWord(word="the", start=0.7, end=0.9),
+                    TranscriptionWord(word="talk", start=0.9, end=1.2),
+                    TranscriptionWord(word="on", start=1.2, end=1.4),
+                    TranscriptionWord(word="cooper", start=1.4, end=1.8),
+                    TranscriptionWord(word="netties", start=1.8, end=2.2),
+                ],
+            ),
+            TranscriptionSegment(
+                text="Today we discuss go roo teens.",
+                start=3.0,
+                end=6.5,
+                words=[
+                    TranscriptionWord(word="Today", start=3.0, end=3.3),
+                    TranscriptionWord(word="we", start=3.3, end=3.5),
+                    TranscriptionWord(word="discuss", start=3.5, end=4.0),
+                    TranscriptionWord(word="go", start=4.0, end=4.3),
+                    TranscriptionWord(word="roo", start=4.3, end=4.6),
+                    TranscriptionWord(word="teens", start=4.6, end=5.0),
+                ],
+            ),
+        ]
+
+    def test_init_with_config(self):
+        config = LLMConfig(provider=LLMProviderType.CLAUDE, api_key="test-key")
+        refiner = TranscriptRefiner(config, chunk_size=10)
+        assert refiner.config is config
+        assert refiner.chunk_size == 10
+
+    def test_init_default_chunk_size(self):
+        config = LLMConfig(provider=LLMProviderType.CLAUDE)
+        refiner = TranscriptRefiner(config)
+        assert refiner.chunk_size == DEFAULT_CHUNK_SIZE
+
+    def test_refine_calls_llm_and_applies_corrections(self):
+        config = LLMConfig(provider=LLMProviderType.CLAUDE, api_key="test-key")
+        refiner = TranscriptRefiner(config)
+        segments = self._make_segments()
+
+        mock_response = json.dumps([
+            {"original": "cooper netties", "corrected": "Kubernetes", "reason": "Misheard product name"},
+            {"original": "go roo teens", "corrected": "goroutines", "reason": "Go concurrency term"},
+        ])
+
+        with patch.object(refiner, "_call_llm", return_value=mock_response) as mock_llm:
+            result, log = refiner.refine(segments)
+
+        mock_llm.assert_called_once()
+        assert "Kubernetes" in result[0].text
+        assert "cooper netties" not in result[0].text
+        assert "goroutines" in result[1].text
+        assert len(log) > 0
+
+    def test_refine_passes_context_to_prompt(self):
+        config = LLMConfig(provider=LLMProviderType.CLAUDE, api_key="test-key")
+        refiner = TranscriptRefiner(config)
+        segments = self._make_segments()
+        context = RefinementContext(
+            talk_title="Intro to K8s",
+            speaker_name="Jane Doe",
+        )
+
+        mock_response = "[]"
+        with patch.object(refiner, "_call_llm", return_value=mock_response) as mock_llm:
+            refiner.refine(segments, context=context)
+
+        # Verify the user prompt (second arg) contains the context
+        call_args = mock_llm.call_args
+        user_prompt = call_args[0][1]
+        assert "Intro to K8s" in user_prompt
+        assert "Jane Doe" in user_prompt
+
+    def test_refine_handles_empty_llm_response(self):
+        config = LLMConfig(provider=LLMProviderType.CLAUDE, api_key="test-key")
+        refiner = TranscriptRefiner(config)
+        segments = self._make_segments()
+
+        with patch.object(refiner, "_call_llm", return_value="[]"):
+            result, log = refiner.refine(segments)
+
+        # Should return deep copy of originals with no corrections
+        assert len(result) == len(segments)
+        assert result[0].text == segments[0].text
+        assert result[1].text == segments[1].text
+        assert len(log) == 0
+        # Verify it is a copy, not the same objects
+        assert result[0] is not segments[0]
+
+    def test_refine_handles_llm_error_gracefully(self):
+        config = LLMConfig(provider=LLMProviderType.CLAUDE, api_key="test-key")
+        refiner = TranscriptRefiner(config)
+        segments = self._make_segments()
+
+        with patch.object(refiner, "_call_llm", side_effect=Exception("API error")):
+            result, log = refiner.refine(segments)
+
+        # Should return deep copy of originals, never raise
+        assert len(result) == len(segments)
+        assert result[0].text == segments[0].text
+        assert result[1].text == segments[1].text
+        assert len(log) == 0
+        # Verify it is a copy
+        assert result[0] is not segments[0]
+
+    def test_refine_chunks_segments(self):
+        config = LLMConfig(provider=LLMProviderType.CLAUDE, api_key="test-key")
+        refiner = TranscriptRefiner(config, chunk_size=1)
+        segments = self._make_segments()
+
+        with patch.object(refiner, "_call_llm", return_value="[]") as mock_llm:
+            refiner.refine(segments)
+
+        # Should be called once per segment since chunk_size=1
+        assert mock_llm.call_count == 2
