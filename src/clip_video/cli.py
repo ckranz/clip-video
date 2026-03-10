@@ -491,6 +491,26 @@ def transcribe(
         bool,
         typer.Option("--yes", "-y", help="Skip cost confirmation prompt"),
     ] = False,
+    refine: Annotated[
+        Optional[bool],
+        typer.Option("--refine/--no-refine", help="Enable LLM refinement of transcript (fixes domain terms, grammar)"),
+    ] = None,
+    refine_provider: Annotated[
+        Optional[str],
+        typer.Option("--refine-provider", help="LLM provider for refinement (claude, openai, ollama)"),
+    ] = None,
+    refine_model: Annotated[
+        Optional[str],
+        typer.Option("--refine-model", help="LLM model for refinement"),
+    ] = None,
+    talk_title: Annotated[
+        Optional[str],
+        typer.Option("--talk-title", help="Talk title for LLM refinement context"),
+    ] = None,
+    talk_description: Annotated[
+        Optional[str],
+        typer.Option("--talk-description", help="Talk description for LLM refinement context"),
+    ] = None,
 ) -> None:
     """Transcribe videos for a brand.
 
@@ -709,6 +729,39 @@ def transcribe(
                 # Update full text
                 result.text = " ".join(seg.text for seg in result.segments)
                 result.vocabulary_corrections = len(correction_log)
+
+                # LLM refinement (if enabled)
+                should_refine = refine if refine is not None else config.refine_transcripts
+                if should_refine:
+                    from clip_video.transcription.llm_refine import TranscriptRefiner, RefinementContext
+                    from clip_video.llm.base import LLMConfig, LLMProviderType
+
+                    rp = refine_provider or config.llm_provider
+                    rm = refine_model or config.llm_model
+                    llm_config = LLMConfig(
+                        provider=LLMProviderType(rp),
+                        model=rm,
+                    )
+
+                    refiner = TranscriptRefiner(llm_config)
+
+                    if refiner.is_available():
+                        ctx = RefinementContext(
+                            talk_title=talk_title,
+                            talk_description=talk_description,
+                            vocabulary_terms=vocabulary.get_all_terms() if vocabulary else None,
+                        )
+
+                        console.print(f"[dim]Refining transcript with {rp}...[/dim]")
+                        refined_segments, refine_log = refiner.refine(result.segments, context=ctx)
+
+                        if len(refine_log) > 0:
+                            result.segments = refined_segments
+                            result.text = " ".join(seg.text for seg in result.segments)
+                            result.vocabulary_corrections += len(refine_log)
+                            console.print(f"[dim]LLM refinement: {len(refine_log)} corrections[/dim]")
+                    else:
+                        console.print(f"[yellow]Warning:[/yellow] LLM provider '{rp}' not available for refinement, skipping.")
 
                 # Save transcript
                 transcript_path = transcripts_dir / f"{video_path.stem}.json"
