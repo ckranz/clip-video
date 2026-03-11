@@ -17,6 +17,9 @@ clip-video --help
 # Refine existing transcripts with LLM post-correction
 clip-video refine BRAND --provider ollama
 
+# Re-burn captions on existing highlight clips after transcript refinement
+clip-video re-burn-captions BRAND
+
 # Run tests
 uv run pytest
 
@@ -181,6 +184,9 @@ Clips are skipped if output file already exists. Use `--update` flag to re-parse
 
 ### Transcript refinement backups
 The `refine` command (and `transcribe --refine`) creates backups before modifying transcripts. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.refine-YYYY-MM-DDTHHMMSS.json`), preserving the original and all intermediate versions.
+
+### Re-burn caption backups
+The `re-burn-captions` command backs up existing final clips before overwriting. The first run saves originals to `clips/backups/pre-reburn/`. Subsequent runs create timestamped backups (`clips/backups/reburn-YYYY-MM-DDTHHMMSS/`), following the same pattern as transcript refinement backups.
 
 ### Vocabulary alternatives
 The transcript index searches for both the canonical word and all alternatives defined in `config.vocabulary`. This catches common Whisper mistranscriptions.

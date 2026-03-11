@@ -305,6 +305,25 @@ clip-video refine KCD-UK --provider ollama --model llama3.2
 
 Backups are created automatically before refinement modifies any transcript. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.refine-YYYY-MM-DDTHHMMSS.json`), so you can always revert.
 
+### Re-burn captions on existing clips
+
+After refining transcripts, update captions on already-generated highlight clips:
+
+```bash
+# Re-burn captions for all projects in a brand
+clip-video re-burn-captions KCD-UK
+
+# Re-burn a specific project
+clip-video re-burn-captions KCD-UK --project "David Flanagan"
+```
+
+| Option | Description |
+|---|---|
+| `--project TEXT` | Filter to projects matching this substring |
+
+Previous final clips are backed up to `clips/backups/pre-reburn/` on first run,
+and `clips/backups/reburn-YYYY-MM-DDTHHMMSS/` on subsequent runs.
+
 ### Highlights Mode
 
 | Command                                     | Description                                    |
