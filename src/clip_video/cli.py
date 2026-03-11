@@ -2666,5 +2666,136 @@ def review_summary(
         console.print(video_table)
 
 
+@app.command()
+def re_burn_captions(
+    brand_name: Annotated[str, typer.Argument(help="Name of the brand to re-burn captions for")],
+    project: Annotated[
+        Optional[str],
+        typer.Option("--project", "-p", help="Filter projects by name substring (case-insensitive)"),
+    ] = None,
+) -> None:
+    """Re-burn captions on existing highlight clips using updated transcripts.
+
+    Backs up existing final clips, then re-burns captions using the current
+    transcript files without re-extracting or re-analyzing.
+    """
+    if not brand_exists(brand_name):
+        console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+        raise typer.Exit(1)
+
+    from clip_video.modes.highlights import HighlightsConfig, HighlightsProcessor, HighlightsProject
+    from clip_video.transcription.base import TranscriptionResult
+    from clip_video.llm.base import LLMConfig, LLMProviderType
+
+    config = load_brand_config(brand_name)
+    brand_path = get_brand_path(brand_name)
+    highlights_dir = brand_path / "highlights"
+    transcripts_dir = brand_path / "transcripts"
+
+    # Find all highlight projects
+    if not highlights_dir.exists():
+        console.print("[yellow]No highlight projects found.[/yellow]")
+        raise typer.Exit(0)
+
+    project_state_files = sorted(highlights_dir.glob("*/project_state.json"))
+
+    # Apply project name filter
+    if project:
+        project_state_files = [
+            f for f in project_state_files
+            if project.lower() in f.parent.name.lower()
+        ]
+
+    if not project_state_files:
+        console.print("[yellow]No highlight projects found.[/yellow]")
+        raise typer.Exit(0)
+
+    # Set up processor
+    llm_config = LLMConfig(provider=LLMProviderType(config.llm_provider), model=config.llm_model)
+    highlights_config = HighlightsConfig(llm_config=llm_config, brand_config=config)
+    processor = HighlightsProcessor(config=highlights_config)
+
+    console.print(f"[bold]Re-burning captions for brand '{brand_name}'[/bold]")
+    console.print(f"[dim]Projects: {len(project_state_files)}[/dim]")
+    console.print()
+
+    processed = 0
+    skipped = 0
+    failed = 0
+
+    for state_file in project_state_files:
+        project_name = state_file.parent.name
+        console.print(f"[bold]{project_name}[/bold]")
+
+        try:
+            proj = HighlightsProject.load(state_file)
+
+            # Find transcript
+            video_stem = Path(proj.video_path).stem
+            transcript_path = transcripts_dir / f"{video_stem}.json"
+
+            if not transcript_path.exists():
+                console.print(f"  [yellow]Transcript not found: {video_stem}.json - skipping[/yellow]")
+                skipped += 1
+                continue
+
+            transcript_result = TranscriptionResult.load(transcript_path)
+
+            # Back up existing final clips
+            backups_dir = proj.clips_dir / "backups"
+            pre_reburn_dir = backups_dir / "pre-reburn"
+
+            def _resolve_clip_path(clip_path: Path) -> Path:
+                """Resolve clip path relative to project root if not absolute."""
+                if clip_path.is_absolute():
+                    return clip_path
+                return proj.project_root / clip_path
+
+            if not pre_reburn_dir.exists():
+                pre_reburn_dir.mkdir(parents=True)
+                for clip in proj.clips:
+                    if clip.captioned_clip_path:
+                        src = _resolve_clip_path(clip.captioned_clip_path)
+                        if src.exists():
+                            shutil.copy2(src, pre_reburn_dir / src.name)
+                console.print(f"  [dim]Backed up to backups/pre-reburn/[/dim]")
+            else:
+                ts = datetime.now().strftime("%Y-%m-%dT%H%M%S")
+                ts_dir = backups_dir / f"reburn-{ts}"
+                ts_dir.mkdir(parents=True)
+                for clip in proj.clips:
+                    if clip.captioned_clip_path:
+                        src = _resolve_clip_path(clip.captioned_clip_path)
+                        if src.exists():
+                            shutil.copy2(src, ts_dir / src.name)
+                console.print(f"  [dim]Backed up to backups/reburn-{ts}/[/dim]")
+
+            # Clear captioned paths so burn_captions doesn't skip them
+            for clip in proj.clips:
+                clip.captioned_clip_path = None
+
+            # Burn captions with updated transcript
+            processor.burn_captions(proj, transcript_segments=transcript_result.segments)
+
+            # Save updated project state
+            proj.save()
+
+            console.print(f"  [green]Re-burned {len(proj.clips)} clips[/green]")
+            processed += 1
+
+        except Exception as e:
+            console.print(f"  [red]Error: {e}[/red]")
+            failed += 1
+            continue
+
+    console.print()
+    summary_lines = [f"[bold]Processed:[/bold] {processed}"]
+    if skipped:
+        summary_lines.append(f"[bold]Skipped:[/bold] {skipped}")
+    if failed:
+        summary_lines.append(f"[bold]Failed:[/bold] {failed}")
+    console.print(Panel("\n".join(summary_lines), title="Re-burn Summary"))
+
+
 if __name__ == "__main__":
     app()
