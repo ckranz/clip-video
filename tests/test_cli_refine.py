@@ -183,14 +183,14 @@ class TestRefineCommandFileFiltering:
             )
             mock_refine.return_value = (
                 _make_transcript().segments,
-                MagicMock(corrections=[]),
+                MagicMock(corrections=[MagicMock()]),  # 1 correction so file is refined
             )
             result = runner.invoke(app, ["refine", "mybrand", "--video", "keynote"])
 
         assert result.exit_code == 0
         assert "keynote.json" in result.output
-        # Only 1 file processed
-        assert "1 refined" in result.output or "Refined: 1" in result.output or "1" in result.output
+        assert mock_refine.call_count == 1
+        assert "Refined: 1" in result.output
 
 
 class TestRefineCommandBackups:

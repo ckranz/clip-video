@@ -180,7 +180,7 @@ Whisper sometimes returns words with identical start/end times. `SearchResult.fr
 Clips are skipped if output file already exists. Use `--update` flag to re-parse lyrics while keeping existing clips.
 
 ### Transcript refinement backups
-The `refine` command (and `transcribe --refine`) creates backups before modifying transcripts. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.pre-refine-YYYYMMDD-HHMMSS.json`), preserving the original and all intermediate versions.
+The `refine` command (and `transcribe --refine`) creates backups before modifying transcripts. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.refine-YYYY-MM-DDTHHMMSS.json`), preserving the original and all intermediate versions.
 
 ### Vocabulary alternatives
 The transcript index searches for both the canonical word and all alternatives defined in `config.vocabulary`. This catches common Whisper mistranscriptions.

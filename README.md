@@ -303,7 +303,7 @@ clip-video refine KCD-UK --provider ollama --model llama3.2
 | `--talk-title TEXT` | Talk title for context |
 | `--talk-description TEXT` | Talk description for context |
 
-Backups are created automatically before refinement modifies any transcript. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.pre-refine-YYYYMMDD-HHMMSS.json`), so you can always revert.
+Backups are created automatically before refinement modifies any transcript. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.refine-YYYY-MM-DDTHHMMSS.json`), so you can always revert.
 
 ### Highlights Mode
 
