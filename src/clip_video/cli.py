@@ -6,6 +6,8 @@ Uses Typer for a modern, type-hinted CLI experience.
 from __future__ import annotations
 
 import os
+import re
+import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Optional
@@ -796,6 +798,162 @@ def transcribe(
         f"Failed: [red]{failed}[/red]\n"
         f"Total processed: {summary['completed']}\n"
         + (f"Total cost: ${summary['total_cost_usd']:.2f} USD" if summary['total_cost_usd'] else ""),
+        title="Results",
+    ))
+
+
+@app.command()
+def refine(
+    brand_name: Annotated[str, typer.Argument(help="Name of the brand to refine transcripts for")],
+    video: Annotated[
+        Optional[str],
+        typer.Option("--video", "-v", help="Filter transcripts by video filename (substring match)"),
+    ] = None,
+    provider: Annotated[
+        Optional[str],
+        typer.Option("--provider", "-p", help="LLM provider for refinement (claude, openai, ollama)"),
+    ] = None,
+    model: Annotated[
+        Optional[str],
+        typer.Option("--model", "-m", help="LLM model for refinement"),
+    ] = None,
+    talk_title: Annotated[
+        Optional[str],
+        typer.Option("--talk-title", help="Talk title for LLM refinement context"),
+    ] = None,
+    talk_description: Annotated[
+        Optional[str],
+        typer.Option("--talk-description", help="Talk description for LLM refinement context"),
+    ] = None,
+) -> None:
+    """Refine existing transcripts using LLM post-correction.
+
+    Runs LLM refinement on transcript JSON files to fix domain-specific terms,
+    acronyms, proper nouns, and grammar. Backs up originals before overwriting.
+    """
+    if not brand_exists(brand_name):
+        console.print(f"[red]Error:[/red] Brand '{brand_name}' does not exist.")
+        raise typer.Exit(1)
+
+    from clip_video.transcription.base import TranscriptionResult
+    from clip_video.transcription.llm_refine import TranscriptRefiner, RefinementContext
+    from clip_video.llm.base import LLMConfig, LLMProviderType
+    from clip_video.vocabulary import VocabularyTerms
+
+    config = load_brand_config(brand_name)
+    brand_path = get_brand_path(brand_name)
+    transcripts_dir = brand_path / "transcripts"
+
+    if not transcripts_dir.exists():
+        console.print("[yellow]No transcripts directory found.[/yellow]")
+        raise typer.Exit(0)
+
+    # Collect transcript files, excluding dot files and backup files
+    transcript_files = []
+    for f in sorted(transcripts_dir.iterdir()):
+        if not f.is_file() or not f.suffix == ".json":
+            continue
+        # Exclude dot files (e.g., .progress.json)
+        if f.name.startswith("."):
+            continue
+        # Exclude backup files
+        if ".pre-refine." in f.name or re.search(r"\.refine-\d{4}-\d{2}-\d{2}T\d{6}\.json$", f.name):
+            continue
+        # Apply video filter if specified
+        if video and video.lower() not in f.stem.lower():
+            continue
+        transcript_files.append(f)
+
+    if not transcript_files:
+        if video:
+            console.print(f"[yellow]No transcript files found matching '{video}'.[/yellow]")
+        else:
+            console.print("[yellow]No transcript files found to refine.[/yellow]")
+        raise typer.Exit(0)
+
+    # Set up LLM provider
+    rp = provider or config.llm_provider
+    rm = model or config.llm_model
+    llm_config = LLMConfig(
+        provider=LLMProviderType(rp),
+        model=rm,
+    )
+    refiner = TranscriptRefiner(llm_config)
+
+    if not refiner.is_available():
+        console.print(f"[red]Error:[/red] LLM provider '{rp}' is not available.")
+        raise typer.Exit(1)
+
+    # Load vocabulary for context
+    vocabulary = VocabularyTerms(config.vocabulary) if config.vocabulary else None
+
+    # Build refinement context
+    ctx = RefinementContext(
+        talk_title=talk_title,
+        talk_description=talk_description,
+        vocabulary_terms=vocabulary.get_all_terms() if vocabulary else None,
+    )
+
+    console.print(f"[bold]Refining transcripts for brand '{brand_name}'[/bold]")
+    console.print(f"[dim]Provider: {rp} | Files: {len(transcript_files)}[/dim]")
+    console.print()
+
+    refined = 0
+    skipped = 0
+    failed = 0
+    total_corrections = 0
+
+    for transcript_path in transcript_files:
+        console.print(f"Processing [bold]{transcript_path.name}[/bold]...")
+
+        try:
+            result = TranscriptionResult.load(transcript_path)
+
+            refined_segments, refine_log = refiner.refine(result.segments, context=ctx)
+            num_corrections = len(refine_log.corrections) if hasattr(refine_log, 'corrections') else 0
+
+            if num_corrections == 0:
+                console.print(f"  [dim]No corrections needed[/dim]")
+                skipped += 1
+                continue
+
+            # Create backup before overwriting
+            stem = transcript_path.stem
+            pre_refine_backup = transcripts_dir / f"{stem}.pre-refine.json"
+
+            if not pre_refine_backup.exists():
+                # First run: save original as .pre-refine.json
+                shutil.copy2(transcript_path, pre_refine_backup)
+                console.print(f"  [dim]Backup: {pre_refine_backup.name}[/dim]")
+            else:
+                # Subsequent run: save timestamped backup
+                ts = datetime.now().strftime("%Y-%m-%dT%H%M%S")
+                timestamped_backup = transcripts_dir / f"{stem}.refine-{ts}.json"
+                shutil.copy2(transcript_path, timestamped_backup)
+                console.print(f"  [dim]Backup: {timestamped_backup.name}[/dim]")
+
+            # Apply refinement and save
+            result.segments = refined_segments
+            result.text = " ".join(seg.text for seg in result.segments)
+            result.vocabulary_corrections += num_corrections
+            result.save(transcript_path)
+
+            console.print(f"  [green]{num_corrections} corrections applied[/green]")
+            refined += 1
+            total_corrections += num_corrections
+
+        except Exception as e:
+            failed += 1
+            console.print(f"  [red]Error: {e}[/red]")
+
+    # Summary
+    console.print()
+    console.print(Panel(
+        f"[bold]Refinement Complete[/bold]\n\n"
+        f"Refined: [green]{refined}[/green]\n"
+        f"Skipped (no changes): [dim]{skipped}[/dim]\n"
+        f"Failed: [red]{failed}[/red]\n"
+        f"Total corrections: {total_corrections}",
         title="Results",
     ))
 

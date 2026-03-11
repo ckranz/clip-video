@@ -280,6 +280,31 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
 | `transcribe BRAND --refine --talk-title "..."` | Provide talk context for better corrections      |
 | `index-transcripts BRAND`                    | Rebuild search index                             |
 
+### Refine Existing Transcripts
+
+Run LLM refinement on already-transcribed videos without re-running Whisper:
+
+```bash
+# Refine all transcripts for a brand
+clip-video refine KCD-UK --provider claude
+
+# Refine a specific talk
+clip-video refine KCD-UK --video "David Flanagan" --talk-title "Extreme Microservices"
+
+# Use local Ollama (free)
+clip-video refine KCD-UK --provider ollama --model llama3.2
+```
+
+| Option | Description |
+|---|---|
+| `--video TEXT` | Filter to transcripts matching this substring |
+| `--provider TEXT` | LLM provider (claude, openai, ollama) |
+| `--model TEXT` | LLM model override |
+| `--talk-title TEXT` | Talk title for context |
+| `--talk-description TEXT` | Talk description for context |
+
+Backups are created automatically before refinement modifies any transcript. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.refine-YYYY-MM-DDTHHMMSS.json`), so you can always revert.
+
 ### Highlights Mode
 
 | Command                                     | Description                                    |

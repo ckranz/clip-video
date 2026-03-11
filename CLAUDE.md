@@ -14,6 +14,9 @@ This is a CLI tool for extracting video clips with two primary modes:
 # Run the CLI
 clip-video --help
 
+# Refine existing transcripts with LLM post-correction
+clip-video refine BRAND --provider ollama
+
 # Run tests
 uv run pytest
 
@@ -176,6 +179,9 @@ Whisper sometimes returns words with identical start/end times. `SearchResult.fr
 ### Idempotent clip extraction
 Clips are skipped if output file already exists. Use `--update` flag to re-parse lyrics while keeping existing clips.
 
+### Transcript refinement backups
+The `refine` command (and `transcribe --refine`) creates backups before modifying transcripts. The first run saves the original as `.pre-refine.json`. Subsequent runs create timestamped backups (`.refine-YYYY-MM-DDTHHMMSS.json`), preserving the original and all intermediate versions.
+
 ### Vocabulary alternatives
 The transcript index searches for both the canonical word and all alternatives defined in `config.vocabulary`. This catches common Whisper mistranscriptions.
 
@@ -220,9 +226,11 @@ Optional post-correction step using LLM to fix domain terms, acronyms, and gramm
 
 - Runs after vocabulary correction, before saving
 - Enabled via `--refine` CLI flag or `refine_transcripts` brand config
+- Standalone command: `clip-video refine BRAND` runs refinement on existing transcripts without re-transcribing
 - Uses the same LLM provider config as highlights mode (`llm_provider`, `llm_model`)
-- Override with `--refine-provider` and `--refine-model`
+- Override with `--provider` and `--model` on the `refine` command (or `--refine-provider` and `--refine-model` on `transcribe`)
 - Provide `--talk-title` and `--talk-description` for context-aware corrections
+- Backups created automatically before modifying transcripts (see Important Implementation Details)
 - Implementation: `src/clip_video/transcription/llm_refine.py`
 
 ## LLM Analysis (Highlights Mode)
