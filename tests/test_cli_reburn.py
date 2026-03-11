@@ -358,6 +358,33 @@ class TestReburnCaptionClearing:
         # All captioned_clip_path values should be None when burn_captions is called
         assert all(p is None for p in captured_projects[0])
 
+    def test_project_state_saved_after_burn(self, tmp_path):
+        """Project state is saved after a successful burn."""
+        brand_path = _setup_brand_with_project(tmp_path)
+        state_file = brand_path / "highlights" / "talk1-highlights" / "project_state.json"
+        original_state = json.loads(state_file.read_text())
+        original_updated_at = original_state["updated_at"]
+
+        with (
+            patch("clip_video.cli.brand_exists", return_value=True),
+            patch("clip_video.cli.get_brand_path", return_value=brand_path),
+            patch("clip_video.cli.load_brand_config") as mock_config,
+            patch("clip_video.modes.highlights.HighlightsProcessor.burn_captions") as mock_burn,
+        ):
+            mock_config.return_value = MagicMock(
+                llm_provider="ollama",
+                llm_model="llama3.2",
+            )
+            mock_burn.return_value = []
+            result = runner.invoke(app, ["re-burn-captions", "testbrand"])
+
+        assert result.exit_code == 0
+        saved_state = json.loads(state_file.read_text())
+        assert saved_state["updated_at"] != original_updated_at
+        # captioned_clip_path should be None since mock doesn't set them back
+        for clip in saved_state["clips"]:
+            assert clip["captioned_clip_path"] is None
+
 
 class TestReburnErrorHandling:
     """Tests for error handling during re-burn."""
