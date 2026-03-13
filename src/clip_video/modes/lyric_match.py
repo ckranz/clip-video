@@ -629,12 +629,11 @@ class LyricMatchProcessor:
 
                 from clip_video.lyrics.fuzzy import FuzzyWordExpander
                 from clip_video.llm.base import LLMConfig, LLMProviderType
-                from clip_video.config import BrandConfig
+                from clip_video.config import load_brand_config, BrandConfig
 
-                config_path = self.brand_path / "config.json"
-                if config_path.exists():
-                    brand_config = BrandConfig(**json.loads(config_path.read_text(encoding="utf-8")))
-                else:
+                try:
+                    brand_config = load_brand_config(self.brand_name)
+                except FileNotFoundError:
                     brand_config = BrandConfig(name=self.brand_name)
                 llm_config = LLMConfig(
                     provider=LLMProviderType(brand_config.llm_provider),
@@ -707,8 +706,15 @@ class LyricMatchProcessor:
             if progress_callback:
                 progress_callback(target.text, i + 1, total)
 
-            # Get search results for this target
+            # Get search results for this target (or its alternatives)
             results = search_results.get(target.text)
+            if not results or not results.results:
+                # Fall back to checking alternatives
+                for alt in target.alternatives:
+                    alt_results = search_results.get(alt)
+                    if alt_results and alt_results.results:
+                        results = alt_results
+                        break
             if not results or not results.results:
                 continue
 
