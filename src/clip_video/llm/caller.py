@@ -63,7 +63,7 @@ class LLMCaller:
         response = client.messages.create(
             model=self.config.model,
             max_tokens=self.config.max_tokens,
-            temperature=0.1,
+            temperature=self.config.temperature,
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}],
         )
@@ -81,7 +81,7 @@ class LLMCaller:
         response = client.chat.completions.create(
             model=self.config.model,
             max_tokens=self.config.max_tokens,
-            temperature=0.1,
+            temperature=self.config.temperature,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -98,7 +98,7 @@ class LLMCaller:
             ],
             "stream": False,
             "options": {
-                "temperature": 0.1,
+                "temperature": self.config.temperature,
             },
         }
 

@@ -88,7 +88,7 @@ class TestLLMCallerClaude:
         mock_client.messages.create.assert_called_once_with(
             model="claude-sonnet-4-5-20250929",
             max_tokens=1024,
-            temperature=0.1,
+            temperature=0.3,
             system="be helpful",
             messages=[{"role": "user", "content": "what is 2+2"}],
         )
@@ -145,7 +145,7 @@ class TestLLMCallerOpenAI:
         mock_client.chat.completions.create.assert_called_once_with(
             model="gpt-4.1",
             max_tokens=2048,
-            temperature=0.1,
+            temperature=0.3,
             messages=[
                 {"role": "system", "content": "be helpful"},
                 {"role": "user", "content": "what is 2+2"},
