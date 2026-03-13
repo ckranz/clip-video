@@ -1471,6 +1471,10 @@ def lyric_match(
         bool,
         typer.Option("--yes", "-y", help="Skip confirmation prompts"),
     ] = False,
+    no_fuzzy: Annotated[
+        bool,
+        typer.Option("--no-fuzzy", help="Disable LLM fuzzy matching for missing words"),
+    ] = False,
 ) -> None:
     """Start a lyric match project.
 
@@ -1517,6 +1521,7 @@ def lyric_match(
         max_candidates_per_target=max_candidates,
         extract_words=not no_words,
         extract_phrases=not no_phrases,
+        fuzzy_matching=not no_fuzzy,
     )
 
     # Initialize processor
@@ -1598,7 +1603,14 @@ def lyric_match(
         def search_progress(target: str, current: int, total: int):
             progress_bar.update(task, completed=current, description=f"Searching: {target[:30]}...")
 
-        search_results = processor.search_all(project, progress_callback=search_progress)
+        def fuzzy_progress(count: int):
+            console.print(f"\n[cyan]Generating fuzzy alternatives for {count} missing words...[/cyan]")
+
+        search_results = processor.search_all(
+            project,
+            progress_callback=search_progress,
+            fuzzy_callback=fuzzy_progress,
+        )
 
     # Count found targets
     found_targets = sum(1 for r in search_results.values() if r.results)

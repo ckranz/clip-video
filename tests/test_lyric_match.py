@@ -3,6 +3,7 @@
 import pytest
 from pathlib import Path
 from datetime import datetime
+from unittest.mock import patch, MagicMock
 
 from clip_video.modes.lyric_match import (
     LyricMatchConfig,
@@ -11,6 +12,7 @@ from clip_video.modes.lyric_match import (
     LyricMatchProcessor,
 )
 from clip_video.lyrics.phrases import ExtractionTarget, ExtractionList
+from clip_video.search import SearchResults
 
 
 class TestLyricMatchConfig:
@@ -30,6 +32,15 @@ class TestLyricMatchConfig:
         assert config.min_phrase_words == 2
         assert config.max_phrase_words == 5
         assert config.shuffle_candidates is True  # For variety across videos
+        assert config.fuzzy_matching is True
+
+    def test_default_fuzzy_matching_enabled(self):
+        config = LyricMatchConfig()
+        assert config.fuzzy_matching is True
+
+    def test_fuzzy_matching_can_be_disabled(self):
+        config = LyricMatchConfig(fuzzy_matching=False)
+        assert config.fuzzy_matching is False
 
 
 class TestLineClipSet:
@@ -416,3 +427,135 @@ We are singing along""")
         # Save report
         report_path = processor.save_report(project)
         assert report_path.exists()
+
+
+def _make_project_with_targets(tmp_path, targets, brand_name="test_brand"):
+    """Helper to create a project with specific extraction targets."""
+    brand_path = tmp_path / brand_name
+    brand_path.mkdir(parents=True, exist_ok=True)
+
+    extraction_list = ExtractionList(
+        lyrics_file=None,
+        title=None,
+        artist=None,
+        targets_by_line={
+            1: targets,
+        },
+    )
+
+    project = LyricMatchProject(
+        name="test_project",
+        brand_name=brand_name,
+        lyrics_file=Path("/fake/lyrics.txt"),
+        extraction_list=extraction_list,
+        line_clip_sets=[
+            LineClipSet(
+                line_number=1,
+                line_text="test line",
+                targets=list(targets),
+            )
+        ],
+    )
+    project._project_root = tmp_path / brand_name / "projects" / "test_project"
+    return project
+
+
+class TestSearchAllFuzzyMatching:
+    """Tests for fuzzy matching integration in search_all."""
+
+    @patch("clip_video.lyrics.fuzzy.FuzzyWordExpander")
+    def test_fuzzy_expands_missing_words(self, MockExpander, tmp_path):
+        expander_instance = MockExpander.return_value
+        expander_instance.expand.return_value = {"hello": ["hallo"], "world": ["whirled"]}
+
+        targets = [
+            ExtractionTarget(text="hello", source_line=1, source_text="hello world"),
+            ExtractionTarget(text="world", source_line=1, source_text="hello world"),
+        ]
+        project = _make_project_with_targets(tmp_path, targets)
+
+        config = LyricMatchConfig(fuzzy_matching=True)
+        processor = LyricMatchProcessor("test_brand", brands_root=tmp_path, config=config)
+
+        processor.search_all(project)
+
+        expander_instance.expand.assert_called_once()
+        called_words = expander_instance.expand.call_args[0][0]
+        assert "hello" in called_words
+        assert "world" in called_words
+
+    @patch("clip_video.lyrics.fuzzy.FuzzyWordExpander")
+    def test_fuzzy_skipped_when_disabled(self, MockExpander, tmp_path):
+        targets = [
+            ExtractionTarget(text="hello", source_line=1, source_text="hello"),
+        ]
+        project = _make_project_with_targets(tmp_path, targets)
+
+        config = LyricMatchConfig(fuzzy_matching=False)
+        processor = LyricMatchProcessor("test_brand", brands_root=tmp_path, config=config)
+
+        processor.search_all(project)
+
+        MockExpander.assert_not_called()
+
+    @patch("clip_video.lyrics.fuzzy.FuzzyWordExpander")
+    def test_fuzzy_adds_alternatives_to_targets(self, MockExpander, tmp_path):
+        expander_instance = MockExpander.return_value
+        expander_instance.expand.return_value = {"hello": ["hallo", "hullo"]}
+
+        targets = [
+            ExtractionTarget(text="hello", source_line=1, source_text="hello"),
+        ]
+        project = _make_project_with_targets(tmp_path, targets)
+
+        config = LyricMatchConfig(fuzzy_matching=True)
+        processor = LyricMatchProcessor("test_brand", brands_root=tmp_path, config=config)
+
+        processor.search_all(project)
+
+        # Check alternatives were added to the target in the project
+        target = project.line_clip_sets[0].targets[0]
+        assert "hallo" in target.alternatives
+        assert "hullo" in target.alternatives
+
+    @patch("clip_video.lyrics.fuzzy.FuzzyWordExpander")
+    def test_fuzzy_skipped_when_no_missing_words(self, MockExpander, tmp_path):
+        """When all words have search results, fuzzy expansion is skipped."""
+        targets = [
+            ExtractionTarget(text="hello", source_line=1, source_text="hello"),
+        ]
+        project = _make_project_with_targets(tmp_path, targets)
+        # Pre-populate clips so the word is "found"
+        project.line_clip_sets[0].clips["hello"] = [Path("/clips/hello.mp4")]
+
+        config = LyricMatchConfig(fuzzy_matching=True)
+        processor = LyricMatchProcessor("test_brand", brands_root=tmp_path, config=config)
+
+        # Mock the searcher to return results for "hello"
+        mock_results = MagicMock(spec=SearchResults)
+        mock_results.results = [MagicMock()]
+        processor.searcher.search = MagicMock(return_value=mock_results)
+
+        processor.search_all(project)
+
+        MockExpander.assert_not_called()
+
+    @patch("clip_video.lyrics.fuzzy.FuzzyWordExpander")
+    def test_fuzzy_skips_words_with_existing_alternatives(self, MockExpander, tmp_path):
+        expander_instance = MockExpander.return_value
+        expander_instance.expand.return_value = {"world": ["whirled"]}
+
+        targets = [
+            ExtractionTarget(text="hello", source_line=1, source_text="hello world", alternatives=["hallo"]),
+            ExtractionTarget(text="world", source_line=1, source_text="hello world"),
+        ]
+        project = _make_project_with_targets(tmp_path, targets)
+
+        config = LyricMatchConfig(fuzzy_matching=True)
+        processor = LyricMatchProcessor("test_brand", brands_root=tmp_path, config=config)
+
+        processor.search_all(project)
+
+        called_words = expander_instance.expand.call_args[0][0]
+        assert "hello" not in called_words
+        assert "world" in called_words

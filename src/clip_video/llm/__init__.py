@@ -16,6 +16,7 @@ from clip_video.llm.base import (
 from clip_video.llm.claude import ClaudeLLM
 from clip_video.llm.openai import OpenAILLM
 from clip_video.llm.ollama import OllamaLLM
+from clip_video.llm.caller import LLMCaller
 from clip_video.llm.prompts import HighlightPromptBuilder
 
 __all__ = [
@@ -29,5 +30,6 @@ __all__ = [
     "ClaudeLLM",
     "OpenAILLM",
     "OllamaLLM",
+    "LLMCaller",
     "HighlightPromptBuilder",
 ]

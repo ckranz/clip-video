@@ -51,6 +51,7 @@ class LyricMatchConfig:
     min_phrase_words: int = 2
     max_phrase_words: int = 5
     shuffle_candidates: bool = True  # Shuffle to get variety across videos
+    fuzzy_matching: bool = True  # LLM-powered fuzzy alternatives for missing words
 
 
 @dataclass
@@ -547,12 +548,14 @@ class LyricMatchProcessor:
         self,
         project: LyricMatchProject,
         progress_callback: Callable[[str, int, int], None] | None = None,
+        fuzzy_callback: Callable[[int], None] | None = None,
     ) -> dict[str, SearchResults]:
         """Search for all targets in the project.
 
         Args:
             project: Project to search for
             progress_callback: Optional callback(target, current, total)
+            fuzzy_callback: Optional callback(count) called before fuzzy expansion
 
         Returns:
             Dict mapping target text to SearchResults
@@ -602,6 +605,70 @@ class LyricMatchProcessor:
                         alt_results.total_count = len(alt_results.results)
                     all_results[alt] = alt_results
 
+        # Fuzzy matching second pass
+        if self.config.fuzzy_matching:
+            # Find missing single-word targets with no results and no existing alternatives
+            seen = set()
+            missing_words = []
+            for target in targets:
+                if target.is_phrase:
+                    continue
+                if target.text in seen:
+                    continue
+                seen.add(target.text)
+                if target.alternatives:
+                    continue
+                results = all_results.get(target.text)
+                if results and results.results:
+                    continue
+                missing_words.append(target.text)
+
+            if missing_words:
+                if fuzzy_callback:
+                    fuzzy_callback(len(missing_words))
+
+                from clip_video.lyrics.fuzzy import FuzzyWordExpander
+                from clip_video.llm.base import LLMConfig, LLMProviderType
+                from clip_video.config import load_brand_config, BrandConfig
+
+                try:
+                    brand_config = load_brand_config(self.brand_name)
+                except FileNotFoundError:
+                    brand_config = BrandConfig(name=self.brand_name)
+                llm_config = LLMConfig(
+                    provider=LLMProviderType(brand_config.llm_provider),
+                    model=brand_config.llm_model,
+                )
+                expander = FuzzyWordExpander(llm_config)
+                expansions = expander.expand(missing_words)
+
+                # Add alternatives to targets and re-search
+                for lcs in project.line_clip_sets:
+                    for target in lcs.targets:
+                        if target.text in expansions:
+                            new_alts = expansions[target.text]
+                            target.alternatives.extend(
+                                alt for alt in new_alts if alt not in target.alternatives
+                            )
+
+                # Search the new alternatives
+                for word, alts in expansions.items():
+                    for alt in alts:
+                        if alt not in all_results:
+                            alt_results = self.searcher.search(
+                                alt,
+                                max_results=self.config.max_candidates_per_target * 5,
+                            )
+                            if self.config.shuffle_candidates and alt_results.results:
+                                shuffled = list(alt_results.results)
+                                random.shuffle(shuffled)
+                                alt_results.results = shuffled[:self.config.max_candidates_per_target]
+                                alt_results.total_count = len(alt_results.results)
+                            all_results[alt] = alt_results
+
+                # Persist the new alternatives
+                project.save()
+
         return all_results
 
     def extract_candidates(
@@ -639,8 +706,15 @@ class LyricMatchProcessor:
             if progress_callback:
                 progress_callback(target.text, i + 1, total)
 
-            # Get search results for this target
+            # Get search results for this target (or its alternatives)
             results = search_results.get(target.text)
+            if not results or not results.results:
+                # Fall back to checking alternatives
+                for alt in target.alternatives:
+                    alt_results = search_results.get(alt)
+                    if alt_results and alt_results.results:
+                        results = alt_results
+                        break
             if not results or not results.results:
                 continue
 
