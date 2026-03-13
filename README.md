@@ -344,6 +344,7 @@ and `clips/backups/reburn-YYYY-MM-DDTHHMMSS/` on subsequent runs.
 | `lyric-match BRAND NAME FILE` | Create/run lyric match project |
 | `lyric-match ... --update`    | Update with new lyrics         |
 | `lyric-match ... --resume`    | Resume existing project        |
+| `lyric-match ... --no-fuzzy`  | Disable LLM fuzzy matching     |
 
 ### Utilities
 
@@ -424,9 +425,10 @@ clip-video check-deps
 
 ### Missing words in lyric match
 
-- Check `coverage_report.md` for missing words
+- Fuzzy matching automatically generates alternatives for missing words via LLM (e.g. "gonna" matches "going to")
+- Check `coverage_report.md` for remaining missing words
 - Add more source videos, or modify lyrics to use available words
-- Some words may need manual recording
+- Disable fuzzy matching with `--no-fuzzy` if needed
 
 ### Transcription errors
 

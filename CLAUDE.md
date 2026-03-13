@@ -55,7 +55,8 @@ clip-video/
 │   │
 │   ├── lyrics/
 │   │   ├── parser.py        # Lyrics file parser (sections, phrases, repeats)
-│   │   └── phrases.py       # Phrase extraction and subphrase generation
+│   │   ├── phrases.py       # Phrase extraction and subphrase generation
+│   │   └── fuzzy.py         # LLM-powered fuzzy word alternatives
 │   │
 │   ├── search.py            # Brand-wide search across transcripts
 │   ├── selection.py         # Clip selection tracking
@@ -98,7 +99,7 @@ Video → Transcribe (Whisper local/API) → Vocabulary Correction → LLM Refin
 
 **Lyric Match Mode:**
 ```
-Lyrics file → Parse → Extract targets → Search transcripts → Extract clips per word/phrase
+Lyrics file → Parse → Extract targets → Search transcripts → Fuzzy expand missing words (LLM) → Re-search alternatives → Extract clips per word/phrase
 ```
 
 ## Key Files to Understand
@@ -258,6 +259,18 @@ To use Ollama (free local inference):
 3. Pull a model: `ollama pull llama3.2`
 4. Run highlights: `clip-video highlights BRAND VIDEO --llm-provider ollama`
 
+## Fuzzy Word Matching (Lyric Match Mode)
+
+Automatically generates phonetic and semantic alternatives for missing lyric words using the configured LLM provider.
+
+- Enabled by default. Disable with `--no-fuzzy` flag on the `lyric-match` command
+- Only applies to single words (not phrases), and only for words with no exact match
+- Uses the same LLM provider config as highlights mode (`llm_provider`, `llm_model` in brand config)
+- Alternatives are cached in `ExtractionTarget.alternatives` (persisted in `project.json`), so the LLM is only called once per missing word
+- Words that already have alternatives from a previous run are not sent to the LLM again
+- LLM failure is non-fatal: if the call fails, search continues with exact matches only
+- Implementation: `src/clip_video/lyrics/fuzzy.py`
+
 ## Common Issues
 
 ### "End time must be after start time"
@@ -268,6 +281,7 @@ Check `coverage_report.md`. Options:
 - Add more source videos
 - Modify lyrics to use available words
 - Add vocabulary alternatives for mistranscribed words
+- Fuzzy matching generates alternatives automatically (disable with `--no-fuzzy` if needed)
 
 ### FFmpeg not found
 Run `clip-video check-deps`. FFmpeg auto-downloads on first video operation.
