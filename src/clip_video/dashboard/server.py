@@ -164,13 +164,32 @@ def create_app(brand_name: str, brands_root: Path) -> FastAPI:
         return _clip_to_dict(clip, project.name, brand_path)
 
     @app.post("/api/clips/{clip_id}/schedule")
-    def schedule_clip(clip_id: str, body: ScheduleRequest) -> dict[str, Any]:
+    async def schedule_clip(clip_id: str, body: ScheduleRequest) -> dict[str, Any]:
         project, clip = _find_clip(brand_path, clip_id)
         if project is None or clip is None:
             raise HTTPException(status_code=404, detail=f"Clip {clip_id} not found")
         clip.schedule.append(ScheduleEntry(platform=body.platform, date=body.date))
         if clip.status != ClipStatus.SCHEDULED:
             clip.status = ClipStatus.SCHEDULED
+
+        if body.platform == "youtube" and not clip.landscape_clip_path:
+            task_id = task_queue.submit(
+                "landscape", target=clip_id,
+                description=f"Generating landscape clip for {clip_id}",
+            )
+
+            async def run_landscape() -> None:
+                from clip_video.dashboard.reprocess import generate_landscape_clip
+                try:
+                    task_queue.update(task_id, status=TaskStatus.RUNNING)
+                    await asyncio.to_thread(generate_landscape_clip, project, clip)
+                    project.save()
+                    task_queue.update(task_id, status=TaskStatus.COMPLETED, progress=100.0)
+                except Exception as e:
+                    task_queue.update(task_id, status=TaskStatus.FAILED, error=str(e))
+
+            asyncio.create_task(run_landscape())
+
         project.save()
         return _clip_to_dict(clip, project.name, brand_path)
 

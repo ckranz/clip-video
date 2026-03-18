@@ -106,6 +106,7 @@ class HighlightClip:
     raw_clip_path: Path | None = None
     portrait_clip_path: Path | None = None
     captioned_clip_path: Path | None = None
+    landscape_clip_path: Path | None = None
     metadata: dict = field(default_factory=dict)
     created_at: str = ""
     status: ClipStatus = ClipStatus.NEW
@@ -129,6 +130,7 @@ class HighlightClip:
             "raw_clip_path": str(self.raw_clip_path) if self.raw_clip_path else None,
             "portrait_clip_path": str(self.portrait_clip_path) if self.portrait_clip_path else None,
             "captioned_clip_path": str(self.captioned_clip_path) if self.captioned_clip_path else None,
+            "landscape_clip_path": str(self.landscape_clip_path) if self.landscape_clip_path else None,
             "metadata": self.metadata,
             "created_at": self.created_at,
             "status": self.status.value,
@@ -145,6 +147,7 @@ class HighlightClip:
             raw_clip_path=Path(data["raw_clip_path"]) if data.get("raw_clip_path") else None,
             portrait_clip_path=Path(data["portrait_clip_path"]) if data.get("portrait_clip_path") else None,
             captioned_clip_path=Path(data["captioned_clip_path"]) if data.get("captioned_clip_path") else None,
+            landscape_clip_path=Path(data["landscape_clip_path"]) if data.get("landscape_clip_path") else None,
             metadata=data.get("metadata", {}),
             created_at=data.get("created_at", ""),
             status=ClipStatus(data.get("status", "new")),

@@ -5,7 +5,7 @@ from typing import Callable
 
 from clip_video.catalogue import load_catalogue
 from clip_video.captions.renderer import CaptionRenderer, CaptionTrack
-from clip_video.modes.highlights import HighlightsProject
+from clip_video.modes.highlights import HighlightClip, HighlightsProject
 from clip_video.video.portrait import PortraitConfig, PortraitConverter
 
 # Maps speaker position to crop_x_offset (0.0=left edge, 1.0=right edge)
@@ -76,3 +76,40 @@ def reprocess_video_clips(
             progress_callback((i + 1) / total * 100)
 
     project.save()
+
+
+def generate_landscape_clip(
+    project: HighlightsProject,
+    clip: HighlightClip,
+) -> Path:
+    """Generate a landscape clip with captions (no portrait crop) for YouTube."""
+    renderer = CaptionRenderer()
+
+    source_path = clip.raw_clip_path
+    if not source_path or not Path(source_path).exists():
+        raise ValueError(f"Raw clip not found: {source_path}")
+
+    landscape_dir = project.clips_dir / "landscape"
+    landscape_dir.mkdir(parents=True, exist_ok=True)
+    output_path = landscape_dir / f"{clip.clip_id}_landscape.mp4"
+
+    if output_path.exists():
+        clip.landscape_clip_path = output_path
+        return output_path
+
+    caption_track = CaptionTrack()
+    if clip.segment.hook_text:
+        caption_track.add_caption(
+            text=clip.segment.hook_text,
+            start_time=0.0,
+            end_time=min(3.0, clip.segment.duration),
+        )
+
+    renderer.render(
+        input_path=source_path,
+        output_path=output_path,
+        caption_track=caption_track,
+    )
+
+    clip.landscape_clip_path = output_path
+    return output_path
