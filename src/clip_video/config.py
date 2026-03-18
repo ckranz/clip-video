@@ -114,6 +114,8 @@ class BrandConfig(BaseModel):
     llm_model: str | None = None  # None = use provider default (e.g., claude-sonnet-4-5, gpt-4.1, llama3.2)
     # LLM transcript refinement (post-correction)
     refine_transcripts: bool = False
+    # Social media platforms to target for highlights
+    social_platforms: list[str] = Field(default_factory=lambda: ["linkedin"])
 
     def get_crop_x_offset(self, source_width: int) -> float:
         """Calculate crop X offset, handling pixel-based config.

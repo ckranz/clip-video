@@ -31,6 +31,7 @@ from clip_video.config import (
     BrandConfig,
     brand_exists,
     get_brand_path,
+    get_brands_root,
     list_brands,
     load_brand_config,
     save_brand_config,
@@ -2807,6 +2808,31 @@ def re_burn_captions(
     if failed:
         summary_lines.append(f"[bold]Failed:[/bold] {failed}")
     console.print(Panel("\n".join(summary_lines), title="Re-burn Summary"))
+
+
+@app.command()
+def dashboard(
+    brand_name: Annotated[str, typer.Argument(help="Brand to manage")],
+    port: Annotated[int, typer.Option("--port", "-p", help="Server port")] = 8080,
+    no_open: Annotated[bool, typer.Option("--no-open", help="Don't open browser")] = False,
+) -> None:
+    """Open the highlights review dashboard in a browser."""
+    import uvicorn
+    import webbrowser
+    from clip_video.dashboard.server import create_app
+
+    if not brand_exists(brand_name):
+        console.print(f"[red]Error: Brand '{brand_name}' not found[/red]")
+        raise typer.Exit(1)
+
+    app_instance = create_app(brand_name=brand_name, brands_root=get_brands_root())
+    url = f"http://localhost:{port}"
+    console.print(f"Starting dashboard at [link={url}]{url}[/link]")
+
+    if not no_open:
+        webbrowser.open(url)
+
+    uvicorn.run(app_instance, host="127.0.0.1", port=port, log_level="warning")
 
 
 if __name__ == "__main__":

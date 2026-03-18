@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>clip-video dashboard</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+  <div id="app">
+    <!-- Header -->
+    <header class="border-b border-gray-800 px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img v-if="brand.logo_url" :src="brand.logo_url" class="h-8" alt="Brand logo">
+        <h1 class="text-xl font-semibold">{{ brand.name || 'Dashboard' }}</h1>
+      </div>
+      <nav class="flex gap-1">
+        <button v-for="tab in tabs" :key="tab.id"
+          @click="currentTab = tab.id"
+          :class="['px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+            currentTab === tab.id
+              ? 'bg-gray-800 text-white'
+              : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50']">
+          {{ tab.label }}
+          <span v-if="tab.id === 'tasks' && activeTaskCount > 0"
+            class="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-blue-600 text-white">
+            {{ activeTaskCount }}
+          </span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="p-6">
+      <review-view v-if="currentTab === 'review'" :brand="brand" />
+      <schedule-view v-if="currentTab === 'schedule'" :brand="brand" />
+      <tasks-view v-if="currentTab === 'tasks'" @task-count="activeTaskCount = $event" />
+    </main>
+    <toast-container />
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
