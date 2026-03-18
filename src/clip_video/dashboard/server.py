@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from clip_video.catalogue import load_catalogue, save_catalogue
-from clip_video.dashboard.tasks import TaskQueue
+from clip_video.dashboard.tasks import TaskQueue, TaskStatus
 from clip_video.modes.highlights import ClipStatus, HighlightClip, HighlightsProject, ScheduleEntry
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -215,6 +215,48 @@ def create_app(brand_name: str, brands_root: Path) -> FastAPI:
                         "hook_text": clip.segment.hook_text,
                     })
         return entries
+
+    @app.post("/api/videos/{filename}/reprocess")
+    async def reprocess_video(filename: str) -> dict[str, str]:
+        highlights_dir = brand_path / "highlights"
+        if not highlights_dir.exists():
+            raise HTTPException(status_code=404, detail="No highlights found")
+
+        project = None
+        for proj_dir in highlights_dir.iterdir():
+            state_file = proj_dir / "project_state.json"
+            if not state_file.exists():
+                continue
+            p = HighlightsProject.load(state_file)
+            if Path(p.video_path).name == filename:
+                project = p
+                break
+
+        if project is None:
+            raise HTTPException(status_code=404, detail=f"No project found for {filename}")
+
+        task_id = task_queue.submit(
+            "reprocess", target=filename,
+            description=f"Reprocessing clips for {filename}",
+        )
+
+        async def run_reprocess() -> None:
+            from clip_video.dashboard.reprocess import reprocess_video_clips
+            try:
+                task_queue.update(task_id, status=TaskStatus.RUNNING)
+
+                def on_progress(pct: float) -> None:
+                    task_queue.update(task_id, progress=pct)
+
+                await asyncio.to_thread(
+                    reprocess_video_clips, project, brand_path / "videos.json", on_progress
+                )
+                task_queue.update(task_id, status=TaskStatus.COMPLETED, progress=100.0)
+            except Exception as e:
+                task_queue.update(task_id, status=TaskStatus.FAILED, error=str(e))
+
+        asyncio.create_task(run_reprocess())
+        return {"task_id": task_id}
 
     @app.get("/api/tasks")
     def list_tasks() -> list[dict[str, Any]]:
