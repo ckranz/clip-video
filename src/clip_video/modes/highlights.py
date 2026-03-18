@@ -533,6 +533,18 @@ class HighlightsProcessor:
         project.final_clips_dir.mkdir(parents=True, exist_ok=True)
         project.metadata_dir.mkdir(parents=True, exist_ok=True)
 
+        # Auto-scaffold video catalogue if it doesn't exist
+        from clip_video.catalogue import load_catalogue, save_catalogue, scaffold_catalogue
+        from clip_video.config import get_brand_path
+
+        brand_path = get_brand_path(brand_name)
+        catalogue_path = brand_path / "videos.json"
+        videos_dir = brand_path / "videos"
+        if videos_dir.exists():
+            existing = load_catalogue(catalogue_path)
+            updated = scaffold_catalogue(videos_dir, existing=existing)
+            save_catalogue(catalogue_path, updated)
+
         project.save()
         return project
 
