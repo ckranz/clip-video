@@ -70,6 +70,7 @@ def _clip_to_dict(clip: HighlightClip, project_name: str, brand_path: Path) -> d
         "raw_path": f"{highlights_prefix}/raw/{clip.clip_id}.mp4",
         "portrait_path": f"{highlights_prefix}/portrait/{clip.clip_id}_portrait.mp4",
         "final_path": f"{highlights_prefix}/final/{clip.clip_id}_final.mp4",
+        "thumbnail_url": f"/api/clips/{clip.clip_id}/thumbnail",
     }
 
 
@@ -276,6 +277,31 @@ def create_app(brand_name: str, brands_root: Path) -> FastAPI:
 
         asyncio.create_task(run_reprocess())
         return {"task_id": task_id}
+
+    @app.get("/api/clips/{clip_id}/thumbnail")
+    def get_thumbnail(clip_id: str) -> FileResponse:
+        """Get or generate a thumbnail for a clip."""
+        project, clip = _find_clip(brand_path, clip_id)
+        if project is None or clip is None:
+            raise HTTPException(status_code=404, detail=f"Clip {clip_id} not found")
+
+        thumbnails_dir = project.clips_dir / "thumbnails"
+        thumbnails_dir.mkdir(parents=True, exist_ok=True)
+        thumb_path = thumbnails_dir / f"{clip_id}.jpg"
+
+        if not thumb_path.exists():
+            # Generate from best available clip version
+            source = clip.captioned_clip_path or clip.portrait_clip_path or clip.raw_clip_path
+            if not source or not Path(source).exists():
+                raise HTTPException(status_code=404, detail="No clip file found")
+            try:
+                from clip_video.ffmpeg import FFmpegWrapper
+                ffmpeg = FFmpegWrapper()
+                ffmpeg.get_thumbnail(source, thumb_path, timestamp=1.0, width=320)
+            except Exception:
+                raise HTTPException(status_code=500, detail="Failed to generate thumbnail")
+
+        return FileResponse(str(thumb_path), media_type="image/jpeg")
 
     @app.get("/api/tasks")
     def list_tasks() -> list[dict[str, Any]]:
