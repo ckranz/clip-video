@@ -418,13 +418,352 @@ const ReviewView = {
   `
 };
 
-// Schedule View (stub)
+// Schedule View — monthly calendar for scheduling clips
 const ScheduleView = {
   props: ['brand'],
+  setup(props) {
+    const schedule = ref([]);
+    const videos = ref([]);
+    const loading = ref(true);
+    const currentYear = ref(new Date().getFullYear());
+    const currentMonth = ref(new Date().getMonth()); // 0-indexed
+    const scheduleModal = ref(false);
+    const selectedDate = ref(null);
+    const selectedClipId = ref(null);
+    const selectedPlatform = ref('linkedin');
+    const detailEntry = ref(null);
+
+    const MONTH_NAMES = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    async function fetchSchedule() {
+      try {
+        const resp = await fetch('/api/schedule');
+        if (resp.ok) schedule.value = await resp.json();
+      } catch (e) {
+        console.error('Failed to load schedule:', e);
+      }
+    }
+
+    async function fetchVideos() {
+      try {
+        const resp = await fetch('/api/videos');
+        if (resp.ok) videos.value = await resp.json();
+      } catch (e) {
+        console.error('Failed to load videos:', e);
+      }
+    }
+
+    onMounted(async () => {
+      await Promise.all([fetchSchedule(), fetchVideos()]);
+      loading.value = false;
+    });
+
+    const availableClips = computed(() => {
+      return videos.value
+        .flatMap(v => v.clips.map(c => ({ ...c, speaker: v.speaker })))
+        .filter(c => c.status === 'selected');
+    });
+
+    const monthLabel = computed(() => {
+      return `${MONTH_NAMES[currentMonth.value]} ${currentYear.value}`;
+    });
+
+    const calendarDays = computed(() => {
+      const year = currentYear.value;
+      const month = currentMonth.value;
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+
+      // Monday=0 .. Sunday=6 (ISO week)
+      let startDow = firstDay.getDay() - 1;
+      if (startDow < 0) startDow = 6;
+
+      const days = [];
+
+      // Days from previous month to fill the first week
+      const prevMonthLast = new Date(year, month, 0).getDate();
+      for (let i = startDow - 1; i >= 0; i--) {
+        const d = prevMonthLast - i;
+        const m = month === 0 ? 11 : month - 1;
+        const y = month === 0 ? year - 1 : year;
+        days.push({ date: d, month: m, year: y, outside: true });
+      }
+
+      // Days in current month
+      for (let d = 1; d <= lastDay.getDate(); d++) {
+        days.push({ date: d, month, year, outside: false });
+      }
+
+      // Fill remaining cells to complete the grid (up to 42 = 6 rows)
+      const remaining = (7 - (days.length % 7)) % 7;
+      const nextMonth = month === 11 ? 0 : month + 1;
+      const nextYear = month === 11 ? year + 1 : year;
+      for (let d = 1; d <= remaining; d++) {
+        days.push({ date: d, month: nextMonth, year: nextYear, outside: true });
+      }
+
+      return days;
+    });
+
+    function dateKey(year, month, date) {
+      const m = String(month + 1).padStart(2, '0');
+      const d = String(date).padStart(2, '0');
+      return `${year}-${m}-${d}`;
+    }
+
+    function entriesForDay(day) {
+      const key = dateKey(day.year, day.month, day.date);
+      return schedule.value.filter(e => e.date === key);
+    }
+
+    function isToday(day) {
+      const now = new Date();
+      return day.date === now.getDate() && day.month === now.getMonth() && day.year === now.getFullYear();
+    }
+
+    function prevMonth() {
+      if (currentMonth.value === 0) {
+        currentMonth.value = 11;
+        currentYear.value--;
+      } else {
+        currentMonth.value--;
+      }
+    }
+
+    function nextMonth() {
+      if (currentMonth.value === 11) {
+        currentMonth.value = 0;
+        currentYear.value++;
+      } else {
+        currentMonth.value++;
+      }
+    }
+
+    function platformColor(platform) {
+      if (platform === 'linkedin') return 'bg-blue-600 text-blue-100';
+      if (platform === 'youtube') return 'bg-red-600 text-red-100';
+      return 'bg-gray-600 text-gray-200';
+    }
+
+    function openScheduleModal(day) {
+      if (day.outside) return;
+      selectedDate.value = dateKey(day.year, day.month, day.date);
+      selectedClipId.value = availableClips.value.length > 0 ? availableClips.value[0].clip_id : null;
+      selectedPlatform.value = (props.brand && props.brand.social_platforms && props.brand.social_platforms[0]) || 'linkedin';
+      scheduleModal.value = true;
+    }
+
+    async function submitSchedule() {
+      if (!selectedClipId.value || !selectedDate.value) return;
+      try {
+        const resp = await fetch(`/api/clips/${encodeURIComponent(selectedClipId.value)}/schedule`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ platform: selectedPlatform.value, date: selectedDate.value }),
+        });
+        if (resp.ok) {
+          scheduleModal.value = false;
+          await fetchSchedule();
+          showToast('Clip scheduled');
+        } else {
+          showToast('Failed to schedule', 'error');
+        }
+      } catch (e) {
+        showToast('Failed to schedule', 'error');
+      }
+    }
+
+    async function removeSchedule(entry) {
+      // Find the index of this schedule entry on the clip
+      const clipEntries = schedule.value.filter(e => e.clip_id === entry.clip_id);
+      const idx = clipEntries.indexOf(entry);
+      if (idx < 0) return;
+      // The API uses the index within the clip's schedule array, which we need
+      // to compute by counting matching entries by date+platform order
+      try {
+        const resp = await fetch(`/api/clips/${encodeURIComponent(entry.clip_id)}/schedule/${idx}`, {
+          method: 'DELETE',
+        });
+        if (resp.ok) {
+          await fetchSchedule();
+          detailEntry.value = null;
+          showToast('Schedule removed');
+        } else {
+          showToast('Failed to remove', 'error');
+        }
+      } catch (e) {
+        showToast('Failed to remove', 'error');
+      }
+    }
+
+    function showDetail(entry) {
+      detailEntry.value = entry;
+    }
+
+    function closeDetail() {
+      detailEntry.value = null;
+    }
+
+    const platforms = computed(() => {
+      return (props.brand && props.brand.social_platforms && props.brand.social_platforms.length > 0)
+        ? props.brand.social_platforms
+        : ['linkedin'];
+    });
+
+    return {
+      schedule, videos, loading, currentYear, currentMonth, scheduleModal,
+      selectedDate, selectedClipId, selectedPlatform, detailEntry,
+      monthLabel, calendarDays, availableClips, platforms,
+      DAY_NAMES, entriesForDay, isToday,
+      prevMonth, nextMonth, platformColor,
+      openScheduleModal, submitSchedule, removeSchedule,
+      showDetail, closeDetail,
+    };
+  },
   template: `
-    <div class="text-gray-400 text-center py-20">
-      <p class="text-lg">Schedule View</p>
-      <p class="text-sm mt-2">Coming in Task 10</p>
+    <div>
+      <div v-if="loading" class="text-gray-400 text-center py-20">
+        <p class="text-lg">Loading schedule...</p>
+      </div>
+
+      <div v-else>
+        <!-- Month navigation header -->
+        <div class="flex items-center justify-center gap-4 mb-6">
+          <button @click="prevMonth"
+            class="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors">
+            &lt;
+          </button>
+          <h2 class="text-xl font-semibold text-gray-100 min-w-[200px] text-center">{{ monthLabel }}</h2>
+          <button @click="nextMonth"
+            class="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors">
+            &gt;
+          </button>
+        </div>
+
+        <!-- Calendar grid (hidden on small screens) -->
+        <div class="hidden md:grid grid-cols-7 gap-px bg-gray-800 rounded-xl overflow-hidden border border-gray-800">
+          <!-- Day-of-week headers -->
+          <div v-for="day in DAY_NAMES" :key="day"
+            class="bg-gray-900 px-2 py-2 text-center text-xs font-medium text-gray-400 uppercase">
+            {{ day }}
+          </div>
+
+          <!-- Day cells -->
+          <div v-for="(day, i) in calendarDays" :key="i"
+            @click="openScheduleModal(day)"
+            :class="[
+              'bg-gray-900 p-2 min-h-[100px] cursor-pointer transition-colors hover:bg-gray-800/80',
+              day.outside ? 'opacity-40' : '',
+              isToday(day) ? 'ring-2 ring-inset ring-blue-500' : '',
+              !day.outside && entriesForDay(day).length === 0 ? 'text-gray-600' : '',
+            ]">
+            <div class="text-xs font-medium mb-1" :class="day.outside ? 'text-gray-700' : 'text-gray-300'">
+              {{ day.date }}
+            </div>
+            <div v-for="entry in entriesForDay(day)" :key="entry.clip_id + entry.platform + entry.date"
+              @click.stop="showDetail(entry)"
+              :class="['rounded px-1.5 py-0.5 text-xs mb-1 flex items-center justify-between gap-1 cursor-pointer truncate',
+                platformColor(entry.platform)]">
+              <span class="truncate">{{ entry.speaker || 'Clip' }}</span>
+              <button @click.stop="removeSchedule(entry)" class="flex-shrink-0 opacity-60 hover:opacity-100">&times;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- List view for small screens -->
+        <div class="md:hidden space-y-2">
+          <div v-if="schedule.length === 0" class="text-gray-500 text-center py-8">
+            No clips scheduled this month.
+          </div>
+          <div v-for="entry in schedule" :key="entry.clip_id + entry.date + entry.platform"
+            @click="showDetail(entry)"
+            class="bg-gray-900 border border-gray-800 rounded-lg p-3 flex items-center justify-between gap-3 cursor-pointer">
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium text-gray-200 truncate">{{ entry.speaker || 'Clip' }}</div>
+              <div class="text-xs text-gray-400">{{ entry.date }}</div>
+            </div>
+            <span :class="['px-2 py-0.5 rounded text-xs font-medium capitalize', platformColor(entry.platform)]">
+              {{ entry.platform }}
+            </span>
+            <button @click.stop="removeSchedule(entry)" class="text-gray-500 hover:text-red-400">&times;</button>
+          </div>
+        </div>
+
+        <!-- Detail overlay -->
+        <div v-if="detailEntry" class="fixed inset-0 z-40 flex items-center justify-center bg-black/60" @click.self="closeDetail">
+          <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 max-w-md w-full mx-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-100">Scheduled Clip</h3>
+              <button @click="closeDetail" class="text-gray-400 hover:text-gray-200">&times;</button>
+            </div>
+            <div class="space-y-2">
+              <p class="text-sm text-gray-300"><span class="text-gray-500">Speaker:</span> {{ detailEntry.speaker }}</p>
+              <p class="text-sm text-gray-300"><span class="text-gray-500">Date:</span> {{ detailEntry.date }}</p>
+              <p class="text-sm text-gray-300"><span class="text-gray-500">Platform:</span> {{ detailEntry.platform }}</p>
+              <p class="text-sm font-medium text-gray-200">{{ detailEntry.hook_text }}</p>
+              <p class="text-xs text-gray-400">{{ detailEntry.summary }}</p>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+              <button @click="removeSchedule(detailEntry)"
+                class="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-700 hover:bg-red-600 text-red-100 transition-colors">
+                Remove
+              </button>
+              <button @click="closeDetail"
+                class="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-700 hover:bg-gray-600 text-gray-200 transition-colors">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule modal -->
+        <div v-if="scheduleModal" class="fixed inset-0 z-40 flex items-center justify-center bg-black/60" @click.self="scheduleModal = false">
+          <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 max-w-md w-full mx-4 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-100">Schedule Clip</h3>
+              <button @click="scheduleModal = false" class="text-gray-400 hover:text-gray-200">&times;</button>
+            </div>
+            <div class="text-sm text-gray-400">Date: {{ selectedDate }}</div>
+
+            <div v-if="availableClips.length === 0" class="text-gray-500 text-sm py-4 text-center">
+              No selected clips available to schedule.
+            </div>
+            <div v-else class="space-y-3">
+              <div>
+                <label class="block text-xs text-gray-400 mb-1">Clip</label>
+                <select v-model="selectedClipId"
+                  class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-blue-500">
+                  <option v-for="clip in availableClips" :key="clip.clip_id" :value="clip.clip_id">
+                    {{ clip.speaker || clip.clip_id }} — {{ clip.hook_text ? clip.hook_text.substring(0, 50) : clip.clip_id }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-1">Platform</label>
+                <select v-model="selectedPlatform"
+                  class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-blue-500">
+                  <option v-for="p in platforms" :key="p" :value="p">{{ p }}</option>
+                </select>
+              </div>
+              <div class="flex justify-end gap-2 pt-2">
+                <button @click="scheduleModal = false"
+                  class="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-700 hover:bg-gray-600 text-gray-200 transition-colors">
+                  Cancel
+                </button>
+                <button @click="submitSchedule"
+                  class="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors">
+                  Schedule
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   `
 };

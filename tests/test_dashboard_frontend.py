@@ -189,6 +189,70 @@ class TestStyleCss:
         assert "video" in css
 
 
+class TestScheduleViewImplementation:
+    @pytest.fixture()
+    def js(self):
+        return (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    def test_fetches_schedule_on_mount(self, js):
+        assert "/api/schedule" in js
+
+    def test_fetches_videos_for_clip_picker(self, js):
+        assert "selectedClips" in js or "availableClips" in js
+
+    def test_has_month_navigation(self, js):
+        assert "prevMonth" in js
+        assert "nextMonth" in js
+
+    def test_has_calendar_grid(self, js):
+        assert "grid-cols-7" in js
+
+    def test_has_day_of_week_headers(self, js):
+        assert "Mon" in js
+        assert "Tue" in js
+        assert "Sun" in js
+
+    def test_has_today_highlight(self, js):
+        assert "ring-blue-500" in js
+
+    def test_has_platform_colors(self, js):
+        assert "linkedin" in js
+        assert "youtube" in js
+
+    def test_has_schedule_modal(self, js):
+        assert "showScheduleModal" in js or "scheduleModal" in js
+
+    def test_posts_schedule_to_api(self, js):
+        assert "/schedule" in js
+        assert "POST" in js
+
+    def test_deletes_schedule_entry(self, js):
+        assert "DELETE" in js
+
+    def test_has_remove_button(self, js):
+        assert "removeSchedule" in js or "deleteSchedule" in js
+
+    def test_has_dimmed_empty_days(self, js):
+        assert "opacity" in js or "dimmed" in js or "text-gray-600" in js
+
+    def test_has_outside_month_dimming(self, js):
+        assert "outside" in js or "other-month" in js or "text-gray-700" in js
+
+    def test_has_responsive_list_fallback(self, js):
+        assert "sm:hidden" in js or "md:grid" in js or "lg:grid" in js
+
+    def test_has_detail_view_for_scheduled_clip(self, js):
+        assert "hook_text" in js
+        assert "summary" in js
+
+    def test_computes_calendar_days(self, js):
+        assert "calendarDays" in js or "daysInMonth" in js
+
+    def test_has_dark_theme_calendar_cells(self, js):
+        assert "bg-gray-900" in js
+        assert "border-gray-800" in js
+
+
 class TestStaticFilesServed:
     def test_app_js_served(self, tmp_path):
         from clip_video.dashboard.server import create_app
