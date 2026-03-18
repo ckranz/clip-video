@@ -1,15 +1,17 @@
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from clip_video.catalogue import load_catalogue, save_catalogue
+from clip_video.dashboard.tasks import TaskQueue
 from clip_video.modes.highlights import ClipStatus, HighlightClip, HighlightsProject, ScheduleEntry
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -74,9 +76,11 @@ def _clip_to_dict(clip: HighlightClip, project_name: str, brand_path: Path) -> d
 def create_app(brand_name: str, brands_root: Path) -> FastAPI:
     app = FastAPI(title=f"clip-video dashboard - {brand_name}")
     brand_path = brands_root / brand_name
+    task_queue = TaskQueue()
     app.state.brand_name = brand_name
     app.state.brands_root = brands_root
     app.state.brand_path = brand_path
+    app.state.task_queue = task_queue
 
     @app.get("/api/health")
     def health() -> dict[str, str]:
@@ -211,6 +215,19 @@ def create_app(brand_name: str, brands_root: Path) -> FastAPI:
                         "hook_text": clip.segment.hook_text,
                     })
         return entries
+
+    @app.get("/api/tasks")
+    def list_tasks() -> list[dict[str, Any]]:
+        return [t.to_dict() for t in task_queue.list_tasks()]
+
+    @app.get("/api/tasks/stream")
+    async def tasks_stream() -> StreamingResponse:
+        async def event_generator():
+            while True:
+                tasks_data = [t.to_dict() for t in task_queue.list_tasks()]
+                yield f"data: {json.dumps(tasks_data)}\n\n"
+                await asyncio.sleep(1)
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
 
     @app.get("/")
     def index() -> FileResponse:
