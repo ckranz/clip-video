@@ -1,4 +1,4 @@
-const { createApp, ref, reactive, computed, onMounted, watch, nextTick } = Vue;
+const { createApp, ref, reactive, computed, onMounted, onUnmounted, watch, nextTick } = Vue;
 
 // Toast notification component
 const ToastContainer = {
@@ -768,13 +768,166 @@ const ScheduleView = {
   `
 };
 
-// Tasks View (stub)
+// Utility: format a timestamp string to relative time (e.g., "2 minutes ago")
+function relativeTime(isoString) {
+  if (!isoString) return '';
+  const now = Date.now();
+  const then = new Date(isoString).getTime();
+  const diffSec = Math.floor((now - then) / 1000);
+  if (diffSec < 5) return 'just now';
+  if (diffSec < 60) return `${diffSec} seconds ago`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr} hour${diffHr === 1 ? '' : 's'} ago`;
+  const diffDay = Math.floor(diffHr / 24);
+  return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
+}
+
+// Task status sort priority: running first, then queued, then completed/failed
+const TASK_STATUS_ORDER = { running: 0, queued: 1, completed: 2, failed: 3 };
+
+// Task status badge styles
+const TASK_STATUS_STYLES = {
+  queued:    'bg-gray-600 text-gray-200',
+  running:   'bg-blue-600 text-blue-100',
+  completed: 'bg-green-600 text-green-100',
+  failed:    'bg-red-600 text-red-100',
+};
+
+// Tasks View — real-time monitoring of background reprocessing jobs
 const TasksView = {
   emits: ['task-count'],
+  setup(props, { emit }) {
+    const tasks = ref([]);
+    let eventSource = null;
+    let pollInterval = null;
+
+    const sortedTasks = computed(() => {
+      return [...tasks.value].sort((a, b) => {
+        const orderA = TASK_STATUS_ORDER[a.status] ?? 99;
+        const orderB = TASK_STATUS_ORDER[b.status] ?? 99;
+        if (orderA !== orderB) return orderA - orderB;
+        // Within same priority group, newest first
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    });
+
+    const activeCount = computed(() => {
+      return tasks.value.filter(t => t.status === 'running' || t.status === 'queued').length;
+    });
+
+    watch(activeCount, (count) => {
+      emit('task-count', count);
+    });
+
+    function updateTasks(data) {
+      tasks.value = data;
+    }
+
+    function startSSE() {
+      eventSource = new EventSource('/api/tasks/stream');
+      eventSource.onmessage = (event) => {
+        try {
+          updateTasks(JSON.parse(event.data));
+        } catch (e) {
+          console.error('Failed to parse SSE data:', e);
+        }
+      };
+      eventSource.onerror = () => {
+        // SSE failed, fall back to polling
+        if (eventSource) {
+          eventSource.close();
+          eventSource = null;
+        }
+        startPolling();
+      };
+    }
+
+    async function fetchTasks() {
+      try {
+        const resp = await fetch('/api/tasks');
+        if (resp.ok) {
+          updateTasks(await resp.json());
+        }
+      } catch (e) {
+        console.error('Failed to fetch tasks:', e);
+      }
+    }
+
+    function startPolling() {
+      if (pollInterval) return;
+      fetchTasks();
+      pollInterval = setInterval(fetchTasks, 2000);
+    }
+
+    function cleanup() {
+      if (eventSource) {
+        eventSource.close();
+        eventSource = null;
+      }
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    }
+
+    onMounted(() => {
+      startSSE();
+    });
+
+    onUnmounted(() => {
+      cleanup();
+    });
+
+    function taskStatusClass(status) {
+      return TASK_STATUS_STYLES[status] || TASK_STATUS_STYLES.queued;
+    }
+
+    return { sortedTasks, activeCount, relativeTime, taskStatusClass };
+  },
   template: `
-    <div class="text-gray-400 text-center py-20">
-      <p class="text-lg">Tasks View</p>
-      <p class="text-sm mt-2">Coming in Task 11</p>
+    <div>
+      <!-- Empty state -->
+      <div v-if="sortedTasks.length === 0" class="text-gray-500 text-center py-20">
+        <p class="text-lg">No background tasks</p>
+      </div>
+
+      <!-- Task cards -->
+      <div v-else class="space-y-3">
+        <div v-for="task in sortedTasks" :key="task.task_id"
+          class="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-2">
+
+          <!-- Header row: type + target, status badge -->
+          <div class="flex items-center justify-between gap-3">
+            <div class="text-sm font-medium text-gray-200 truncate">
+              <span class="capitalize">{{ task.task_type }}</span><span v-if="task.target">: {{ task.target }}</span>
+            </div>
+            <span :class="['px-2 py-0.5 rounded-full text-xs font-medium capitalize flex-shrink-0',
+              taskStatusClass(task.status)]"
+              v-text="task.status"></span>
+          </div>
+
+          <!-- Description -->
+          <p v-if="task.description" class="text-xs text-gray-400">{{ task.description }}</p>
+
+          <!-- Progress bar for running tasks -->
+          <div v-if="task.status === 'running' && task.progress != null"
+            class="w-full bg-gray-800 rounded h-2 overflow-hidden">
+            <div class="bg-blue-500 h-2 rounded transition-all duration-300"
+              :style="{ width: task.progress + '%' }"></div>
+          </div>
+
+          <!-- Timestamps and error -->
+          <div class="flex items-center gap-3 text-xs text-gray-500">
+            <span v-if="task.created_at">Started {{ relativeTime(task.created_at) }}</span>
+            <span v-if="task.completed_at">Finished {{ relativeTime(task.completed_at) }}</span>
+          </div>
+
+          <!-- Error message -->
+          <p v-if="task.error" class="text-xs text-red-400">{{ task.error }}</p>
+        </div>
+      </div>
     </div>
   `
 };

@@ -253,6 +253,54 @@ class TestScheduleViewImplementation:
         assert "border-gray-800" in js
 
 
+class TestTasksViewImplementation:
+    @pytest.fixture()
+    def js(self):
+        return (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    def test_emits_task_count_event(self, js):
+        assert "task-count" in js
+
+    def test_uses_event_source_for_sse(self, js):
+        assert "EventSource" in js
+        assert "/api/tasks/stream" in js
+
+    def test_has_polling_fallback(self, js):
+        assert "/api/tasks" in js
+        assert "setInterval" in js or "polling" in js.lower()
+
+    def test_has_empty_state_message(self, js):
+        assert "No background tasks" in js
+
+    def test_has_status_badges(self, js):
+        assert "queued" in js
+        assert "running" in js
+        assert "completed" in js
+        assert "failed" in js
+
+    def test_has_progress_bar(self, js):
+        assert "bg-blue-500" in js
+        assert "bg-gray-800" in js
+
+    def test_has_relative_time_formatting(self, js):
+        assert "ago" in js
+
+    def test_has_error_display(self, js):
+        assert "error" in js.lower()
+
+    def test_cleans_up_on_unmount(self, js):
+        assert "onUnmounted" in js
+
+    def test_has_task_card_styling(self, js):
+        assert "task_type" in js or "task.type" in js or "task.task_type" in js
+
+    def test_sorts_tasks(self, js):
+        assert "sort" in js
+
+    def test_computes_active_count(self, js):
+        assert "activeCount" in js or "active" in js.lower()
+
+
 class TestStaticFilesServed:
     def test_app_js_served(self, tmp_path):
         from clip_video.dashboard.server import create_app
