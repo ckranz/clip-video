@@ -54,6 +54,7 @@
       <schedule-view v-if="currentTab === 'schedule'" :brand="brand" />
       <tasks-view v-if="currentTab === 'tasks'" @task-count="activeTaskCount = $event" />
     </main>
+    <toast-container />
   </div>
 
   <script src="/static/app.js"></script>

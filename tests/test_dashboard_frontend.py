@@ -80,6 +80,103 @@ class TestAppJsStructure:
         assert "ref('review')" in js
 
 
+class TestReviewViewImplementation:
+    @pytest.fixture()
+    def js(self):
+        return (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    def test_fetches_videos_on_mount(self, js):
+        assert "/api/videos" in js
+
+    def test_has_status_filter(self, js):
+        assert "statusFilter" in js
+
+    def test_has_all_status_filter_options(self, js):
+        for status in ["all", "new", "selected", "skipped", "scheduled", "posted"]:
+            assert f"'{status}'" in js
+
+    def test_has_clip_version_toggle(self, js):
+        for version in ["raw", "portrait", "final"]:
+            assert f"'{version}'" in js
+
+    def test_has_video_player(self, js):
+        assert "<video" in js
+        assert "controls" in js
+
+    def test_has_status_badge_styles(self, js):
+        assert "bg-gray-600" in js  # new
+        assert "bg-blue-600" in js  # selected
+        assert "bg-amber-600" in js  # scheduled
+        assert "bg-green-600" in js  # posted
+
+    def test_has_speaker_input(self, js):
+        assert "onSpeakerBlur" in js
+
+    def test_has_position_dropdown(self, js):
+        assert "onPositionChange" in js
+        assert "speaker_position" in js
+
+    def test_has_youtube_url_input(self, js):
+        assert "onYoutubeBlur" in js
+        assert "youtube_url" in js
+
+    def test_has_reprocess_button(self, js):
+        assert "reprocessVideo" in js
+        assert "/reprocess" in js
+
+    def test_has_select_and_skip_buttons(self, js):
+        assert "setClipStatus" in js
+        assert "'selected'" in js
+        assert "'skipped'" in js
+
+    def test_optimistic_update_with_rollback(self, js):
+        assert "oldStatus" in js
+
+    def test_has_social_copy_section(self, js):
+        assert "copyToClipboard" in js
+        assert "navigator.clipboard" in js
+
+    def test_has_toast_notifications(self, js):
+        assert "showToast" in js
+        assert "ToastContainer" in js
+
+    def test_has_quality_score_display(self, js):
+        assert "quality_score" in js
+
+    def test_has_duration_formatter(self, js):
+        assert "formatDuration" in js
+
+    def test_has_topics_display(self, js):
+        assert "clip.topics" in js
+
+    def test_has_hook_text_display(self, js):
+        assert "clip.hook_text" in js
+
+    def test_has_summary_display(self, js):
+        assert "clip.summary" in js
+
+    def test_has_responsive_grid(self, js):
+        assert "grid-cols-1" in js
+        assert "md:grid-cols-2" in js
+        assert "xl:grid-cols-3" in js
+
+    def test_media_url_helper(self, js):
+        assert "mediaUrl" in js
+
+    def test_has_dark_theme_classes(self, js):
+        assert "bg-gray-900" in js
+        assert "border-gray-800" in js
+
+    def test_has_filter_counts(self, js):
+        assert "statusCounts" in js
+
+
+class TestIndexHtmlHasToastContainer:
+    def test_toast_container_in_html(self):
+        html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+        assert "toast-container" in html
+
+
 class TestStyleCss:
     @pytest.fixture()
     def css(self):
